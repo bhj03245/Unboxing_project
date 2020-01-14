@@ -4,7 +4,7 @@ cap = cv2.VideoCapture(0)
 cap.set(3, 640) #WIDTH
 cap.set(4, 500)
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('../opencv/haarcascades/haarcascade_frontalface_default.xml')
 
 while(True):
     # frame 별로 capture 한다

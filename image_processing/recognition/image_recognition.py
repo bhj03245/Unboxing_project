@@ -3,9 +3,9 @@ import cv2
 from matplotlib import pyplot as plt
 
 # CasacdeClassifier Object Create
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('../opencv/haarcascades/haarcascade_frontalface_default.xml')
 
-img = cv2.imread('test4.jpg')
+img = cv2.imread('test1.jpg')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # convert image color : RGB -> GRAY scale
 
 # face scale alignment
