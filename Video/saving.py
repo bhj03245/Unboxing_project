@@ -1,8 +1,11 @@
 import RPi.GPIO as gp
 import os
 import sys
+import threading
+import time
 from threading import Thread
 from datetime import datetime
+
 
 gp.setwarnings(False)
 gp.setmode(gp.BOARD)
@@ -40,6 +43,7 @@ def main():
 
 
 class recording:
+
     def normal_recording(self):  # video capture and convert
         # cmd = "raspivid -w 1280 -h 720 -t 0"
         mtime = datetime.today().strftime("%Y%m%d%H%M%S")
@@ -50,6 +54,7 @@ class recording:
 
         os.system(cmd)
         os.system(conv_cmd)
+        threading.Timer(0.1, self.normal_recording).start()
 
     def parking_recording(self):
         mtime = datetime.today().strftime("%Y%m%d%H%M%S")
@@ -60,6 +65,7 @@ class recording:
 
         os.system(cmd)
         os.system(conv_cmd)
+        threading.Timer(0.1, self.parking_recording()).start()
 
     def manual_recording(self):
         mtime = datetime.today().strftime("%Y%m%d%H%M%S")
@@ -70,6 +76,7 @@ class recording:
 
         os.system(cmd)
         os.system(conv_cmd)
+        threading.Timer(0.1, self.manual_recording()).start()
 
     def impact_recording(self):
         mtime = datetime.today().strftime("%Y%m%d%H%M%S")
@@ -80,7 +87,7 @@ class recording:
 
         os.system(cmd)
         os.system(conv_cmd)
-
+        threading.Timer(0.1, self.impact_recording()).start()
 
 if __name__ == "__main__":
     main()
