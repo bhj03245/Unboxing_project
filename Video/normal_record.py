@@ -40,25 +40,32 @@ def create_file():
     file_name = now + '.h264'
     return file_name
 
-def normal(picam):
+def convert(file_name):
+    conv_file = file_name.split('.')[0] + '.mp4'
+    convert_cmd = 'MP4Box -fps 25 -add ' + path + file_name + " " + path + conv_file + "; rm " + path + file_name
+    os.system(convert_cmd)
+
+def normal_recording(picam):
     file_name = create_file()
     picam.start_recording(path + file_name)
     picam.wait_recording(10)
     picam.stop_recording()
-    nthread = threading.Thread(target=normal, args=(picam,))
+    convert(file_name)
+    nthread = threading.Thread(target=normal_recording, args=(picam,))
     nthread.start()
 
-def recording():
+
+def video():
     now = create_time()
     file_name = create_file()
     picam.start_preview()
-    normal(picam)
+    normal_recording(picam)
     
     key = cv2.waitKey(1) & 0xFF
         #rawCapture.truncate(0)
         # if key == ord("q"):     
 
-recording()
+video()
 
 
 #nthread = threading.Thread(target=normal, args=(picam,))
