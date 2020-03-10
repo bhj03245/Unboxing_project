@@ -45,7 +45,7 @@
 ?> 
    <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="normalPage.php">
+		<frame src="normalList.php">
     </frameset>
     </html>
 <?php
@@ -57,7 +57,7 @@
 ?> 
     <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="manualPage.php">
+		<frame src="manualList.php">
     </frameset>
     </html>
 <?php
@@ -69,7 +69,7 @@
 ?> 
     <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="parkingPage.php">
+		<frame src="parkingList.php">
     </frameset>
     </html>
 <?php
@@ -81,7 +81,7 @@
 ?> 
     <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="impactPage.php">
+		<frame src="impactList.php">
     </frameset>
     </html>
     </html>
@@ -174,18 +174,19 @@
 ?>
 
 <?php 
-    function display_normalList($cat_array){
+    function display_normalList(){
 ?>  
     <body>
     <table>
         <thead>
-            <tr>
+            <tr align='center'>
                 <th scope="col" class="No">No</th>
                 <th scope="col" class="Name">Name</th>
                 <th scope="col" class="Size">Size</th>
                 <th scope="col" class="Length">Length</th>
                 <th scope="col" class="Mktime">MakeTime</th>
                 <th scope="col" class="Resolution">Resolution</th>
+		<th scope="col" class="Url">Download</th>
             </tr>
         </thead>
         
@@ -195,13 +196,14 @@
             $result_norm=$conn->query("SELECT * FROM normal");
             $row=$result_norm->fetch_assoc();
         ?>
-            <tr>
+            <tr align='center'>
                 <td class="No"><?php echo $row['norm_num']?></td>
                 <td class="Name"><?php echo $row['norm_name']?></td>
                 <td class="Size"><?php echo $row['norm_size']?></td>
                 <td class="Length"><?php echo $row['norm_length']?></td>
                 <td class="Mktime"><?php echo $row['norm_mktime']?></td>
                 <td class="Resolution"><?php echo $row['norm_resolution']?></td>
+		<td class="Url"><a href="<?php echo $row['norm_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
             </tr> 
         </tbody>
     </table>
