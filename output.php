@@ -45,7 +45,7 @@
 ?> 
    <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="normalList.php">
+		<frame src="normList.php">
     </frameset>
     </html>
 <?php
@@ -57,7 +57,7 @@
 ?> 
     <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="manualList.php">
+		<frame src="manlList.php">
     </frameset>
     </html>
 <?php
@@ -69,7 +69,7 @@
 ?> 
     <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="parkingList.php">
+		<frame src="parkList.php">
     </frameset>
     </html>
 <?php
@@ -81,7 +81,7 @@
 ?> 
     <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="impactList.php">
+		<frame src="imptList.php">
     </frameset>
     </html>
     </html>
@@ -146,7 +146,7 @@
     <h1>UB_BlackBox</h1>
 	<a href="http://localhost/webServ/users.php" target="_top">사용자 설정</a><br>
 	영상목록<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/normalPage.php" target="_top">상시 녹화</a><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/normPage.php" target="_top">상시 녹화</a><br>
 	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/manualPage.php" target="_top">수동 녹화</a><br>
 	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/parkingPage.php" target="_top">주차 녹화</a><br>
 	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/impactPage.php" target="_top">이벤트 녹화</a><br>
@@ -174,8 +174,9 @@
 ?>
 
 <?php 
-    function display_normalList(){
+    function display_normalList($paging, $result){
 ?>  
+
     <body>
     <table>
         <thead>
@@ -189,13 +190,10 @@
 		<th scope="col" class="Url">Download</th>
             </tr>
         </thead>
-        
+<?php
+    while($row=mysqli_fetch_array($result)){
+?>
         <tbody>
-        <?php
-            $conn=db_connect();
-            $result_norm=$conn->query("SELECT * FROM normal");
-            $row=$result_norm->fetch_assoc();
-        ?>
             <tr align='center'>
                 <td class="No"><?php echo $row['norm_num']?></td>
                 <td class="Name"><?php echo $row['norm_name']?></td>
@@ -205,8 +203,14 @@
                 <td class="Resolution"><?php echo $row['norm_resolution']?></td>
 		<td class="Url"><a href="<?php echo $row['norm_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
             </tr> 
+<?php
+    }
+?>
         </tbody>
     </table>
+    <div class="paging">
+    	<?php echo $paging ?>
+    </div>
     </body>
     </html>
 
