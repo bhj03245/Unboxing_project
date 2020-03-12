@@ -25,7 +25,7 @@ gp.output(12, True)
 norm_path = os.getcwd() + '/UB_video/Normal/'
 manl_path = os.getcwd() + '/UB_video/Manual/'
 
-fourcc = cv2.VideoWriter_fourcc(*'H264')
+fourcc = cv2.VideoWriter_fourcc('X','2','6','4')
 
 
 def create_time():
@@ -63,28 +63,30 @@ class recording:
 
 		path = self.normal_recording()[0]
 		out = self.normal_recording()[1]	
-		while(True):
+		while(cnt < 5000):
 			ret, frame = picam.read()
 			curTime = time.time()
 			sec = curTime - prevTime
 			prevTime = curTime
-			fps = 1/(sec)
+			fps = 1/(sec)		
 			cnt = cnt + fps
-			str = "FPS : %0.1f" % fps
-			cv2.putText(frame, str, (0,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+			#str = "FPS : %0.1f" % fps
+			#cv2.putText(frame, str, (0,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+			#print(cnt)	
+			out.write(frame)
 			cv2.imshow('CAM_Window', frame)
-			print(cnt)	
-			out.write(frame) 
-			if int(cnt) > 2000:		# size (frame * sec)
-				break
-			elif cv2.waitKey(10) >= 0:
+			#out.write(frame) 
+	
+			if cv2.waitKey(10) >= 0:
 				break
 
-		convert(norm_path, path.split('/')[6])
+		print(path.split('/')[6])
 		picam.release()
 		out.release()
+		convert(norm_path, path.split('/')[6])
 		nthread = threading.Thread(target=self.recording, args=())
 		nthread.start()
+		
 		#cv2.destroyWindow('CAM_Window')
 
 r = recording()
