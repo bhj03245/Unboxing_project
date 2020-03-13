@@ -8,7 +8,7 @@
     }
 
     $db=db_connect();
-    $sql='SELECT count(*) as cnt from norm ORDER BY norm_num desc';
+    $sql='SELECT count(*) as cnt from impt ORDER BY impt_num desc';
     $result=$db->query($sql);
     $row=$result->fetch_assoc();
 
@@ -70,7 +70,7 @@
     $currentLimit=($onePage*$page)-$onePage; //몇 번째의 글을 가져오는지
     $sqlLimit = ' limit ' . $currentLimit . ', ' . $onePage; //limit sql 구문
 
-    $sql='SELECT * FROM norm ORDER BY norm_num ASC'.$sqlLimit; //원하는 개수만큼 가져옴
+    $sql='SELECT * FROM impt ORDER BY impt_num ASC'.$sqlLimit; //원하는 개수만큼 가져옴
     $result=$db->query($sql);
     
 

@@ -1,4 +1,4 @@
 <?php
     require_once('../lib.php'); 
-    display_normal();
+    display_impact();
 ?>
