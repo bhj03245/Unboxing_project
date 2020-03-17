@@ -142,40 +142,54 @@ void FileList()
 	int num = 1;
 	char newpath[100];	
 	char NORM_PATH[50] = "/home/pi/Desktop/UB_video/Normal";
+	char ParentPath[100];	
+	char CurrentPath[100];
+	sprintf(ParentPath, "%s/..", NORM_PATH);
+	sprintf(CurrentPath, "%s/.", NORM_PATH); 
 	dir = opendir(NORM_PATH);
 	
 	if(dir != NULL){
 		while((entry = readdir(dir)) != NULL){	
 			Video vid = Video();	
-			sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);	// Combine path
-
-			stat(newpath, &buf);	
-			VideoCapture cap(newpath);				// Video File Analysis
-			int width = cvRound(cap.get(CAP_PROP_FRAME_WIDTH));	// Video Info : Frame Width 
-			int height = cvRound(cap.get(CAP_PROP_FRAME_HEIGHT));	// Video Info : Frame Height 
-			double fps = cap.get(CAP_PROP_FPS);			// Video Info : FPS
-			int fcount = cvRound(cap.get(CAP_PROP_FRAME_COUNT));	// Video Info : Frame Count
-			int length = fcount / fps;				// Video Info : Video Length
-	
-			// Convert & Combine String
-			char vidMakeTime[100];		
-			char vidLength[10];
-			char vidResolution[20];
-			char file[100];
-
-			time_t t;		
-			t = buf.st_mtime;
-
-			strcpy(file, entry->d_name);				// Copy Filename 
-			sprintf(vidLength, "%d", length);			// Convert Integer to String
-			sprintf(vidResolution, "%dX%d", width, height);		// Convert & Combine
-			strcpy(vidMakeTime, timeToString(localtime(&t)));	// Convert time to String
 			
-			vid.setVideo(num, file, buf.st_size, vidLength, vidMakeTime, vidResolution, newpath);	// Set
-			vid.printInfo();	// Output Video Info 
-			db_insert(vid);
-			// db_select();
-			num++;
+			//sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);	// Combine path
+			char *ext; 
+			ext = strrchr(entry->d_name, '.'); 
+			//cout << ext << endl;
+			if(strcmp(ext, ".mp4") == 0) { 
+				sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);
+				stat(newpath, &buf);	
+
+				VideoCapture cap(newpath);				// Video File Analysis
+				int width = cvRound(cap.get(CAP_PROP_FRAME_WIDTH));	// Video Info : Frame Width 
+				int height = cvRound(cap.get(CAP_PROP_FRAME_HEIGHT));	// Video Info : Frame Height 
+				double fps = cap.get(CAP_PROP_FPS);			// Video Info : FPS
+				int fcount = cvRound(cap.get(CAP_PROP_FRAME_COUNT));	// Video Info : Frame Count
+				int length = fcount / fps;				// Video Info : Video Length
+	
+				// Convert & Combine String
+				char vidMakeTime[100];		
+				char vidLength[10];
+				char vidResolution[20];
+				char file[100];
+
+				time_t t;		
+				t = buf.st_mtime;
+
+				strcpy(file, entry->d_name);				// Copy Filename 
+				sprintf(vidLength, "%d", length);			// Convert Integer to String
+				sprintf(vidResolution, "%dX%d", width, height);		// Convert & Combine
+				strcpy(vidMakeTime, timeToString(localtime(&t)));	// Convert time to String
+				if(strcmp(ParentPath, newpath))
+			
+				vid.setVideo(num, file, buf.st_size, vidLength, vidMakeTime, vidResolution, newpath);	// Set
+				cout << newpath << endl;
+				vid.printInfo();	// Output Video Info 
+				db_insert(vid);
+				// db_select();
+				num++;
+			}
+
 		}		
 	
 		closedir(dir);
