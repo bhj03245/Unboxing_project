@@ -97,8 +97,7 @@ void db_insert(Video vid) {
 
 	mysql_real_connect(&mysql, DB_HOST, DB_USER, DB_PW, DB_NAME, 3306, NULL, 0);
 	sprintf(buf, "insert into video.norm values""('%d','%s', '%d', '%s', '%s', '%s', '%s')",vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl());
-	//sprintf(buf, "insert into video.norm(norm_num, norm_name, norm_size, norm_length, norm_mktime, norm_resolution, norm_url) select '%d', '%s', '%d', '%s', '%s', '%s', '%s' from dual where not exists(select norm_name from video.norm where norm_name='%s')",vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl(), vid.getName());
-	//cout <<buf<<endl;
+	
 	mysql_query(&mysql, buf);
 	cout << "Insert Success!!" << endl;
 }
@@ -156,7 +155,6 @@ void FileList()
 			//sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);	// Combine path
 			char *ext; 
 			ext = strrchr(entry->d_name, '.'); 
-			//cout << ext << endl;
 			if(strcmp(ext, ".mp4") == 0) { 
 				sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);
 				stat(newpath, &buf);	
@@ -181,10 +179,8 @@ void FileList()
 				sprintf(vidLength, "%d", length);			// Convert Integer to String
 				sprintf(vidResolution, "%dX%d", width, height);		// Convert & Combine
 				strcpy(vidMakeTime, timeToString(localtime(&t)));	// Convert time to String
-				if(strcmp(ParentPath, newpath))
-			
+				
 				vid.setVideo(num, file, buf.st_size, vidLength, vidMakeTime, vidResolution, newpath);	// Set
-				cout << newpath << endl;
 				vid.printInfo();	// Output Video Info 
 				db_insert(vid);
 				// db_select();
