@@ -1,7 +1,7 @@
 package kr.ac.kpu.ce2015150012.ub_app;
 
         import android.content.Intent;
-        import android.support.v7.app.AppCompatActivity;
+        import androidx.appcompat.app.AppCompatActivity;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.Button;
@@ -38,7 +38,7 @@ public class MainMenu extends AppCompatActivity {
         btn_parkLocation.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Streaming.class);
+                Intent intent = new Intent(MainMenu.this, ParkLocation.class);
                 startActivity(intent);
             }
         });
