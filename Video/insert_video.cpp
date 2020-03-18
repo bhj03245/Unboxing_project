@@ -92,12 +92,13 @@ void db_insert(Video vid) {
 	list <string> vlist;
 	list<string>::iterator iter;
 	MYSQL_FIELD* field;
-	char buf[255];
+	char buf[500];
 	mysql_init(&mysql);
 
 	mysql_real_connect(&mysql, DB_HOST, DB_USER, DB_PW, DB_NAME, 3306, NULL, 0);
-	sprintf(buf, "insert into video.norm values""('%d', '%s', '%d', '%s', '%s', '%s', '%s')",
-		vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl());
+	sprintf(buf, "insert into video.norm values""('%d','%s', '%d', '%s', '%s', '%s', '%s')",vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl());
+	//sprintf(buf, "insert into video.norm(norm_num, norm_name, norm_size, norm_length, norm_mktime, norm_resolution, norm_url) select '%d', '%s', '%d', '%s', '%s', '%s', '%s' from dual where not exists(select norm_name from video.norm where norm_name='%s')",vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl(), vid.getName());
+	//cout <<buf<<endl;
 	mysql_query(&mysql, buf);
 	cout << "Insert Success!!" << endl;
 }
