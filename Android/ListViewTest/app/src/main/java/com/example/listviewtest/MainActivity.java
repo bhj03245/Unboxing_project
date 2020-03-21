@@ -1,15 +1,16 @@
 package com.example.listviewtest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
-import android.net.UrlQuerySanitizer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -26,7 +27,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,13 +38,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_TITLE = "title";
     private static final String TAG_SIZE ="size";
     private static final String TAG_LENGTH ="length";
-    private static final String TAG_URL ="url";
+    //private static final String TAG_URL ="url";
 
     public static final String listURL = "http://211.216.137.157/apkCtrl/normList_apk.php";
 
     private TextView textViewResult;
-    ArrayList<HashMap<String, String>> arrayList;
-    ListView mlistView;
+    private ArrayList<RecycleVO> mArrayList;
+    private RecycleAdapter recycleAdapter;
+    private RecycleVO recycleVO;
+    private int count = -1;
+
     String jsonString;
 
 
@@ -54,8 +57,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textViewResult = (TextView)findViewById(R.id.textView);
-        mlistView = (ListView)findViewById(R.id.listView);
-        arrayList = new ArrayList<>();
+        //mlistView = (ListView)findViewById(R.id.listView);
+       // arrayList = new ArrayList<>();
+
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        mArrayList = new ArrayList<>();
+        recycleAdapter = new RecycleAdapter(mArrayList);
+        recyclerView.setAdapter(recycleAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
 
         GetData task = new GetData();
         task.execute(listURL);
@@ -97,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setReadTimeout(10000);
+                httpURLConnection.setConnectTimeout(10000);
                 httpURLConnection.connect();
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
@@ -152,24 +168,14 @@ public class MainActivity extends AppCompatActivity {
                 String length = item.getString(TAG_LENGTH);
                 //String url = item.getString(TAG_URL);
 
-                HashMap<String, String> hasMap = new HashMap<>();
 
-                hasMap.put(TAG_NUM, num);
-                hasMap.put(TAG_TITLE, title);
-                hasMap.put(TAG_SIZE, size);
-                hasMap.put(TAG_LENGTH, length);
-                //hasMap.put(TAG_URL, url);
+                recycleVO = new RecycleVO(num, title, size, length);
+                mArrayList.add(recycleVO);
+                //recycleAdapter.addItem(recycleVO);
 
-                arrayList.add(hasMap);
             }
+            recycleAdapter.notifyDataSetChanged();
 
-            ListAdapter adapter = new SimpleAdapter(
-                    MainActivity.this, arrayList, R.layout.listitem,
-                    new String[]{TAG_NUM, TAG_TITLE, TAG_SIZE, TAG_LENGTH},
-                    new int[]{R.id.num, R.id.title, R.id.size, R.id.length}
-            );
-
-            mlistView.setAdapter(adapter);
 
         }catch (JSONException e){
             Log.d(TAG, "showResult: ", e);
