@@ -34,6 +34,10 @@ public class RecycleVO {
         return this.length;
     }
 
+    public RecycleVO(){
+
+    }
+
     public RecycleVO(String num, String title, String size, String length){
         this.num = num;
         this.title = title;

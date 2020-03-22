@@ -1,6 +1,7 @@
 package com.example.listviewtest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,9 +10,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -26,7 +24,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,12 +40,13 @@ public class MainActivity extends AppCompatActivity {
     public static final String listURL = "http://211.216.137.157/apkCtrl/normList_apk.php";
 
     private TextView textViewResult;
-    private ArrayList<RecycleVO> mArrayList;
+    private ArrayList<RecycleVO> mArrayList = new ArrayList<>();
     private RecycleAdapter recycleAdapter;
     private RecycleVO recycleVO;
-    private int count = -1;
-
+    private RecyclerView recyclerView;
+    private VideoItemDeco videoItemDeco;
     String jsonString;
+
 
 
     @Override
@@ -56,21 +54,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textViewResult = (TextView)findViewById(R.id.textView);
-        //mlistView = (ListView)findViewById(R.id.listView);
-       // arrayList = new ArrayList<>();
+        //textViewResult = (TextView)findViewById(R.id.textView);
 
 
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        mArrayList = new ArrayList<>();
-        recycleAdapter = new RecycleAdapter(mArrayList);
+        //recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        recycleAdapter = new RecycleAdapter(getApplicationContext(), mArrayList);
         recyclerView.setAdapter(recycleAdapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation()));
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        videoItemDeco = new VideoItemDeco(5);
+        recyclerView.addItemDecoration(videoItemDeco);
 
 
         GetData task = new GetData();
@@ -80,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private class GetData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
         String errString=null;
+        HttpURLConnection httpURLConnection;
+        URL url = null;
 
         @Override
         protected void onPreExecute() {
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "response" + result);
 
             if(result==null) {
-                textViewResult.setText(errString);
+                //textViewResult.setText(errString);
             }else{
                 jsonString=result;
                 showResult();
@@ -110,11 +111,13 @@ public class MainActivity extends AppCompatActivity {
             String serverURL = params[0];
 
             try {
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                url = new URL(serverURL);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
 
-                httpURLConnection.setReadTimeout(10000);
+                httpURLConnection.setReadTimeout(15000);
                 httpURLConnection.setConnectTimeout(10000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
                 httpURLConnection.connect();
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
@@ -149,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "InsertData: Error ", e);
                 errString = e.toString();
                 return null;
+            }finally{
+                httpURLConnection.disconnect();
             }
 
         }
@@ -169,7 +174,13 @@ public class MainActivity extends AppCompatActivity {
                 //String url = item.getString(TAG_URL);
 
 
-                recycleVO = new RecycleVO(num, title, size, length);
+                recycleVO = new RecycleVO();
+                recycleVO.setNum(num);
+                recycleVO.setTitle(title);
+                recycleVO.setSize(size);
+                recycleVO.setLength(length);
+
+
                 mArrayList.add(recycleVO);
                 //recycleAdapter.addItem(recycleVO);
 
@@ -181,6 +192,5 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "showResult: ", e);
         }
     }
-
 
 }
