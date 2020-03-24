@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             try{
-                URL url = new URL("http://192.168.0.9/apkCtrl/user_auth_apk.php");
+                URL url = new URL("http://211.216.137.157/apkCtrl/user_auth_apk.php");
                 HttpURLConnection conn = (HttpURLConnection)url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestMethod("POST");
