@@ -82,7 +82,9 @@ public:
 
 void db_insert(Video vid);
 void db_select();
+void db_update();
 char* timeToString(struct tm *t);
+
 void db_insert(Video vid) {
 	MYSQL mysql;
 	MYSQL_RES* res;
@@ -92,12 +94,13 @@ void db_insert(Video vid) {
 	list <string> vlist;
 	list<string>::iterator iter;
 	MYSQL_FIELD* field;
-	char buf[255];
+	char buf[500];
+	char exist_query[100];
+	int x;
 	mysql_init(&mysql);
-
 	mysql_real_connect(&mysql, DB_HOST, DB_USER, DB_PW, DB_NAME, 3306, NULL, 0);
-	sprintf(buf, "insert into video.norm values""('%d', '%s', '%d', '%s', '%s', '%s', '%s')",
-		vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl());
+	//sprintf(buf, "insert into video.norm values""('%d','%s', '%d', '%s', '%s', '%s', '%s')",vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl());
+	sprintf(buf, "insert into video.norm (norm_num, norm_name, norm_size, norm_length, norm_mktime, norm_resolution, norm_url) values('%d','%s', '%d', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE norm_name='%s'", vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl(), vid.getName());
 	mysql_query(&mysql, buf);
 	cout << "Insert Success!!" << endl;
 }
@@ -133,6 +136,22 @@ void db_insert(Video vid) {
 	mysql_free_result(res);
 	mysql_close(&mysql);
 }
+void db_update(){
+	MYSQL mysql;
+	MYSQL_RES* res;
+	int fields;
+	int i;
+	char buf[200];
+	char set[20];
+	mysql_init(&mysql);
+	
+	mysql_real_connect(&mysql, DB_HOST, DB_USER, DB_PW, DB_NAME, 3306, NULL, 0);
+	sprintf(set, "set @cnt = 0");
+	sprintf(buf, "update video.norm set video.norm.norm_num = @cnt:=@cnt+1");
+	mysql_query(&mysql, set);
+	mysql_query(&mysql, buf);
+	cout << "Update Success!!" << endl;
+}
 void FileList()
 {
 	DIR *dir = NULL;
@@ -155,7 +174,6 @@ void FileList()
 			//sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);	// Combine path
 			char *ext; 
 			ext = strrchr(entry->d_name, '.'); 
-			//cout << ext << endl;
 			if(strcmp(ext, ".mp4") == 0) { 
 				sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);
 				stat(newpath, &buf);	
@@ -180,12 +198,11 @@ void FileList()
 				sprintf(vidLength, "%d", length);			// Convert Integer to String
 				sprintf(vidResolution, "%dX%d", width, height);		// Convert & Combine
 				strcpy(vidMakeTime, timeToString(localtime(&t)));	// Convert time to String
-				if(strcmp(ParentPath, newpath))
-			
+				
 				vid.setVideo(num, file, buf.st_size, vidLength, vidMakeTime, vidResolution, newpath);	// Set
-				cout << newpath << endl;
 				vid.printInfo();	// Output Video Info 
 				db_insert(vid);
+				//db_update();
 				// db_select();
 				num++;
 			}

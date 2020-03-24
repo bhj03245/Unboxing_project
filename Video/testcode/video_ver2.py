@@ -24,10 +24,18 @@ gp.output(12, True)
 
 norm_path = os.getcwd() + '/UB_video/Normal/'
 manl_path = os.getcwd() + '/UB_video/Manual/'
+park_path = os.getcwd() + '/UB_video/Parking/'
+
 
 fourcc = cv2.VideoWriter_fourcc('X','2','6','4')
 
 
+<<<<<<< HEAD
+fourcc = cv2.VideoWriter_fourcc('X','2','6','4')
+
+
+=======
+>>>>>>> Video
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
     return now
@@ -49,6 +57,21 @@ class recording:
 		path = norm_path + "NORM_" + __file_name
 		norm_out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))
 		return path, norm_out		
+<<<<<<< HEAD
+=======
+
+	def parking_recording(self):
+		__file_name = create_file()
+		path = park_path + "PARK_" + __file_name
+		park_out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))
+		return path, park_out
+
+	def manual_recording(self):
+		__file_name = create_file()
+		path = manl_path + "MANL_" + __file_name
+		manl_out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))
+		return path, manl_out
+>>>>>>> Video
 
 	
 	def recording(self): 	
@@ -61,8 +84,20 @@ class recording:
 		cnt = 0
 		prevTime = 0	
 
+<<<<<<< HEAD
 		path = self.normal_recording()[0]
 		out = self.normal_recording()[1]	
+=======
+		#path = self.normal_recording()[0]
+		#out = self.normal_recording()[1]
+
+		#path = self.parking_recording()[0]
+		#out = self.parking_recording()[1]
+		
+		path = self.manual_recording()[0]
+		out = self.manual_recording()[1]
+			
+>>>>>>> Video
 		while(cnt < 5000):
 			ret, frame = picam.read()
 			curTime = time.time()
@@ -83,7 +118,13 @@ class recording:
 		print(path.split('/')[6])
 		picam.release()
 		out.release()
+<<<<<<< HEAD
 		convert(norm_path, path.split('/')[6])
+=======
+		#convert(park_path, path.split('/')[6])		
+		#convert(norm_path, path.split('/')[6])
+		convert(manl_path, path.split('/')[6])		
+>>>>>>> Video
 		nthread = threading.Thread(target=self.recording, args=())
 		nthread.start()
 		
