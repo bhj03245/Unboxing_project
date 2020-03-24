@@ -24,9 +24,12 @@ gp.output(12, True)
 
 norm_path = os.getcwd() + '/UB_video/Normal/'
 manl_path = os.getcwd() + '/UB_video/Manual/'
+park_path = os.getcwd() + '/UB_video/Parking/'
 
-#fourcc = cv2.cv.CV_FOURCC(*'H264')
-fourcc = cv2.VideoWriter_fourcc(*'X264')
+
+fourcc = cv2.VideoWriter_fourcc('X','2','6','4')
+
+
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
     return now
@@ -43,25 +46,23 @@ def convert(path, file_name):
 
 class recording:
 	
-	def normal_recording(self, picam, frame, size):	
-		while int(size) > 3000 :
-			__file_name = create_file()
-			path = norm_path + "NORM_" + __file_name	
-			out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))						
-			out.write(frame)
-			size = 0
-			print("hi")
-			
-		
-		#__file_name = create_file()
-		#file_name = norm_path + "NORM_" + __file_name
-		#return file_name	
-	
-	#	convert(norm_path, file_name)
-	#	nthread = threading.Thread(target=self.normal_recording, args=(picam,))
-	#	nthread.start()
-	#	print("Finish")
-	
+	def normal_recording(self):	
+		__file_name = create_file()
+		path = norm_path + "NORM_" + __file_name
+		norm_out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))
+		return path, norm_out		
+
+	def parking_recording(self):
+		__file_name = create_file()
+		path = park_path + "PARK_" + __file_name
+		park_out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))
+		return path, park_out
+
+	def manual_recording(self):
+		__file_name = create_file()
+		path = manl_path + "MANL_" + __file_name
+		manl_out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))
+		return path, manl_out
 
 	def recording(self): 	
 		picam = cv2.VideoCapture(0)
@@ -72,28 +73,43 @@ class recording:
 		cv2.namedWindow('CAM_Window')
 		cnt = 0
 		prevTime = 0	
-		path = '/home/pi/Desktop/UB_video/Normal/output.h264' # add
-		out = cv2.VideoWriter(path, fourcc, 25.0, (640,480))
-		while(True):
+
+		#path = self.normal_recording()[0]
+		#out = self.normal_recording()[1]
+
+		#path = self.parking_recording()[0]
+		#out = self.parking_recording()[1]
+		
+		path = self.manual_recording()[0]
+		out = self.manual_recording()[1]
+			
+		while(cnt < 5000):
 			ret, frame = picam.read()
 			curTime = time.time()
 			sec = curTime - prevTime
 			prevTime = curTime
-			fps = 1/(sec)
-			str = "FPS : %0.1f" % fps
-			cv2.putText(frame, str, (0,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
-			cv2.imshow('CAM_Window', frame)
+			fps = 1/(sec)		
 			cnt = cnt + fps
-			print(cnt)	
-			 # add 
-			out.write(frame) # add	
-			#self.normal_recording(picam, frame, cnt)	
+			#str = "FPS : %0.1f" % fps
+			#cv2.putText(frame, str, (0,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+			#print(cnt)	
+			out.write(frame)
+			cv2.imshow('CAM_Window', frame)
+			#out.write(frame) 
+	
 			if cv2.waitKey(10) >= 0:
 				break
-			
+
+		print(path.split('/')[6])
 		picam.release()
 		out.release()
-		cv2.destroyWindow('CAM_Window')
+		#convert(park_path, path.split('/')[6])		
+		#convert(norm_path, path.split('/')[6])
+		convert(manl_path, path.split('/')[6])		
+		nthread = threading.Thread(target=self.recording, args=())
+		nthread.start()
+		
+		#cv2.destroyWindow('CAM_Window')
 
 r = recording()
 r.recording()
