@@ -1,82 +1,191 @@
 package kr.ac.kpu.ce2015150012.ub_app.list;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.ac.kpu.ce2015150012.ub_app.R;
 
-public class NormList extends AppCompatActivity implements AbsListView.OnScrollListener{
+public class NormList extends AppCompatActivity{
 
-    private ListView listView;
-    private boolean lastItemVisibleFlag = false; //리스트 스크롤이 마지막 셀로 이동했는지 체크
-    private List<String>list;
-    private ListViewAdapter adapter;
-    private int page=0;
-    private final int OFFSET=20; //한 페이지마다 출력되는 데이터 개수
-    private ProgressBar progressBar; //데이터 로딩을 표시할 용도
-    private boolean mLockListView = false; // 데이터 불러올 때 중복되지 않게 하기 위한 변수
+    private static String IP_ADDRESS = "http://211.216.137.157/apkCtrl/normList_apk.php";
+    private static String TAG = "phptest";
+
+    private ArrayList<VideoVO> mArrayList;
+    private VideoAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private String mJsonString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_norm_list);
+        setContentView(R.layout.activity_main);
 
-        listView = (ListView) findViewById(R.id.list_item);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        mRecyclerView = (RecyclerView)findViewById(R.id.normList);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        list = new ArrayList<String>();
-        adapter = new ListViewAdapter(this, list);
-        listView.setAdapter(adapter);
+        mArrayList = new ArrayList<>();
+        mAdapter = new VideoAdapter(this, mArrayList);
+        mRecyclerView.setAdapter(mAdapter);
 
-        progressBar.setVisibility(View.GONE);
-        listView.setOnScrollListener(this);
-        getItem();
+        //VideoItemDeco videoItemDeco = new VideoItemDeco(1);
+        //mRecyclerView.addItemDecoration(videoItemDeco);
+
+        mArrayList.clear();
+        mAdapter.notifyDataSetChanged();
+
+        GetData task = new GetData();
+        task.execute(IP_ADDRESS);
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        // 1. OnScrollListener.SCROLL_STATE_IDLE : 스크롤이 이동하지 않을때의 이벤트(즉 스크롤이 멈추었을때).
-        // 2. lastItemVisibleFlag : 리스트뷰의 마지막 셀의 끝에 스크롤이 이동했을때.
-        // 3. mLockListView == false : 데이터 리스트에 다음 데이터를 불러오는 작업이 끝났을때.
-        // 1, 2, 3 모두가 true일때 다음 데이터를 불러온다.
-        if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag && mLockListView == false){
-            progressBar.setVisibility(View.VISIBLE);
-            getItem();
+    private class GetData extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+        String errString = null;
+
+        URL url = null;
+        HttpURLConnection httpURLConnection;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(NormList.this,
+                    "Please Wait", null, true, true);
         }
-    }
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        // firstVisibleItem : 화면에 보이는 첫번째 리스트의 아이템 번호.
-        // visibleItemCount : 화면에 보이는 리스트 아이템의 갯수
-        // totalItemCount : 리스트 전체의 총 갯수
-        lastItemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
-    }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
 
-    private void getItem(){
-        mLockListView = true;
+            progressDialog.dismiss();
+            Log.d(TAG, "response - " + result);
 
-        for(int i=0; i<20; i++){
-            //수정 필요
-            String label="Label" + ((page+OFFSET) + i);
-            list.add(label);
-        }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                page++;
-                adapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.GONE);
-                mLockListView=false;
+            if (result == null){
+
+                //mTextViewResult.setText(errorString);
             }
-        }, 1000);
+            else {
+
+                mJsonString = result;
+                showResult();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = params[0];
+            //String postParameters = params[1];
+
+
+
+            try {
+
+                url = new URL(serverURL);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(10000);
+                httpURLConnection.setConnectTimeout(15000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString().trim();
+
+            } catch (MalformedURLException e) {
+                Log.d(TAG, "InsertData: Error ", e);
+                errString = e.toString();
+                return null;
+            } catch (IOException e) {
+                Log.d(TAG, "InsertData: Error ", e);
+                errString = e.toString();
+                return null;
+            }finally{
+                httpURLConnection.disconnect();
+            }
+        }
     }
+
+    private void showResult(){
+
+
+        try{
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray("fromWeb");
+
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject item = jsonArray.getJSONObject(i);
+
+                String num = item.getString("num");
+                String title = item.getString("title");
+                String size = item.getString("size");
+                String length = item.getString("length");
+                String url = item.getString("url");
+
+                VideoVO data = new VideoVO();
+
+                data.setNum(num);
+                data.setTitle(title);
+                data.setSize(size);
+                data.setLength(length);
+                data.setUrl(url);
+
+
+                mArrayList.add(data);
+
+                //recycleAdapter.addItem(recycleVO);
+
+            }
+            mAdapter.notifyDataSetChanged();
+
+
+        }catch (JSONException e){
+            Log.d(TAG, "showResult: ", e);
+        }
+    }
+
 }

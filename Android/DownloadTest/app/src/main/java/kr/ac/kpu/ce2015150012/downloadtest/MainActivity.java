@@ -5,14 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.FileInputStream;
 import java.util.List;
 
 
@@ -62,12 +68,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.addQueueButton:
 
-                List<String> pathSegments = urlToDownload.getPathSegments(); urlToDownload = Uri.parse(downloadUrl.getText().toString());
+                urlToDownload = Uri.parse(downloadUrl.getText().toString());
                 request = new DownloadManager.Request(urlToDownload);
                 request.setTitle("다운로드 예제");
                 request.setDescription("항목 설명");
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, pathSegments.get(pathSegments.size()-1));
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
+
                 latestId = downloadManager.enqueue(request);
                 downloadUrl.setText("");
                 break;
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
 
     @Override
     public void onResume(){
