@@ -24,9 +24,9 @@ gp.setmode(gp.BOARD)
 gp.setup(7, gp.OUT)
 gp.setup(11, gp.OUT)
 gp.setup(12, gp.OUT)
-i2c = "i2cset -y 1 0x68"
-i2c = "i2cset -y 1 0x70 0x00 0x04"
-os.system(i2c)
+#i2c = "i2cset -y 1"
+#i2c = "i2cset -y 1 0x70 0x00 0x04"
+#os.system(i2c)
 gp.output(7, False)
 gp.output(11, False)
 gp.output(12, True)
@@ -159,7 +159,8 @@ class recording:
 		out.release()
 		#convert(park_path, path.split('/')[6])		
 		#convert(norm_path, path.split('/')[6])
-		convert(manl_path, path.split('/')[6])		
+		#convert(manl_path, path.split('/')[6])	
+		convert(impt_path, path.split('/')[6])	
 		nthread = threading.Thread(target=self.recording, args=())
 		nthread.start()
 		
