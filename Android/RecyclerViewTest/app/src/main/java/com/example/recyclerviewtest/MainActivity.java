@@ -4,21 +4,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private VideoAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private String mJsonString;
+
+    private DownloadManager downloadManager;
+    private long downloadID = -1L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +64,61 @@ public class MainActivity extends AppCompatActivity {
 
         GetData task = new GetData();
         task.execute(IP_ADDRESS);
+
+
+        downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
+        registerReceiver(onDownloadComplete, intentFilter);
+
     }
+
+    protected void startDownload(String title, String download_Url){
+        File file = new File(getExternalFilesDir(null), title);
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(download_Url))
+                .setTitle("영상")
+                .setDescription("다운로드")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                .setDestinationUri(Uri.fromFile(file))
+                .setRequiresCharging(false)
+                .setAllowedOverMetered(true)
+                .setAllowedOverRoaming(true);
+
+
+        downloadID = downloadManager.enqueue(request);
+    }
+
+    private BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+
+            if("android.intent.action.DOWNlOAD_COMPLETE".equals(intent.getAction())) {
+
+                if (downloadID == id) {
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(new long[]{id});
+                    Cursor cursor = downloadManager.query(query);
+                    if(!cursor.moveToFirst()){
+                        return;
+                    }
+
+                    int columnIndex = cursor.getColumnIndex("status");
+                    int status = cursor.getInt(columnIndex);
+                    if(status==8){
+                        Toast.makeText(context, (CharSequence)"Download succeeded", Toast.LENGTH_SHORT).show();
+                    }else if (status == 16){
+                        Toast.makeText(context, (CharSequence)"Download failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }else if ("android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED".equals(intent.getAction())) {
+                Toast.makeText(context, (CharSequence)"Notification clicked", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
 
     private class GetData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
