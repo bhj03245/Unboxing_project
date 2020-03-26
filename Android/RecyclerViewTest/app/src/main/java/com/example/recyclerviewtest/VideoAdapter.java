@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
     private List<VideoVO> mList = null;
     private Activity context = null;
     private LayoutInflater inflater;
+
+    private MainActivity mainActivity;
+
+
 
     public VideoAdapter(Activity context, ArrayList<VideoVO> list){
         this.context= context;
@@ -60,11 +65,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
         holder.tv_title.setText("영상 제목: " + item.getTitle());
         holder.tv_size.setText("영상 사이즈: " + item.getSize());
         holder.tv_length.setText("영상 길이: " + item.getLength());
+        final String videoTitle = item.getTitle();
+        final String videoUrl = item.getUrl();
         holder.iv_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                mainActivity.startDownload(videoTitle, videoUrl);
+                //Toast.makeText(context, videoUrl, Toast.LENGTH_SHORT).show();
             }
+
         });
 
     }
@@ -73,4 +83,5 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
     public int getItemCount() {
         return (null != mList? mList.size() : 0);
     }
+
 }
