@@ -3,6 +3,7 @@ package com.example.recyclerviewtest;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -14,6 +15,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,7 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static String IP_ADDRESS = "http://211.216.137.157/apkCtrl/normList_apk.php";
     private static String TAG = "phptest";
@@ -40,9 +42,13 @@ public class MainActivity extends AppCompatActivity {
     private VideoAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private String mJsonString;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private DownloadManager downloadManager;
     private long downloadID = -1L;
+
+    public MainActivity mainActivity;
+    protected Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView)findViewById(R.id.normList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         mArrayList = new ArrayList<>();
         mAdapter = new VideoAdapter(this, mArrayList);
@@ -62,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
         mArrayList.clear();
         mAdapter.notifyDataSetChanged();
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
         GetData task = new GetData();
         task.execute(IP_ADDRESS);
 
@@ -72,10 +82,31 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
         registerReceiver(onDownloadComplete, intentFilter);
 
+
+        Intent intent = getIntent();
+        String title = intent.getStringExtra("title");
+        String url = intent.getStringExtra("url");
+        if(title != null && url != null){ //조건문 보완 필요
+            startDownload(title, url);
+        }
     }
 
+    @Override
+    public void onRefresh() {
+        GetData task = new GetData();
+        task.execute(IP_ADDRESS);
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(onDownloadComplete);
+    }
+
+
     protected void startDownload(String title, String download_Url){
-        File file = new File(getExternalFilesDir(null), title);
+        File file = new File(getExternalFilesDir(Environment.DIRECTORY_DCIM), title);
 
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(download_Url))
                 .setTitle("영상")
@@ -90,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         downloadID = downloadManager.enqueue(request);
     }
 
-    private BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
+    protected BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
