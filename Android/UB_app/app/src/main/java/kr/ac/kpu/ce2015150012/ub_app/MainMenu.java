@@ -6,6 +6,11 @@ package kr.ac.kpu.ce2015150012.ub_app;
         import android.view.View;
         import android.widget.Button;
 
+        import kr.ac.kpu.ce2015150012.ub_app.list.ImptList;
+        import kr.ac.kpu.ce2015150012.ub_app.list.ManlList;
+        import kr.ac.kpu.ce2015150012.ub_app.list.NormList;
+        import kr.ac.kpu.ce2015150012.ub_app.list.ParkList;
+
 public class MainMenu extends AppCompatActivity {
 
     Button btn_streaming;
@@ -46,7 +51,7 @@ public class MainMenu extends AppCompatActivity {
         btn_normList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Streaming.class);
+                Intent intent = new Intent(MainMenu.this, NormList.class);
                 startActivity(intent);
             }
         });
@@ -54,7 +59,7 @@ public class MainMenu extends AppCompatActivity {
         btn_manlList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Streaming.class);
+                Intent intent = new Intent(MainMenu.this, ManlList.class);
                 startActivity(intent);
             }
         });
@@ -62,7 +67,7 @@ public class MainMenu extends AppCompatActivity {
         btn_parkList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Streaming.class);
+                Intent intent = new Intent(MainMenu.this, ParkList.class);
                 startActivity(intent);
             }
         });
@@ -70,7 +75,7 @@ public class MainMenu extends AppCompatActivity {
         btn_imptList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Streaming.class);
+                Intent intent = new Intent(MainMenu.this, ImptList.class);
                 startActivity(intent);
             }
         });

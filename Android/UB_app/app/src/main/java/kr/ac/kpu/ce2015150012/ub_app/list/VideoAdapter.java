@@ -1,25 +1,19 @@
 package kr.ac.kpu.ce2015150012.ub_app.list;
 
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import kr.ac.kpu.ce2015150012.ub_app.MainActivity;
 import kr.ac.kpu.ce2015150012.ub_app.R;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder> {
@@ -27,12 +21,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
     private List<VideoVO> mList = null;
     private Activity context = null;
     private LayoutInflater inflater;
-
-    private DownloadManager downloadManager;
-    private DownloadManager.Request request;
-    private Uri urlToDownload;
-
-    private long latestId = -1;
 
 
     public VideoAdapter(Activity context, ArrayList<VideoVO> list){
@@ -48,7 +36,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
         protected TextView tv_length;
         protected ImageView iv_download;
 
-
         public VideoHolder(View view){
             super(view);
             this.tv_num = (TextView) view.findViewById(R.id.list_num);
@@ -56,11 +43,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
             this.tv_size = (TextView)view.findViewById(R.id.list_size);
             this.tv_length = (TextView) view.findViewById(R.id.list_length);
             this.iv_download = (ImageView) view.findViewById(R.id.list_download);
-
-
         }
     }
-
 
     @Override
     public VideoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -76,34 +60,40 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
         holder.tv_title.setText("영상 제목: " + item.getTitle());
         holder.tv_size.setText("영상 사이즈: " + item.getSize());
         holder.tv_length.setText("영상 길이: " + item.getLength());
+
+        final String videoTitle = item.getTitle();
         final String videoUrl = item.getUrl();
         holder.iv_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Intent toMain = new Intent(v.getContext(), NormList.class);
 
-                List<String> pathSegments = urlToDownload.getPathSegments();
-                urlToDownload = Uri.parse(videoUrl);
-                request = new DownloadManager.Request(urlToDownload);
-                request.setTitle("영상 다운로드");
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, pathSegments.get(pathSegments.size() - 1));
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
-                latestId = downloadManager.enqueue(request);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(videoTitle);
+                builder.setMessage("다운로드하시겠습니까?");
+                builder.setPositiveButton("네",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                toMain.putExtra("title", videoTitle);
+                                toMain.putExtra("url", videoUrl);
+                                context.startActivity(toMain);
+                            }
+                        });
+                builder.setNegativeButton("아니오",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
             }
 
         });
-
     }
-
     @Override
     public int getItemCount() {
         return (null != mList? mList.size() : 0);
     }
-
-
-    private BroadcastReceiver donwloadCompleteReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "다운로드가 완료되었습니다.", Toast.LENGTH_SHORT).show();
-        }
-    };
 }

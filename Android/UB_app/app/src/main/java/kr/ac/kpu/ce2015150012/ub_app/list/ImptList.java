@@ -1,10 +1,5 @@
 package kr.ac.kpu.ce2015150012.ub_app.list;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -14,10 +9,15 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +32,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.ac.kpu.ce2015150012.ub_app.R;
 
-public class NormList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ImptList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static String IP_ADDRESS = "http://211.216.137.157/apkCtrl/normList_apk.php";
+    private static String IP_ADDRESS = "http://211.216.137.157/apkCtrl/imptList_apk.php";
     private static String TAG = "phptest";
 
     private ArrayList<VideoVO> mArrayList;
@@ -61,9 +62,6 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
         mArrayList = new ArrayList<>();
         mAdapter = new VideoAdapter(this, mArrayList);
         mRecyclerView.setAdapter(mAdapter);
-
-        //VideoItemDeco videoItemDeco = new VideoItemDeco(1);
-        //mRecyclerView.addItemDecoration(videoItemDeco);
 
         mArrayList.clear();
         mAdapter.notifyDataSetChanged();
@@ -157,7 +155,7 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(NormList.this,
+            progressDialog = ProgressDialog.show(ImptList.this,
                     "잠시만 기다려주세요", null, true, true);
         }
 
@@ -266,5 +264,4 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
             Log.d(TAG, "showResult: ", e);
         }
     }
-
 }
