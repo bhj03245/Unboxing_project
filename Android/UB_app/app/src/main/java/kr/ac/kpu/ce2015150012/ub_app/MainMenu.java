@@ -5,11 +5,13 @@ package kr.ac.kpu.ce2015150012.ub_app;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.Button;
+        import android.widget.ImageView;
 
         import kr.ac.kpu.ce2015150012.ub_app.list.ImptList;
         import kr.ac.kpu.ce2015150012.ub_app.list.ManlList;
         import kr.ac.kpu.ce2015150012.ub_app.list.NormList;
         import kr.ac.kpu.ce2015150012.ub_app.list.ParkList;
+        import kr.ac.kpu.ce2015150012.ub_app.setting.UserSetting;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -19,6 +21,8 @@ public class MainMenu extends AppCompatActivity {
     Button btn_manlList;
     Button btn_parkList;
     Button btn_imptList;
+
+    ImageView iv_setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,15 @@ public class MainMenu extends AppCompatActivity {
         btn_manlList = (Button)findViewById(R.id.manl_list);
         btn_parkList = (Button)findViewById(R.id.park_list);
         btn_imptList = (Button)findViewById(R.id.impt_list);
+        iv_setting = (ImageView)findViewById(R.id.settings);
+
+        iv_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this, UserSetting.class);
+                startActivity(intent);
+            }
+        });
 
         btn_streaming.setOnClickListener(new View.OnClickListener(){
             @Override
