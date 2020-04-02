@@ -79,7 +79,9 @@ def timelapse(in_file, out_file, startFrame, endFrame):
     iCurrentFrame = 0
     in_file = in_file
     out_file = out_file
-	
+    startFrame = startFrame
+    endFrame = endFrame
+
     print(in_file)
     print(out_file)
     vc = cv2.VideoCapture(in_file)
@@ -88,11 +90,11 @@ def timelapse(in_file, out_file, startFrame, endFrame):
         print("Fail to open the video")
         exit()
     vw = r.impact_recording()[1]
-	
+    print(startFrame)
+    print(int(vc.get(cv2.CAP_PROP_FRAME_COUNT)))
     if((startFrame < 0 or startFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT)) or
 		(endFrame < 0 or endFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT))):
-       # print(startFrame)
-        print(int(vc.get(cv2.CAP_PROP_FRAME_COUNT)))
+
         print("Wrong Frame")
         exit()
 
@@ -184,10 +186,10 @@ class recording:
             sec = curTime - prevTime
             prevTime = curTime
             fps = 1 / (sec)
-            #cnt = cnt + int(fps)          
+            cnt = cnt + int(fps)          
             str = "FPS : %0.1f" % fps
 
-            cv2.putText(frame, str, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+            # cv2.putText(frame, str, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
             print(cnt)
             out.write(frame)
             cv2.imshow('CAM_Window', frame)
@@ -198,8 +200,10 @@ class recording:
                picam.release()
                out.release()
                video = convert(path, path.split('/')[6])
+               vc = cv2.VideoCapture(video)
+               fr = int(picam.get(cv2.CAP_PROP_FRAME_COUNT))
                out_path = self.impact_recording()[0]
-               timelapse(video, out_path, cnt, 1500)
+               timelapse(video, out_path, fr, 100)
                break
 
             if cv2.waitKey(27) >= 0:
