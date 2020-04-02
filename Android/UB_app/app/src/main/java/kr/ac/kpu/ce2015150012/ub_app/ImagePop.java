@@ -1,7 +1,6 @@
 package kr.ac.kpu.ce2015150012.ub_app;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -14,7 +13,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ImagePop extends AppCompatActivity {
+public class ImagePop extends Activity {
 
     ImageView img_view;
     getImage getImage;

@@ -14,7 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".list.ImptList"></activity>
+        <activity android:name=".setting.ReportSetting"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".setting.UserSetting"/>
+        <activity android:name=".list.ImptList" />
         <activity android:name=".list.ParkList" />
         <activity android:name=".list.ManlList" />
 
@@ -23,7 +26,8 @@
             android:required="false" />
 
         <activity android:name=".list.NormList" />
-        <activity android:name=".ImagePop" />
+        <activity android:name=".ImagePop"
+            android:theme="@android:style/Theme.Dialog" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

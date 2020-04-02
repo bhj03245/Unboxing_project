@@ -50,7 +50,6 @@ public class ParkLocation extends AppCompatActivity implements OnMapReadyCallbac
     public void front_image(View v){
 
         Intent intent = new Intent(ParkLocation.this, ImagePop.class);
-        //startActivityForResult(intent,1);
         startActivity(intent);
     }
 }
