@@ -1,11 +1,15 @@
 package com.example.recyclerviewtest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +22,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
     private List<VideoVO> mList = null;
     private Activity context = null;
     private LayoutInflater inflater;
+    protected MainActivity mainActivity = new MainActivity();
+
+
 
     public VideoAdapter(Activity context, ArrayList<VideoVO> list){
         this.context= context;
@@ -41,7 +48,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
             this.tv_length = (TextView) view.findViewById(R.id.list_length);
             this.iv_download = (ImageView) view.findViewById(R.id.list_download);
 
+            /*view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                }
+            });*/
         }
     }
 
@@ -60,17 +72,43 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
         holder.tv_title.setText("영상 제목: " + item.getTitle());
         holder.tv_size.setText("영상 사이즈: " + item.getSize());
         holder.tv_length.setText("영상 길이: " + item.getLength());
+        final String videoTitle = item.getTitle();
+        final String videoUrl = item.getUrl();
+
+
         holder.iv_download.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                final Intent toMain = new Intent(v.getContext(), MainActivity.class);
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(videoTitle);
+                builder.setMessage("다운로드하시겠습니까?");
+                builder.setPositiveButton("네",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                toMain.putExtra("title", videoTitle);
+                                toMain.putExtra("url", videoUrl);
+                                context.startActivity(toMain);
+                            }
+                });
+                builder.setNegativeButton("아니오",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                });
+                builder.show();
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
         return (null != mList? mList.size() : 0);
     }
+
 }
