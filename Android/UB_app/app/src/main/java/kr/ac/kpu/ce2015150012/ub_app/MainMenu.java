@@ -11,6 +11,7 @@ package kr.ac.kpu.ce2015150012.ub_app;
         import kr.ac.kpu.ce2015150012.ub_app.list.ManlList;
         import kr.ac.kpu.ce2015150012.ub_app.list.NormList;
         import kr.ac.kpu.ce2015150012.ub_app.list.ParkList;
+        import kr.ac.kpu.ce2015150012.ub_app.parking.ParkLocation;
         import kr.ac.kpu.ce2015150012.ub_app.setting.UserSetting;
 
 public class MainMenu extends AppCompatActivity {

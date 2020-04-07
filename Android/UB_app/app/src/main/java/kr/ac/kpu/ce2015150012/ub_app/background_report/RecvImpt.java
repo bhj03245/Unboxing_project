@@ -1,5 +1,4 @@
-package com.example.backgroundtest;
-
+package kr.ac.kpu.ce2015150012.ub_app.background_report;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,10 +16,11 @@ import java.net.URL;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-public class RecvData extends AsyncTask<String, Void, String> {
+public class RecvImpt extends AsyncTask<String, Void, String> {
+
     Context mContext;
 
-    public RecvData(Context context){
+    public RecvImpt(Context context){
         mContext= context;
     }
 
@@ -89,7 +89,7 @@ public class RecvData extends AsyncTask<String, Void, String> {
         Log.d(TAG, "recvData: " + s);
 
         if(s.equals("Impt")){
-            final String phone = "010XXXXXXXX";
+            final String phone = "01023024573";
             final String contents = "와구와구 테스트중";
 
             try{
@@ -105,5 +105,4 @@ public class RecvData extends AsyncTask<String, Void, String> {
         }
 
     }
-
 }
