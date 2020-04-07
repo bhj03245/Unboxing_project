@@ -1,4 +1,4 @@
-package com.example.backgroundtest;
+package kr.ac.kpu.ce2015150012.ub_app.background_report;
 
 import android.app.AlarmManager;
 import android.app.Application;
@@ -20,6 +20,10 @@ import androidx.core.app.NotificationCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import kr.ac.kpu.ce2015150012.ub_app.MainActivity;
+import kr.ac.kpu.ce2015150012.ub_app.R;
+
 public class RealService extends Service {
 
     private Thread mainThread;
@@ -41,8 +45,8 @@ public class RealService extends Service {
                 while (run) {
                     try {
                         Thread.sleep(1000 * 60 * 1); // 1 minute
-                        RecvData recvData = new RecvData(getApplicationContext());
-                        recvData.execute();
+                        RecvImpt recvImpt = new RecvImpt(getApplicationContext());
+                        recvImpt.execute();
                         //showToast(getApplication(), sdf.format(date));
                         sendNotification("서비스 작동중");
                     } catch (InterruptedException e) {
@@ -117,7 +121,7 @@ public class RealService extends Service {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher)//drawable.splash)
-                        .setContentTitle("Service test")
+                        .setContentTitle("신고 기능")
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
