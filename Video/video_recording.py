@@ -71,7 +71,7 @@ def create_file():
 
 def convert(path, file_name):
     dest_file = path.replace('h264','mp4')
-    convert_cmd = 'MP4Box -fps 25 -add ' + path + " " + dest_file + "; rm " + path 
+    convert_cmd = 'MP4Box -fps 30 -add ' + path + " " + dest_file + "; rm " + path 
     os.system(convert_cmd)
     return dest_file
 
@@ -120,25 +120,25 @@ class recording:
     def normal_recording(self):
         __file_name = create_file()
         path = norm_path + "NORM_" + __file_name
-        norm_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
+        norm_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
         return path, norm_out
 
     def parking_recording(self):
         __file_name = create_file()
         path = park_path + "PARK_" + __file_name
-        park_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
+        park_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
         return path, park_out
 
     def manual_recording(self):
         __file_name = create_file()
         path = manl_path + "MANL_" + __file_name
-        manl_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
+        manl_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
         return path, manl_out
 
     def impact_recording(self):
         __file_name = create_file()
         path = impt_path + "IMPT_" + __file_name
-        impt_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
+        impt_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
         return path, impt_out
 
     def gyro(self, video, sec):
@@ -172,12 +172,12 @@ class recording:
             exit()
 
         cv2.namedWindow('CAM_Window')
-        cnt = int(picam.get(cv2.CAP_PROP_FRAME_COUNT))
+        cnt = 0
         prevTime = 0
-
+   
         path = record[0]
         out = record[1]
-
+	
         while (cnt < 3000):
             check = 0
 
@@ -185,23 +185,25 @@ class recording:
             curTime = time.time()
             sec = curTime - prevTime
             prevTime = curTime
-            fps = 1 / (sec)
-            cnt = cnt + int(fps)          
+            fps = int(picam.get(cv2.CAP_PROP_FPS))
+            #fps = 1 / (sec)
+            cnt += fps          
             str = "FPS : %0.1f" % fps
-
+       
             # cv2.putText(frame, str, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
-            print(cnt)
+            #print(cnt)
             out.write(frame)
             cv2.imshow('CAM_Window', frame)
             check = self.detect_impact(check)
-            #print(picam.get(cv2.CAP_PROP_POS_MSEC))
+            print(picam.get(cv2.CAP_PROP_POS_MSEC))
 
             if check == 1:
               # picam.release()
               # out.release()
                video = convert(path, path.split('/')[6])
                vc = cv2.VideoCapture(video)
-               fr = int(vc.get(cv2.CAP_PROP_FRAME_COUNT))
+               fr = int(vc.get(cv2.CAP_PROP_POS_FRAMES))
+               #fr = int(vc.get(cv2.CAP_PROP_FRAME_COUNT))
                print(fr)
                out_path = self.impact_recording()[0]
                tlthread = threading.Thread(target=timelapse, args=(video, out_path, fr, 250))
