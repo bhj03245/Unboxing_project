@@ -90,7 +90,7 @@ def timelapse(in_file, out_file, startFrame, endFrame):
         print("Fail to open the video")
         exit()
     vw = r.impact_recording()[1]
-    print(endFrame)
+    print(startFrame)
     print(int(vc.get(cv2.CAP_PROP_FRAME_COUNT)))
     if((startFrame < 0 or startFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT)) or
 		(endFrame < 0 or endFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT))):
@@ -177,10 +177,12 @@ class recording:
    
         path = record[0]
         out = record[1]
-	
-        while (cnt < 3000):
-            check = 0
+        video_time=0
+        frame_time = 0
 
+        while (video_time < 21):
+            check = 0
+            frame_time += 1
             ret, frame = picam.read()
             curTime = time.time()
             sec = curTime - prevTime
@@ -188,14 +190,17 @@ class recording:
             fps = int(picam.get(cv2.CAP_PROP_FPS))
             #fps = 1 / (sec)
             cnt += fps          
-            str = "FPS : %0.1f" % fps
+            #str = "FPS : %0.1f" % fps
        
             # cv2.putText(frame, str, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
-            #print(cnt)
             out.write(frame)
             cv2.imshow('CAM_Window', frame)
             check = self.detect_impact(check)
-            print(picam.get(cv2.CAP_PROP_POS_MSEC))
+            video_time = frame_time/fps
+            rr = (picam.get(cv2.CAP_PROP_POS_FRAMES))
+            fr = picam.get(cv2.CAP_PROP_FRAME_COUNT)
+            print(fr)
+            print("%s %s" % (video_time, cnt))                # 1 sec : cnt 900
 
             if check == 1:
               # picam.release()
@@ -204,9 +209,9 @@ class recording:
                vc = cv2.VideoCapture(video)
                fr = int(vc.get(cv2.CAP_PROP_POS_FRAMES))
                #fr = int(vc.get(cv2.CAP_PROP_FRAME_COUNT))
-               print(fr)
+               print("POS Frame : %d" % fr)
                out_path = self.impact_recording()[0]
-               tlthread = threading.Thread(target=timelapse, args=(video, out_path, fr, 250))
+               tlthread = threading.Thread(target=timelapse, args=(video, out_path, fr, 150))
                tlthread.start()
                tlthread.join()
                #timelapse(video, out_path, fr - 250, fr + 250)
