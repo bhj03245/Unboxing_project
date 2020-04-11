@@ -1,4 +1,4 @@
-package kr.ac.kpu.ce2015150012.ub_app;
+package kr.ac.kpu.ce2015150012.ub_app.parking;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import kr.ac.kpu.ce2015150012.ub_app.R;
 
 public class ParkLocation extends AppCompatActivity implements OnMapReadyCallback {
 

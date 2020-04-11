@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,14 +30,14 @@
             android:required="false" />
 
         <activity android:name=".list.NormList" />
-        <activity android:name=".ImagePop"
+        <activity android:name=".parking.ImagePop"
             android:theme="@android:style/Theme.Dialog" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBE0bSOBE9___yep8DTvB8P4MKJjqBrc6Q" />
 
-        <activity android:name=".ParkLocation" />
+        <activity android:name=".parking.ParkLocation" />
         <activity android:name=".Streaming" />
         <activity android:name=".MainMenu" />
         <activity
@@ -45,6 +49,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".background_report.RealService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <service android:name=".background_report.RestartService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <receiver android:name=".background_report.AlarmReceiver"/>
+
+        <receiver android:name=".background_report.RebootReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

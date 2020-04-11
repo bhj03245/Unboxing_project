@@ -1,4 +1,4 @@
-package kr.ac.kpu.ce2015150012.ub_app;
+package kr.ac.kpu.ce2015150012.ub_app.parking;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -12,6 +12,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import kr.ac.kpu.ce2015150012.ub_app.R;
 
 public class ImagePop extends Activity {
 
