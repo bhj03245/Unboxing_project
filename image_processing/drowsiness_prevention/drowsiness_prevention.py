@@ -45,13 +45,12 @@ args = vars(ap.parse_args())
 # define two constants, one for the eye aspect ratio to indicate
 # blink and then a second constant for the number of consecutive
 # frames the eye must be below the threshold
-EYE_AR_THRESH = 0.32
+EYE_AR_THRESH = 0.2
 EYE_AR_CONSEC_FRAMES = 3
-DROWSINESS_COUNT = 0
-DROWSINESS_THRESH = 10
-
+DROWSINESS_CONSEC_FRAMES = 60
 # initialize the frame counters and the total number of blinks
 COUNTER = 0
+DROWSINESS_COUNTER = 0
 TOTAL = 0
 
 # initialize dlib's face detector (HOG-based) and then create
@@ -121,23 +120,30 @@ while True:
         start = time.time()
         if ear < EYE_AR_THRESH:
             COUNTER += 1
+            DROWSINESS_COUNTER += 1
 
+            if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
+                cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
+                            3.5, (0, 0, 255), 2)
+                #print("drowsiness")
+                #time.sleep(1.0)
         # otherwise, the eye aspect ratio is not below the blink
         # threshold
         else:
-            DROWSINESS_COUNT -= 1
             # if the eyes were closed for a sufficient number of
             # then increment the total number of blinks
             if COUNTER >= EYE_AR_CONSEC_FRAMES:
                 TOTAL += 1
-                DROWSINESS_COUNT += 1
-                print(COUNTER)
 
+            if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
+                cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
+                            3.5, (0, 0, 255), 2)
+                #print("drowsiness")
+                #time.sleep(1.0)
             # reset the eye frame counter
             COUNTER = 0
+            DROWSINESS_COUNTER = 0
 
-      #  if DROWSINESS_COUNT > DROWSINESS_THRESH:
-           # print("drowsiness")
         # draw the total number of blinks on the frame along with
         # the computed eye aspect ratio for the frame
         cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
@@ -154,5 +160,4 @@ while True:
         break
 
 # do a bit of cleanup
-cv2.destroyAllWindows()
-vs.stop()
+cv2.destroyAl
