@@ -19,10 +19,7 @@ public class ParkLocation extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     Button imgBtn;
 
-    String str_lat, str_lng;
-    Float lat, lng;
-
-
+    float lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +32,8 @@ public class ParkLocation extends AppCompatActivity implements OnMapReadyCallbac
         imgBtn = (Button)findViewById(R.id.imageBtn);
 
         Intent intent = getIntent();
-        str_lat = intent.getStringExtra("lat");
-        lat = Float.parseFloat(str_lat);
-        str_lng = intent.getStringExtra("url");
-        lng = Float.parseFloat(str_lng);
-
+        lat = intent.getFloatExtra("lat", lat);
+        lng = intent.getFloatExtra("lng", lng);
     }
 
     @Override
@@ -50,8 +44,8 @@ public class ParkLocation extends AppCompatActivity implements OnMapReadyCallbac
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(SEOUL);
-        markerOptions.title("서울");
-        markerOptions.snippet("한국의 수도");
+        markerOptions.title("주차 위치");
+        markerOptions.snippet("요기");
         mMap.addMarker(markerOptions);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
@@ -64,5 +58,4 @@ public class ParkLocation extends AppCompatActivity implements OnMapReadyCallbac
         //startActivityForResult(intent,1);
         startActivity(intent);
     }
-
 }

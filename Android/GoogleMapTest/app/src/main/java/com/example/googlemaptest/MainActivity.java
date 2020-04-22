@@ -18,6 +18,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity{
@@ -25,21 +27,38 @@ public class MainActivity extends AppCompatActivity{
     Button btn;
 
     final static String trig = "trigger";
-    String lat;
-    String lng;
+    String str_lat, str_lng;
+    float lat, lng;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn = (Button)findViewById(R.id.btn);
+        btn = (Button) findViewById(R.id.btn);
 
         GetGPS getGPS = new GetGPS();
-        getGPS.execute();
+        try {
+            String result = getGPS.execute().get();
+            //System.out.println("result" + result);
 
-        Log.e(TAG, lat);
-        Log.e(TAG, lng);
+            String[] gps = result.split("&");
+            str_lat = gps[0];
+            str_lng = gps[1];
+            //Log.e(TAG, gps[0]);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+        //System.out.println("lat=" + str_lat);
+        //System.out.println("lng=" + str_lng);
+
+        lat = Float.parseFloat(str_lat);
+        lng = Float.parseFloat(str_lng);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,18 +69,16 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(in);
             }
         });
-
-
     }
-
 
     public class GetGPS extends AsyncTask<Void, Void, String> {
 
         String data = "";
         HttpURLConnection conn;
+
         @Override
         protected String doInBackground(Void... unused) {
-            String param= "request_gps=" + trig;
+            String param= "request_gps"+ "=" + trig;
             try{
                 URL url = new URL("http://211.216.137.157/apkCtrl/gps_apk.php");
                 conn = (HttpURLConnection) url.openConnection();
@@ -116,12 +133,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(String data){
             super.onPostExecute(data);
-
-            String[] gps = data.split("&");
-            Log.e(TAG, gps[0]);
-            lat = gps[0];
-            lng = gps[1];
-
+            Log.e(TAG, data);
         }
     }
 
