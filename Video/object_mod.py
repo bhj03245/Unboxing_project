@@ -187,7 +187,7 @@ class recording:
         frame_time = 0
         h = 0
 
-        #sthread = threading.Thread(target=streaming)
+        sthread = threading.Thread(target=streaming)
 
         while (video_time < 21):
             check = 0
@@ -227,9 +227,9 @@ class recording:
             h += 1
 
             if cv2.waitKey(27) >= 0:
-              #  picam.release()
-	      #	 sthread.start()
-	      #	 sthread.join()
+                picam.release()
+                sthread.start()
+                sthread.join()
 				
                 break
 
