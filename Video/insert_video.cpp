@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <string.h>
-#include <opencv2/opencv.hpp>
+#include <opencv4/opencv2/opencv.hpp>
 #include <time.h>
 #include <error.h>
 #include "/usr/include/mysql/mysql.h"
@@ -100,7 +100,7 @@ void db_insert(Video vid) {
 	mysql_init(&mysql);
 	mysql_real_connect(&mysql, DB_HOST, DB_USER, DB_PW, DB_NAME, 3306, NULL, 0);
 	//sprintf(buf, "insert into video.norm values""('%d','%s', '%d', '%s', '%s', '%s', '%s')",vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl());
-	sprintf(buf, "insert into video.norm (norm_num, norm_name, norm_size, norm_length, norm_mktime, norm_resolution, norm_url) values('%d','%s', '%d', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE norm_name='%s'", vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl(), vid.getName());
+	sprintf(buf, "insert into video.norm (norm_num, norm_name, norm_size, norm_length, norm_mktime, norm_resolution, norm_url) values('%d','%s', '%d', '%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE norm_name='%s', norm_size='%d', norm_mktime='%s'", vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl(), vid.getName(), vid.getSize(), vid.getMakeTime());
 	mysql_query(&mysql, buf);
 	cout << "Insert Success!!" << endl;
 }
@@ -171,11 +171,10 @@ void FileList()
 		while((entry = readdir(dir)) != NULL){	
 			Video vid = Video();	
 			
-			//sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);	// Combine path
 			char *ext; 
 			ext = strrchr(entry->d_name, '.'); 
 			if(strcmp(ext, ".mp4") == 0) { 
-				sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);
+				sprintf(newpath, "%s/%s", NORM_PATH, entry->d_name);	// Combine Path
 				stat(newpath, &buf);	
 
 				VideoCapture cap(newpath);				// Video File Analysis
@@ -202,7 +201,7 @@ void FileList()
 				vid.setVideo(num, file, buf.st_size, vidLength, vidMakeTime, vidResolution, newpath);	// Set
 				vid.printInfo();	// Output Video Info 
 				db_insert(vid);
-				//db_update();
+				db_update();
 				// db_select();
 				num++;
 			}
