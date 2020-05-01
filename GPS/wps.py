@@ -1,7 +1,8 @@
 import geocoder
 
-g = geocoder.ip('125.142.56.46')
+#g = geocoder.ip('ip')
 g = geocoder.ip('me')
+print(geocoder.ipinfo('me'))
 print(g.latlng)
 print(g.city)
 print(g.state)
