@@ -218,6 +218,8 @@ class recording:
                     impt_out.write(frame)
                 picam.release()
                 impt_out.release()
+		convert(impt_path, impt_path.split('/')[6])
+		out.release()
                 break
 
             #if framecnt == 1782:
