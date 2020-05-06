@@ -1,59 +1,185 @@
-import RPi.GPIO as gp
+#!/usr/bin/python
+
 import os
 import sys
-from threading import Thread
-from datetime import datetime
+import time
+import this
+import math
+#import cPickle
+import RPi.GPIO as gp
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import uic
+
+with open('gui_ui.py', 'w') as fd: 
+    uic.compileUi('gui.ui', fd)
+import gui_ui # pyuic gui.ui > gui_ui.py
+
+import cv2
+import subprocess
+
+######################################
+'''
+Parameter setting
+'''
+width  = 240 #320
+height = 320 #240
+fps = 30
+brightness = 50               # min=0   max=100  step=1
+contrast = 0                  # min=-100  max=100  step=1
+saturation = 0                # min=-100  max=100  step=1
+rotate = 0                    # min=0  max=360  step=90 
+auto_exposure = 0             # min=0  max=3 
+exposure_time_absolute = 1000 # min = 1  max=10000  step=1
+
+#######################################
 
 gp.setwarnings(False)
 gp.setmode(gp.BOARD)
+gp.setup(7,gp.OUT)
+gp.setup(11,gp.OUT)
+gp.setup(12,gp.OUT)
 
-
-gp.setup(7, gp.OUT)
-gp.setup(11, gp.OUT)
-gp.setup(12, gp.OUT)
-
-def main():
+class PhotoGrabThread( QtCore.QThread ):
+    grabbed_signal = QtCore.pyqtSignal([int,QtGui.QImage])
+    
+    def __init__(self, p):
+        super(PhotoGrabThread, self).__init__()
+        self.index = 0
+        self.index_top = p.img_no
 	
-	#gp.output(7, False)
-	#gp.output(11, False)
-	#gp.output(12, True)
-	#capture(1)
-	#i2c = "i2cset -y 1 0x70 0x00 0x04"	# cam A signal
-	i2c = "i2cset -y 1 0x70 0x00 0x06"      # cam C signal   
-	os.system(i2c)
-	gp.output(7, False)
-	gp.output(11, True)
-	gp.output(12, False)
+
+    def run(self):
+
+        i2c = "i2cset -y 1 0x70 0x00 0x04"
+        os.system(i2c)
+        gp.output(7, False)
+    	gp.output(11, False)
+    	gp.output(12, True)
 	
-	#t1 = Thread(target = recording, args=(3,))	
-	#t2 = Thread(target = capture, args=(1,))
-	#t1.start()
-	#t2.start()
-	#capture(3)
-	capture(3)
-
-def recording(cam):
+    	cap = cv2.VideoCapture(-1)
+    	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, height)
+        cap.set(cv2.CAP_PROP_FPS, fps)   
+        command ="v4l2-ctl -d 0 -c brightness=%d" % (brightness)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
+	output = subprocess.call(command, shell=True)
+    	rev, frame = cap.read()
+    	time.sleep(1)
+    	
+    	i2c = "i2cset -y 1 0x70 0x00 0x06"
+        os.system(i2c)
+        gp.output(7, False)
+    	gp.output(11, True)
+    	gp.output(12, False)
+    	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, height)
+        cap.set(cv2.CAP_PROP_FPS, fps)   
+        command ="v4l2-ctl -d 0 -c brightness=%d" % (brightness)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
+	output = subprocess.call(command, shell=True)
+	command ="raspivid -o /home/pi/Desktop/test114.mpeg"
+	output = subprocess.call(command, shell=True)
+    	rev, frame = cap.read()
+    	
 	
-	mtime = datetime.today().strftime("%Y%m%d%H%M%S")
-	cmd = "raspivid -w 1280 -h 720 -n -t 5000 -o /home/pi/Desktop/UB_video/Normal/norm_%s" % mtime
-	  
-	#cmd = "raspivid -w 640 -h 480 -fps 25 -t 0 -b 4500000 -o - | gst-launch-1.0 -v fdsrc !  h264parse ! rtph264pay config-interval=1 pt=96 ! udpsink host=127.0.0.1 port=8554"
-	
-	os.system(cmd)
+
+        index = 0
+        while 1:
+            #rev, frame = cap.read()
+            rev, frame = cap.read()
+            rev, frame = cap.read()
+            if index == 0:
+		gp.output(7,False)
+	    	gp.output(11,False)
+	    	gp.output(12,True)
+            
+            if index == 1:
+		gp.output(7,False)
+	    	gp.output(11,True)
+	    	gp.output(12,False)
+         
+
+            (h, w, c) = frame.shape[:3]
+            bytes_per_line = 3 * w
+            f_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            qimg = QtGui.QImage(f_rgb.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+
+            self.grabbed_signal.emit(index, qimg)
+
+            index += 1
+            index %= self.index_top
 
 
-def capture(self): # video capture and convert
-	#cmd = "raspivid -w 1280 -h 720 -t 0"
-	mtime = datetime.today().strftime("%Y%m%d%H%M%S")
-	cmd = "raspivid -t 20000 -h 720 -w 1280 -fps 25 -vf -b 2000000 -o norm_%s.h264" % mtime 
-	conv_cmd = "MP4Box -fps 25 -add norm_%s.h264 norm_%s.mp4; rm norm_%s.h264" % (mtime, mtime, mtime)
+class CamGui( QtWidgets.QMainWindow):
 
-	os.system(cmd)	
-	os.system(conv_cmd)
+    def __init__(self, *args):
+        #super(CamGui, self).__init__(*args)
+        super(CamGui, self).__init__(*args)
+        self.ui = gui_ui.Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui_label_img_list = [self.ui.label_img0, self.ui.label_img1]
+        self.img_no = len(self.ui_label_img_list)
 
-if __name__ == "__main__":
-	main()
+        #self.ui.label_depth.setMouseTracking(True)
+        for l in self.ui_label_img_list:
+            l.mouseMoveEvent = self.on_mouse_move
+        self.ui.label_img0.mouseReleaseEvent = self.on_mouse_release_label_img
+        
+        
+        self.grab_thread = PhotoGrabThread(self)
+        self.grab_thread.grabbed_signal.connect(self.update_photo)
+        self.grab_thread.start()
 
-	gp.output(7, False)
-	gp.output(11, True)
-	gp.output(12, False)
+    def update_photo(self, index, qimg):
+        self.ui_label_img_list[index].setPixmap(QtGui.QPixmap.fromImage(qimg))
+        return
+
+        for i in range(self.img_no):
+            if i == index:
+                self.ui_label_img_list[i].setLineWidth(10)
+            else:
+                self.ui_label_img_list[i].setLineWidth(1)
+
+    def on_mouse_release_label_img(self, ev):
+        print 'why you click me ?!'
+
+    def on_mouse_move(self, e):
+        pass
+        #x,y = e.x()/3, e.y()/3
+        #print x, y
+
+    def timer_update(self):
+        print self.zen
+        print '\n'*2
+
+
+
+if __name__ == '__main__':
+   # width = input("Please set the width:")
+   # height = input("Please set the height:")
+   # fps  = input ("Please set the fps:")
+    
+    app = QtWidgets.QApplication(sys.argv)
+    gui = CamGui()
+    gui.show()
+    sys.exit(app.exec_())
