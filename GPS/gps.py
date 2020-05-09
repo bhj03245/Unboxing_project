@@ -17,6 +17,7 @@ port = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=1)
 conn = pymysql.connect(host='localhost', user='pi', password='myub', db='ub_project', charset='utf8')
 curs = conn.cursor()
 
+
 ck=0
 fd=''
 while ck <= 50:
@@ -51,10 +52,10 @@ if '$GPRMC' in fd:
  
         #print(lat1)
         #print(lng1)
-
+_
 try:
-    sql = 'UPDATE location SET location_lat=%s, location_lng=%s WHERE location_num=%s'
-    curs.execute(sql, (lat1, lng1, 1))
+    sql = 'UPDATE location SET location_lat=%s, location_lng=%s, location_url=%s WHERE location_num=%s'
+    curs.execute(sql, (lat1, lng1, 1, "http://localhost/Upload/Parkimg/capture_0.jpg"))
     conn.commit()
 finally:
     conn.close()
