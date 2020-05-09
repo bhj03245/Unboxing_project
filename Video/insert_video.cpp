@@ -176,6 +176,10 @@ void FileList()
 
 	char webpath[100];
 	char web_npath[50] = "http://localhost/Upload/UB_video/Normal";
+        char web_ipath[50] = "http://localhost/Upload/UB_video/Impact";
+	char web_ppath[50] = "http://localhost/Upload/UB_video/ppath";
+	char web_mpath[50] = "http://localhost/Upload/UB_video/mpath";
+	
 	char NormParentPath[100];	
 	char NormCurrentPath[100];
 	char ImptParentPath[100];	
