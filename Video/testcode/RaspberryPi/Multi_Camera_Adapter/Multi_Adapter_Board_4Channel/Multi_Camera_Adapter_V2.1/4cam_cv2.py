@@ -50,55 +50,54 @@ class PhotoGrabThread( QtCore.QThread ):
 	
 
     def run(self):
-
         i2c = "i2cset -y 1 0x70 0x00 0x04"
         os.system(i2c)
         gp.output(7, False)
-    	gp.output(11, False)
-    	gp.output(12, True)
+        gp.output(11, False)
+        gp.output(12, True)
 	
-    	cap = cv2.VideoCapture(-1)
-    	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
+        cap = cv2.VideoCapture(-1)	
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, height)
         cap.set(cv2.CAP_PROP_FPS, fps)   
         command ="v4l2-ctl -d 0 -c brightness=%d" % (brightness)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
-	output = subprocess.call(command, shell=True)
-    	rev, frame = cap.read()
-    	time.sleep(1)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
+        output = subprocess.call(command, shell=True)
+        rev, frame = cap.read()
+        time.sleep(1)
     	
-    	i2c = "i2cset -y 1 0x70 0x00 0x06"
+        i2c = "i2cset -y 1 0x70 0x00 0x06"
         os.system(i2c)
         gp.output(7, False)
-    	gp.output(11, True)
-    	gp.output(12, False)
-    	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
+        gp.output(11, True)
+        gp.output(12, False)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, height)
         cap.set(cv2.CAP_PROP_FPS, fps)   
         command ="v4l2-ctl -d 0 -c brightness=%d" % (brightness)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
-	output = subprocess.call(command, shell=True)
-	command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
-	output = subprocess.call(command, shell=True)
-	command ="raspivid -o /home/pi/Desktop/test114.mpeg"
-	output = subprocess.call(command, shell=True)
-    	rev, frame = cap.read()
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
+        output = subprocess.call(command, shell=True)
+        command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
+        output = subprocess.call(command, shell=True)
+        command ="raspivid -o /home/pi/Desktop/test114.mpeg"
+        output = subprocess.call(command, shell=True)
+        rev, frame = cap.read()
     	
 	
 
@@ -108,14 +107,14 @@ class PhotoGrabThread( QtCore.QThread ):
             rev, frame = cap.read()
             rev, frame = cap.read()
             if index == 0:
-		gp.output(7,False)
-	    	gp.output(11,False)
-	    	gp.output(12,True)
+                gp.output(7,False)
+                gp.output(11,False)
+                gp.output(12,True)
             
             if index == 1:
-		gp.output(7,False)
-	    	gp.output(11,True)
-	    	gp.output(12,False)
+                gp.output(7,False)
+                gp.output(11,True)
+                gp.output(12,False)
          
 
             (h, w, c) = frame.shape[:3]
@@ -161,7 +160,7 @@ class CamGui( QtWidgets.QMainWindow):
                 self.ui_label_img_list[i].setLineWidth(1)
 
     def on_mouse_release_label_img(self, ev):
-        print 'why you click me ?!'
+        print('why you click me ?!')
 
     def on_mouse_move(self, e):
         pass
@@ -169,8 +168,8 @@ class CamGui( QtWidgets.QMainWindow):
         #print x, y
 
     def timer_update(self):
-        print self.zen
-        print '\n'*2
+        print(self.zen)
+        print('\n'*2)
 
 
 

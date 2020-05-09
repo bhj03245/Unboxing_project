@@ -57,7 +57,7 @@ class PhotoGrabThread( QtCore.QThread ):
     	gp.output(11, False)
     	gp.output(12, True)
 	
-    	cap = cv2.VideoCapture(-1)
+    	cap = cv2.VideoCapture(0)
     	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, height)
         cap.set(cv2.CAP_PROP_FPS, fps)   
@@ -75,7 +75,28 @@ class PhotoGrabThread( QtCore.QThread ):
 	output = subprocess.call(command, shell=True)
     	rev, frame = cap.read()
     	time.sleep(1)
-    	
+    	i2c = "i2cset -y 1 0x70 0x00 0x05"
+        os.system(i2c)
+        gp.output(7, True)
+    	gp.output(11, False)
+    	gp.output(12, True)
+    	cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, height)
+        cap.set(cv2.CAP_PROP_FPS, fps)   
+        command ="v4l2-ctl -d 0 -c brightness=%d" % (brightness)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
+	output = subprocess.call(command, shell=True)
+    	rev, frame = cap.read()
+    	time.sleep(1)
     	i2c = "i2cset -y 1 0x70 0x00 0x06"
         os.system(i2c)
         gp.output(7, False)
@@ -96,11 +117,34 @@ class PhotoGrabThread( QtCore.QThread ):
 	output = subprocess.call(command, shell=True)
 	command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
 	output = subprocess.call(command, shell=True)
-	command ="raspivid -o /home/pi/Desktop/test114.mpeg"
-	output = subprocess.call(command, shell=True)
     	rev, frame = cap.read()
-    	
+
+    	time.sleep(1)
+    	i2c = "i2cset -y 1 0x70 0x00 0x07"
+        os.system(i2c)
+        gp.output(7, True)
+    	gp.output(11, True)
+    	gp.output(12, False)
+   	rev, frame = cap.read()
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, width)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, height)
+        cap.set(cv2.CAP_PROP_FPS, fps)   
+        command ="v4l2-ctl -d 0 -c brightness=%d" % (brightness)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c contrast=%d" % (contrast)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c saturation=%d" % (saturation)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c rotate=%d" % (rotate)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c auto_exposure=%d" % (auto_exposure)
+	output = subprocess.call(command, shell=True)
+	command ="v4l2-ctl -d 0 -c exposure_time_absolute=%d" % (exposure_time_absolute)
+	output = subprocess.call(command, shell=True)
+	time.sleep(1);
 	
+
+
 
         index = 0
         while 1:
@@ -111,14 +155,20 @@ class PhotoGrabThread( QtCore.QThread ):
 		gp.output(7,False)
 	    	gp.output(11,False)
 	    	gp.output(12,True)
-            
+            if index == 3:
+		gp.output(7,True)
+	   	gp.output(11,False)
+	    	gp.output(12,True)
             if index == 1:
 		gp.output(7,False)
 	    	gp.output(11,True)
 	    	gp.output(12,False)
-         
+            if index == 2:
+		gp.output(7,True)
+	   	gp.output(11,True)
+    		gp.output(12,False)
 
-            (h, w, c) = frame.shape[:3]
+            h, w, c = frame.shape
             bytes_per_line = 3 * w
             f_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -137,7 +187,7 @@ class CamGui( QtWidgets.QMainWindow):
         super(CamGui, self).__init__(*args)
         self.ui = gui_ui.Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui_label_img_list = [self.ui.label_img0, self.ui.label_img1]
+        self.ui_label_img_list = [self.ui.label_img0, self.ui.label_img1, self.ui.label_img2, self.ui.label_img3]
         self.img_no = len(self.ui_label_img_list)
 
         #self.ui.label_depth.setMouseTracking(True)

@@ -8,16 +8,15 @@ import threading
 import os
 import smbus
 import math
-import subprocess
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
-power_mgmt_1 = 0x6b
+#power_mgmt_1 = 0x6b
 power_mgmt_2 = 0x6c
 
 bus = smbus.SMBus(1)
 address = 0x68
-bus.write_byte_data(address, power_mgmt_1, 0)
+#bus.write_byte_data(address, power_mgmt_1, 0)
 
 gp.setwarnings(False)
 gp.setmode(gp.BOARD)
@@ -25,9 +24,18 @@ gp.setmode(gp.BOARD)
 gp.setup(7, gp.OUT)
 gp.setup(11, gp.OUT)
 gp.setup(12, gp.OUT)
-# i2c = "i2cset -y 1"
-# i2c = "i2cset -y 1 0x70 0x00 0x04"
-# os.system(i2c)
+#i2c = "i2cset -y 1"
+#i2cA = "i2cset -y 1 0x70 0x00 0x04"
+i2cC = "i2cset -y 1 0x70 0x00 0x06"
+
+#os.system(i2c)
+#os.system(i2cA)
+os.system(i2cC)
+
+#gp.output(7, False)
+#gp.output(11, True)
+#gp.output(12, False)
+
 gp.output(7, False)
 gp.output(11, False)
 gp.output(12, True)
@@ -40,23 +48,23 @@ impt_path = os.getcwd() + '/UB_video/Impact/'
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 
 
-def read_byte(adr):
-    return bus.read_byte_data(address, adr)
+#def read_byte(adr):
+#    return bus.read_byte_data(address, adr)
 
 
-def read_word(adr):
-    high = bus.read_byte_data(address, adr)
-    low = bus.read_byte_data(address, adr + 1)
-    val = (high << 8) + low
-    return val
+#def read_word(adr):
+#    high = bus.read_byte_data(address, adr)
+#    low = bus.read_byte_data(address, adr + 1)
+#    val = (high << 8) + low
+#    return val
 
 
-def read_word_2c(adr):
-    val = read_word(adr)
-    if (val >= 0x8000):
-        return -((65535 - val) + 1)
-    else:
-        return val
+#def read_word_2c(adr):
+#    val = read_word(adr)
+#    if (val >= 0x8000):
+#        return -((65535 - val) + 1)
+#    else:
+#        return val
 
 
 def create_time():
@@ -72,33 +80,32 @@ def create_file():
 
 def convert(path, file_name):
     dest_file = path.replace('h264','mp4')
-    convert_cmd = 'MP4Box -fps 30 -add ' + path + " " + dest_file + "; rm " + path 
+    convert_cmd = 'MP4Box -fps 25 -add ' + path + " " + dest_file + "; rm " + path 
     os.system(convert_cmd)
     return dest_file
 
-def timelapse(in_file, out_file, impt_vw, startFrame, endFrame):
+def timelapse(in_file, out_file, startFrame, endFrame):
     iCurrentFrame = 0
     in_file = in_file
     out_file = out_file
-    if startFrame > 0:
-        startFrame = startFrame
+    startFrame = startFrame
     endFrame = endFrame
 
+    print(in_file)
+    print(out_file)
     vc = cv2.VideoCapture(in_file)
 
     if vc.isOpened() == False:
         print("Fail to open the video")
         exit()
-    vw = impt_vw
-    print("In : %s" % in_file)
-    print("Out : %s " % out_file)
-    print("start Frame : %d" % startFrame)
-    print("Video Frame Count : %d" % int(vc.get(cv2.CAP_PROP_FRAME_COUNT)))
-    #if((startFrame < 0 or startFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT)) or
-    #	(endFrame < 0 or endFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT))):
+    vw = r.impact_recording()[1]
+    print(endFrame)
+    print(int(vc.get(cv2.CAP_PROP_FRAME_COUNT)))
+    if((startFrame < 0 or startFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT)) or
+		(endFrame < 0 or endFrame >= vc.get(cv2.CAP_PROP_FRAME_COUNT))):
 
-     #   print("Wrong Frame")
-     #  exit()
+        print("Wrong Frame")
+        exit()
 
     vc.set(cv2.CAP_PROP_POS_FRAMES, startFrame)
     while True:
@@ -106,46 +113,41 @@ def timelapse(in_file, out_file, impt_vw, startFrame, endFrame):
         if (iCurrentFrame > (endFrame - startFrame)):
             break
         iCurrentFrame += 1
-        print(iCurrentFrame)
+
         vw.write(frame)
-        #cv2.imshow("CAM_Window", frame)
+        cv2.imshow("CAM_Window", frame)
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
     vc.release()
     vw.release()
-    print("Finish")
-    #cv2.destroyWindow('CAM_Window')
+    cv2.destroyWindow('CAM_Window')
     convert(out_file, out_file.split('/')[6])
-
-def streaming():
-	cmd = 'sh gst-server.sh'
-	subprocess.call(cmd, shell=True)
 
 class recording:
 
     def normal_recording(self):
         __file_name = create_file()
         path = norm_path + "NORM_" + __file_name
-        norm_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
+        norm_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
         return path, norm_out
 
     def parking_recording(self):
         __file_name = create_file()
         path = park_path + "PARK_" + __file_name
-        park_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
+        park_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
         return path, park_out
 
     def manual_recording(self):
         __file_name = create_file()
         path = manl_path + "MANL_" + __file_name
-        manl_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
+        manl_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
         return path, manl_out
 
     def impact_recording(self):
         __file_name = create_file()
         path = impt_path + "IMPT_" + __file_name
-        impt_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
+        impt_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
         return path, impt_out
 
     def gyro(self, video, sec):
@@ -158,7 +160,6 @@ class recording:
     # out = self.impact_recording()[1]
     # return path, out
     # break
-
     def detect_impact(self, check):
         gyro_xout = read_word_2c(0x43)
         gyro_yout = read_word_2c(0x45)
@@ -178,67 +179,54 @@ class recording:
         if picam.isOpened() == False:
             print('Can\'t open the CAM C')
             exit()
-	
+
         cv2.namedWindow('CAM_Window')
+        cnt = int(picam.get(cv2.CAP_PROP_FRAME_COUNT))
         prevTime = 0
-   
+
         path = record[0]
         out = record[1]
-        framecnt = 0
 
-        fps = int(picam.get(cv2.CAP_PROP_FPS))
-        sthread = threading.Thread(target=streaming)
-
-        while True:
+        while (cnt < 3000):
             check = 0
-            framecnt += 1
+
             ret, frame = picam.read()
             curTime = time.time()
-            # sec = curTime - prevTime
+            sec = curTime - prevTime
             prevTime = curTime
-            sec = framecnt / fps
-            rr = (picam.get(cv2.CAP_PROP_POS_FRAMES))
-            print("%d %d %d %d" % (fps, framecnt, rr, sec))
+            fps = 1 / (sec)
+            cnt = cnt + int(fps)          
+            str = "FPS : %0.1f" % fps
 
+            # cv2.putText(frame, str, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+            print(cnt)
             out.write(frame)
-            
             cv2.imshow('CAM_Window', frame)
-            check = self.detect_impact(check)
+            #check = self.detect_impact(check)
+            #print(picam.get(cv2.CAP_PROP_POS_MSEC))
 
             if check == 1:
-                print("IMPACT!!")
-                print("Impact point : %s   %d" % (path ,sec))
-                impt_path = self.impact_recording()[0]
-                impt_out = self.impact_recording()[1] 
-                framecnt = 0
-                while True:
-                    framecnt += 1
-                    sec = framecnt/fps
-                    print("Impact sec : %d" % sec)
-                    impt_out.write(frame)
-                picam.release()
-                impt_out.release()
-		convert(impt_path, impt_path.split('/')[6])
-		out.release()
-                break
+               picam.release()
+               out.release()
+               video = convert(path, path.split('/')[6])
+               vc = cv2.VideoCapture(video)
+               fr = int(vc.get(cv2.CAP_PROP_FRAME_COUNT))
+               print(fr)
+               out_path = self.impact_recording()[0]
+               timelapse(video, out_path, fr, 1000)
+               break
 
-            #if framecnt == 1782:
-            if sec == 60: 
-                picam.release()
-                out.release()
-                video = convert(path, path.split('/')[6])
-                break
+            if cv2.waitKey(27) >= 0:
+               break
 
-            if cv2.waitKey(33) >= 0:
-                picam.release()
-                video = convert(path, path.split('/')[6])  
-                break
+        print(path.split('/')[6])
+        picam.release()
+        out.release()
+        video = convert(path, path.split('/')[6])
 
-		
         nthread = threading.Thread(target=self.recording, args=(self.normal_recording(),))
         nthread.start()
-       # nthread.join()
-      
+
     # cv2.destroyWindow('CAM_Window')
 
 
@@ -249,4 +237,5 @@ n = r.normal_recording()
 #p = r.parking_recording()
 
 r.recording(n)
+
 
