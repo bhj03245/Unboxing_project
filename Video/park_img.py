@@ -8,7 +8,7 @@ rev = True
 img_path = '/var/www/html/Upload/Parkimg'
 
 while cnt == 0:
-	cv2.imwrite(img_path + '/parking_%d.jpg' % cnt, image)
+	cv2.imwrite(img_path + '/capture_%d.jpg' % cnt, image)
 	rev, image = cap.read() 
 	print("save parking image")
 	cnt += 1
