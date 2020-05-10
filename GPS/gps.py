@@ -52,10 +52,10 @@ if '$GPRMC' in fd:
  
         #print(lat1)
         #print(lng1)
-_
+
 try:
     sql = 'UPDATE location SET location_lat=%s, location_lng=%s, location_url=%s WHERE location_num=%s'
-    curs.execute(sql, (lat1, lng1, 1, "http://localhost/Upload/Parkimg/capture_0.jpg"))
+    curs.execute(sql, (lat1, lng1, "http://172.30.1.17/Upload/Parkimg/capture_0.jpg", 1))
     conn.commit()
 finally:
     conn.close()
