@@ -175,11 +175,20 @@ void FileList(char *ip_addr)
 	char MANL_PATH[50] = "/var/www/html/Upload/UB_video/Manual";
 
 	char webpath[100];
-	char web_npath[50] = "http://localhost/Upload/UB_video/Normal";
-        char web_ipath[50] = "http://localhost/Upload/UB_video/Impact";
-	char web_ppath[50] = "http://localhost/Upload/UB_video/ppath";
-	char web_mpath[50] = "http://localhost/Upload/UB_video/mpath";
-	
+	char web_npath[70];
+	char web_ipath[70];
+	char web_ppath[70];
+	char web_mpath[70];
+	sprintf(web_npath, "http://%s/Upload/UB_video/Normal", ip_addr);
+	sprintf(web_ipath, "http://%s/Upload/UB_video/Impact", ip_addr);	
+	sprintf(web_ppath, "http://%s/Upload/UB_video/Parking", ip_addr);
+	sprintf(web_mpath, "http://%s/Upload/UB_video/Manual", ip_addr);
+
+	cout << web_npath << endl;
+	cout << web_ipath << endl;
+	cout << web_ppath << endl;
+	cout << web_mpath << endl;
+
 	char NormParentPath[100];	
 	char NormCurrentPath[100];
 	char ImptParentPath[100];	
@@ -259,7 +268,8 @@ char* timeToString(struct tm *t){
 
 int main(int argc, char **argv)
 {
-	char *ip_addr[16] = argv[1]
+	char ip_addr[16];
+	strcpy(ip_addr, argv[1]);
 	if (argv[1] == NULL)
 		cout << "error" << endl;
 	FileList(ip_addr);
