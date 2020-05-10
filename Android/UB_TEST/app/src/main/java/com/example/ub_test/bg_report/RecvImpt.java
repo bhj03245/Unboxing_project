@@ -6,6 +6,8 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.ub_test.R;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,7 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
         mContext= context;
     }
 
-
+    //String ip = getString(R.string.ip);
     private static String SERVER_URL = "http://211.216.137.157/apkCtrl/reportImpt_apk.php";
 
     String data = "";

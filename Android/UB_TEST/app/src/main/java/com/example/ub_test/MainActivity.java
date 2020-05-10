@@ -154,10 +154,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... unused) {
             String param = "id=" + str_id + "&pw=" + str_pw + "";
-
+            String ip = getString(R.string.ip);
 
             try {
-                URL url = new URL("http://211.216.137.157/apkCtrl/user_auth_apk.php");
+                URL url = new URL(ip + "/apkCtrl/user_auth_apk.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestMethod("POST");

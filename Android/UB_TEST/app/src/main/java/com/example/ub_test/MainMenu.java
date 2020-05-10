@@ -140,11 +140,12 @@ public class MainMenu extends AppCompatActivity {
         String data = "";
         HttpURLConnection conn;
 
+
         @Override
         protected String doInBackground(Void... unused) {
             String param= "request_gps"+ "=" + trig;
             try{
-                URL url = new URL("http://211.216.137.157/apkCtrl/gps_apk.php");
+                URL url = new URL(getString(R.string.ip) + "/apkCtrl/gps_apk.php");
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(5000);
                 conn.setConnectTimeout(5000);

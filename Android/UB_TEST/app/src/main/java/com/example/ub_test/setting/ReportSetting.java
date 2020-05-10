@@ -34,7 +34,8 @@ public class ReportSetting extends Activity {
     String str_phone;
     String str_contents;
 
-    private static String IP_ADDRESS = "http://211.216.137.157/apkCtrl/reportSet_apk.php";
+    String ip = getString(R.string.ip);
+    String IP_ADDRESS = ip + "/apkCtrl/reportSet_apk.php";
 
     private SharedPreferences report_data;
     private String load_phone;

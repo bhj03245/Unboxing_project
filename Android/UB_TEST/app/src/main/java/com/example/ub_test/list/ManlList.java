@@ -38,7 +38,6 @@ import java.util.ArrayList;
 
 public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static String IP_ADDRESS = "http://211.216.137.157/apkCtrl/manlList_apk.php";
     private static String TAG = "phptest";
 
     private ArrayList<VideoVO> mArrayList;
@@ -70,7 +69,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         GetData task = new GetData();
-        task.execute(IP_ADDRESS);
+        task.execute();
 
         downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         IntentFilter intentFilter = new IntentFilter();
@@ -89,7 +88,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
     @Override
     public void onRefresh() {
         GetData task = new GetData();
-        task.execute(IP_ADDRESS);
+        task.execute();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -143,7 +142,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         }
     };
 
-    private class GetData extends AsyncTask<String, Void, String> {
+    private class GetData extends AsyncTask<Void, Void, String> {
         ProgressDialog progressDialog;
         String errString = null;
 
@@ -176,13 +175,13 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(Void... unused) {
 
-            String serverURL = params[0];
+
             //String postParameters = params[1];
             try {
 
-                url = new URL(serverURL);
+                url = new URL(getString(R.string.ip) + "/apkCtrl/manlList_apk.php");
                 httpURLConnection = (HttpURLConnection) url.openConnection();
 
                 httpURLConnection.setReadTimeout(10000);

@@ -21,7 +21,6 @@ public class ImagePop extends Activity {
 
     ImageView img_view;
     getImage getImage;
-    public static final String imgURL="http://theopentutorials.com/totwp331/wp-content/uploads/totlogo.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +31,18 @@ public class ImagePop extends Activity {
         img_view = (ImageView)findViewById(R.id.imageView);
 
         getImage = new getImage();
-        getImage.execute(imgURL);
+        getImage.execute();
     }
 
-    private class getImage extends AsyncTask<String, Void, Bitmap> {
+    private class getImage extends AsyncTask<Void, Void, Bitmap> {
         HttpURLConnection conn = null;
         BufferedInputStream bis = null;
         Bitmap bitmap;
         @Override
-        protected Bitmap doInBackground(String... urls) {
+        protected Bitmap doInBackground(Void... unused) {
             // TODO Auto-generated method stub
             try {
-                URL myFileUrl = new URL(urls[0]);
+                URL myFileUrl = new URL(getString(R.string.ip) + "/Upload/Parkimg/capture_0.jpg");
                 conn = (HttpURLConnection) myFileUrl.openConnection();
                 conn.setDoInput(true);
                 conn.connect();
