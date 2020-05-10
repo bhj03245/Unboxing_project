@@ -157,7 +157,7 @@ void db_update(){
 	cout << "Update Success!!" << endl;
 	mysql_close(&mysql);
 }
-void FileList()
+void FileList(char *ip_addr)
 {
 	DIR *norm_dir = NULL;
 	DIR *impt_dir = NULL;
@@ -257,7 +257,10 @@ char* timeToString(struct tm *t){
 	return s;
 }
 
-int main()
+int main(int argc, char **argv)
 {
-	FileList();
+	char *ip_addr[16] = argv[1]
+	if (argv[1] == NULL)
+		cout << "error" << endl;
+	FileList(ip_addr);
 }
