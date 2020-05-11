@@ -1,6 +1,13 @@
 import cv2
+import glob
+import os
 
-cap = cv2.VideoCapture('/var/www/html/Upload/UB_video/Normal/NORM_200509_135048.mp4')
+pvideo_path = '/var/www/html/Upload/UB_video/Normal'
+files_path = os.path.join(pvideo_path, '*.mp4')
+files = sorted(glob.iglob(files_path), key=os.path.getctime, reverse=True)
+print files[0]
+
+cap = cv2.VideoCapture(files[0])
 rev, image = cap.read()
 
 cnt=0
