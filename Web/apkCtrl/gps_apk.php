@@ -8,8 +8,8 @@
 	
     if(!$strCom){
     $result = $conn->query("SELECT location_lat, location_lng FROM location");
-    //system("park_img.py");
-    //system("python gps.py");
+    system("sudo python park_img.py");
+    system("sudo python gps.py");
 
     }
     while($row = mysqli_fetch_array($result)){
