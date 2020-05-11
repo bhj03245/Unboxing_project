@@ -39,7 +39,7 @@ if '$GPRMC' in fd:
         lng=data[(p[4]+1):p[5]]
  
         lat1=lat[2:len(lat)]
-        lat1=Decimal(lat1)
+        lat1=Decimal(lat1) #Decimal 오류는 gps 값이 못 받아오는 경우에 발생
         lat1=lat1/60
         lat2=int(lat[0:2])
         lat1=lat2+lat1
