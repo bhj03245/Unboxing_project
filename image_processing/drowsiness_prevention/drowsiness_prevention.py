@@ -21,20 +21,20 @@ import cv2
 import time
 import datetime
 
-gp.setwarnings(False)
-gp.setmode(gp.BOARD)
+#gp.setwarnings(False)
+#gp.setmode(gp.BOARD)
 
-gp.setup(7, gp.OUT)
-gp.setup(11, gp.OUT)
-gp.setup(12, gp.OUT)
+#gp.setup(7, gp.OUT)
+#gp.setup(11, gp.OUT)
+#gp.setup(12, gp.OUT)
 
-i2c = "i2cset -y 1 0x70 0x00 0x06"
+#i2c = "i2cset -y 1 0x70 0x00 0x06"
 
-os.system(i2c)
+#os.system(i2c)
 
-gp.output(7, False)
-gp.output(11, True)
-gp.output(12, False)
+#gp.output(7, False)
+#gp.output(11, True)
+#gp.output(12, False)
 
 def eye_aspect_ratio(eye):
     # compute the euclidean distances between the two sets of
@@ -87,8 +87,9 @@ predictor = dlib.shape_predictor(args["shape_predictor"])
 print("[INFO] starting video stream thread...")
 #vs = FileVideoStream(args["video"]).start()
 #fileStream = True
+vs = VideoStream(1).start()
 #vs = VideoStream(0).start()
-vs = VideoStream(usePiCamera=True).start()
+#vs = VideoStream(usePiCamera=True).start()
 fileStream = False
 time.sleep(1.0)
 
