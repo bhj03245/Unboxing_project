@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.unboxing">
+
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <activity android:name=".setting.ReportSetting"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".setting.UserSetting"/>
+        <activity android:name=".list.ImptList" />
+        <activity android:name=".list.ParkList" />
+        <activity android:name=".list.ManlList" />
+
+        
+
+        <activity android:name=".list.NormList" />
+        <activity android:name=".parking.ImagePop"
+            android:theme="@android:style/Theme.Dialog" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"/>
+
+        <activity android:name=".parking.ParkLocation" />
+        <activity android:name=".Streaming" />
+        <activity android:name=".MainMenu" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".bg_report.RealService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <service android:name=".bg_report.RestartService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <receiver android:name=".bg_report.AlarmReceiver"/>
+
+        <receiver android:name=".bg_report.RebootReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

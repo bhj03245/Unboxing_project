@@ -7,6 +7,11 @@ from scipy.spatial import distance as dist
 from imutils.video import FileVideoStream
 from imutils.video import VideoStream
 from imutils import face_utils
+from picamera import PiCamera
+from picamera.array import PiRGBArray
+
+import RPi.GPIO as gp
+import os
 import numpy as np
 import argparse
 import imutils
@@ -16,6 +21,20 @@ import cv2
 import time
 import datetime
 
+#gp.setwarnings(False)
+#gp.setmode(gp.BOARD)
+
+#gp.setup(7, gp.OUT)
+#gp.setup(11, gp.OUT)
+#gp.setup(12, gp.OUT)
+
+#i2c = "i2cset -y 1 0x70 0x00 0x06"
+
+#os.system(i2c)
+
+#gp.output(7, False)
+#gp.output(11, True)
+#gp.output(12, False)
 
 def eye_aspect_ratio(eye):
     # compute the euclidean distances between the two sets of
@@ -69,7 +88,12 @@ print("[INFO] starting video stream thread...")
 #vs = FileVideoStream(args["video"]).start()
 #fileStream = True
 vs = VideoStream(1).start()
+<<<<<<< HEAD
 # vs = VideoStream(usePiCamera=True).start()
+=======
+#vs = VideoStream(0).start()
+#vs = VideoStream(usePiCamera=True).start()
+>>>>>>> 1a66a4e7bd25590c0dd8a38c50586d42b94a943e
 fileStream = False
 time.sleep(1.0)
 
@@ -159,4 +183,4 @@ while True:
         break
 
 # do a bit of cleanup
-cv2.destroyAl
+cv2.destroyAll

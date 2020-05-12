@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">UB_TEST</string>
+    <string name="ip">http://172.30.1.59</string>
+</resources>
