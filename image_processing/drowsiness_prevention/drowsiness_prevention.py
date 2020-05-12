@@ -68,7 +68,7 @@ predictor = dlib.shape_predictor(args["shape_predictor"])
 print("[INFO] starting video stream thread...")
 #vs = FileVideoStream(args["video"]).start()
 #fileStream = True
-vs = VideoStream(0).start()
+vs = VideoStream(1).start()
 # vs = VideoStream(usePiCamera=True).start()
 fileStream = False
 time.sleep(1.0)
@@ -121,10 +121,9 @@ while True:
         if ear < EYE_AR_THRESH:
             COUNTER += 1
             DROWSINESS_COUNTER += 1
-
             if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
                 cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
-                            3.5, (0, 0, 255), 2)
+                            2.0, (0, 0, 255), 2)
                 #print("drowsiness")
                 #time.sleep(1.0)
         # otherwise, the eye aspect ratio is not below the blink
@@ -137,7 +136,7 @@ while True:
 
             if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
                 cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
-                            3.5, (0, 0, 255), 2)
+                            2.0, (0, 0, 255), 2)
                 #print("drowsiness")
                 #time.sleep(1.0)
             # reset the eye frame counter
