@@ -1,3 +1,4 @@
+import socket
 import serial
 import RPi.GPIO as GPIO      
 import pymysql
@@ -17,6 +18,8 @@ port = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=1)
 conn = pymysql.connect(host='localhost', user='pi', password='myub', db='ub_project', charset='utf8')
 curs = conn.cursor()
 
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
 
 ck=0
 fd=''
@@ -39,7 +42,7 @@ if '$GPRMC' in fd:
         lng=data[(p[4]+1):p[5]]
  
         lat1=lat[2:len(lat)]
-        lat1=Decimal(lat1) #Decimal 오류는 gps 값이 못 받아오는 경우에 발생
+        lat1=Decimal(lat1)
         lat1=lat1/60
         lat2=int(lat[0:2])
         lat1=lat2+lat1
@@ -55,7 +58,7 @@ if '$GPRMC' in fd:
 
 try:
     sql = 'UPDATE location SET location_lat=%s, location_lng=%s, location_url=%s WHERE location_num=%s'
-    curs.execute(sql, (lat1, lng1, "http://172.30.1.17/Upload/Parkimg/capture_0.jpg", 1))
+    curs.execute(sql, (lat1, lng1, "http://" + s.getsockname()[0] + "/Upload/Parkimg/capture_0.jpg", 1))
     conn.commit()
 finally:
     conn.close()
