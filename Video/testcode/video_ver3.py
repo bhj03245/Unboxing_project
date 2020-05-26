@@ -85,11 +85,13 @@ def video_mixing(t):
 	files = []
 	files.append(sorted(file_path, key=os.path.getctime, reverse=True))
 
-	impt_time = int(time * frame)
-	startFrame = impt_time - (int(frame)* 10)
+	impt_time = int(time) * int(frame)
+	startFrame = impt_time - frame * 10
 	CurrentFrame = 0
 	endFrame = impt_time + (frame * 10)
-	print(impt_time, startFrame, endFrame)
+	print(impt_time)
+	print(startFrame)
+	print(endFrame)
 	fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 	new_path = impt_path + 'IMPT_' + t + '.mp4'
 	
@@ -193,7 +195,7 @@ class recording:
             rr = (picam.get(cv2.CAP_PROP_POS_FRAMES))
             print("%d %d %d %d" % (fps, framecnt, rr, sec))
 
-            if sec == 20:
+            if sec == 20:		# 
                 t = create_time()
 
             out.write(frame)
