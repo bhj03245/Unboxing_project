@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RecyclerView_Search</string>
+    <string name="search_hint">검색어 입력</string>
+</resources>
