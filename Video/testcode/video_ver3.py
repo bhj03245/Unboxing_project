@@ -13,12 +13,12 @@ import subprocess
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
-#power_mgmt_1 = 0x6b
+power_mgmt_1 = 0x6b
 #power_mgmt_2 = 0x6c
 
-#bus = smbus.SMBus(1)
-#address = 0x68
-#bus.write_byte_data(address, power_mgmt_1, 0)
+bus = smbus.SMBus(1)
+address = 0x68
+bus.write_byte_data(address, power_mgmt_1, 0)
 
 gp.setwarnings(False)
 gp.setmode(gp.BOARD)
@@ -56,11 +56,9 @@ def read_word_2c(adr):
     else:
         return val
 
-
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
     return now
-
 
 def create_file():
     now = create_time()
@@ -113,7 +111,9 @@ def video_mixing(t):
 			CurrentFrame += 1
 
 			impt_out.write(frame)
+			# cv2.imshow('CAM_Window', frame)
 			cv2.waitKey(1)
+
 		impt_out.release()
 		print(amount_of_frames)
 	print("Success!!")
@@ -165,9 +165,12 @@ class recording:
         z_scale = gyro_zout / 131.0
 		
         #print(y_scale)
-        if (1.5 < y_scale):
+        if (2.5 < y_scale):
             check = 1
         return check
+
+    def show(self, frame):
+        cv2.imshow('CAM_Window', frame)
 
     def recording(self, record):
         picam = cv2.VideoCapture(-1)
@@ -195,29 +198,34 @@ class recording:
             rr = (picam.get(cv2.CAP_PROP_POS_FRAMES))
             print("%d %d %d %d" % (fps, framecnt, rr, sec))
 
-            if sec == 20:		# 
+            if self.detect_impact(check) == 1:
                 t = create_time()
 
             out.write(frame)
-            cv2.imshow('CAM_Window', frame)
+            self.show(frame)
+            # cv2.imshow('CAM_Window', frame)
 
-            #if framecnt == 1782:
             if sec == 60: 
-                picam.release()
+                #picam.release()
                 out.release()
                 video = convert(path, path.split('/')[6])
-                video_mixing(t) 
+                thread2 = threading.Thread(target=video_mixing(t))    
+                thread2.start() 
                 break
 
             if cv2.waitKey(33) >= 0:
                 picam.release()
                 video = convert(path, path.split('/')[6])  
+
+                thread2 = threading.Thread(target=video_mixing(t))       
+                thread2.start()  
                 break
 
 		
         nthread = threading.Thread(target=self.recording, args=(self.normal_recording(),))
         nthread.start()
-       # nthread.join()
+
+
       
     # cv2.destroyWindow('CAM_Window')
 
@@ -228,5 +236,10 @@ n = r.normal_recording()
 #m = r.manual_recording()
 #p = r.parking_recording()
 
-r.recording(n)
+thread1=threading.Thread(target=r.recording(n))
+if r.detect_impact(0) == 1:
+    t = create_time()
+    thread2 = threading.Thread(target=video_mixing(t))
+    thread2.start()
+
 
