@@ -5,9 +5,6 @@ import android.os.AsyncTask;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.example.ub_test.R;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +24,7 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
     }
 
     //String ip = getString(R.string.ip);
-    private static String SERVER_URL = "http://211.216.137.157/apkCtrl/reportImpt_apk.php";
+    private static String SERVER_URL = "http://172.30.1.28/apkCtrl/reportImpt_apk.php";
 
     String data = "";
 

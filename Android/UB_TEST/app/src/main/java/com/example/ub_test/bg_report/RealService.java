@@ -20,10 +20,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.ub_test.MainActivity;
 import com.example.ub_test.R;
-
-
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
@@ -43,7 +39,7 @@ public class RealService extends Service {
         mainThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat("aa hh:mm");
+                //SimpleDateFormat sdf = new SimpleDateFormat("aa hh:mm");
                 boolean run = true;
                 while (run) {
                     try {
