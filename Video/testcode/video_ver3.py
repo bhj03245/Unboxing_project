@@ -10,7 +10,7 @@ import glob
 import smbus
 import math
 import subprocess
-
+import sysv_ipc
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
@@ -31,6 +31,7 @@ park_path = os.getcwd() + '/UB_video/Parking/'
 impt_path = os.getcwd() + '/UB_video/Impact/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
+memory = sysv_ipc.SharedMemory(1219, flags=01000, size=10, mode=0600)
 
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
@@ -95,10 +96,11 @@ class recording:
         framecnt = 0
 
         fps = int(picam.get(cv2.CAP_PROP_FPS))
+        check = False
 
         while True:
-            check = 0
             framecnt += 1
+
             ret, frame = picam.read()
             sec = framecnt / fps
             rr = (picam.get(cv2.CAP_PROP_POS_FRAMES))
@@ -106,12 +108,13 @@ class recording:
 
             out.write(frame)
             self.show(frame)
-            #cv2.imshow('CAM_Window', frame)
 
-            if sec == 60: 
-                #picam.release()
+            if sec == 30:
+               #picam.release()
                 out.release()
                 video = convert(path, path.split('/')[6])
+                fin = memory.read()
+                memory.write("True")
                 break
 
             if cv2.waitKey(33) >= 0:
