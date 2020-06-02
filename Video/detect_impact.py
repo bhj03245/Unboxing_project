@@ -5,6 +5,7 @@ import threading
 import cv2
 import datetime
 import smbus
+import sysv_ipc
 
 norm_path = os.getcwd() + '/UB_video/Normal/'
 impt_path = os.getcwd() + '/UB_video/Impact/'
@@ -14,9 +15,11 @@ bus = smbus.SMBus(1)
 address = 0x68
 bus.write_byte_data(address, power_mgmt_1, 0)
 
+check = False
+memory = sysv_ipc.SharedMemory(1219) 
+
 def read_byte(adr):
     return bus.read_byte_data(address, adr)
-
 
 def read_word(adr):
     high = bus.read_byte_data(address, adr)
@@ -36,7 +39,7 @@ def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
     return now
 
-def detect_impact(check):
+def detect_impact():
     gyro_xout = read_word_2c(0x43)
     gyro_yout = read_word_2c(0x45)
     gyro_zout = read_word_2c(0x47)
@@ -47,14 +50,25 @@ def detect_impact(check):
 		
     #print(y_scale)
     if (2.5 < y_scale):
-        check = 1
-    return check
+    	return True
+
+def receive():
+	print("Receiving!!")
+	return True
+
+def send():
+	print("Sending!!")
+	return True
 
 def impact():
 	t = create_time()
 	print("Time : %s" % t)
-	video_mixing(t)
-
+	while True:
+		fin = memory.read()
+		if fin == "True":
+			print("memory: %s" % fin)	
+			video_mixing(t)
+			break
 
 def video_mixing(t):
 	time = t[11:13]
@@ -98,10 +112,11 @@ def video_mixing(t):
 		print(amount_of_frames)
 	print("Success!!")
 
-while True:
-	check = 0	
-	if detect_impact(check) == 1:
-		impact()
-	
+if __name__=="__main__":
+	while True:
+		check = detect_impact()
+		#print("Detecting...")
+		if check == True:
+			impact()
 		
 
