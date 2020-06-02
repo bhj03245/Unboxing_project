@@ -31,7 +31,8 @@ park_path = os.getcwd() + '/UB_video/Parking/'
 impt_path = os.getcwd() + '/UB_video/Impact/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
-memory = sysv_ipc.SharedMemory(1219, flags=01000, size=10, mode=0600)
+
+memory = sysv_ipc.SharedMemory(1209) 
 
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
@@ -114,7 +115,7 @@ class recording:
                 out.release()
                 video = convert(path, path.split('/')[6])
                 fin = memory.read()
-                memory.write("True")
+                memory.write("SIG")
                 break
 
             if cv2.waitKey(33) >= 0:
