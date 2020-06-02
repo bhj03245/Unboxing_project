@@ -5,9 +5,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -15,10 +19,14 @@ import androidx.core.app.NotificationCompat;
 import com.example.ub_test.MainActivity;
 import com.example.ub_test.R;
 
-
+import static android.content.ContentValues.TAG;
 
 
 public class RestartService extends Service {
+
+
+
+    Boolean modeChecked;
 
     public RestartService() {
     }
@@ -52,12 +60,25 @@ public class RestartService extends Service {
         startForeground(9, notification);
 
         /////////////////////////////////////////////////////////////////////
-        Intent in = new Intent(this, RealService.class);
-        startService(in);
+        //modeChecked = intent.getBooleanExtra("modeChecked", false);
+        //String modeChecked = intent.getStringExtra("modeChecked");
+        modeChecked = intent.getExtras().getBoolean("modeChecked", false);
+        Log.d(TAG, "Checked! = " + modeChecked);
+//        SwitchMode switchMode = new SwitchMode(activity);
+//        modeChecked = switchMode.getChecked();
 
-        stopForeground(true);
-        stopSelf();
+//        MainActivity activity = new MainActivity();
+//        modeChecked = activity.getChecked();
 
+        //MainActivity mainActivity = MainActivity.
+
+        if(modeChecked) {
+            Intent in = new Intent(this, RealService.class);
+            startService(in);
+
+            stopForeground(true);
+            stopSelf();
+        }
         return START_NOT_STICKY;
     }
 

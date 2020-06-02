@@ -37,7 +37,7 @@ public class ReportSetting extends Activity {
     String ip = getString(R.string.ip);
     String IP_ADDRESS = ip + "/apkCtrl/reportSet_apk.php";
 
-    private SharedPreferences report_data;
+    private SharedPreferences data;
     private String load_phone;
     private String load_content;
 
@@ -51,7 +51,7 @@ public class ReportSetting extends Activity {
         et_contents = (EditText)findViewById(R.id.et_contents);
         btn_insert = (Button)findViewById(R.id.insertBtn);
 
-        report_data = getSharedPreferences("report_data", MODE_PRIVATE);
+        data = getSharedPreferences("report_data", MODE_PRIVATE);
         load();
 
         et_phone.setText(load_phone);
@@ -60,7 +60,6 @@ public class ReportSetting extends Activity {
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 str_phone = et_phone.getText().toString();
                 str_contents = et_contents.getText().toString();
                 save();
@@ -72,7 +71,7 @@ public class ReportSetting extends Activity {
         });
     }
     private void save(){
-        SharedPreferences.Editor editor = report_data.edit();
+        SharedPreferences.Editor editor = data.edit();
 
         editor.putString("phone", str_phone.trim());
         editor.putString("content", str_contents.trim());
@@ -81,8 +80,8 @@ public class ReportSetting extends Activity {
     }
 
     private void load(){
-        load_phone = report_data.getString("phone", "");
-        load_content = report_data.getString("content", "");
+        load_phone = data.getString("phone", "");
+        load_content = data.getString("content", "");
     }
 
 
