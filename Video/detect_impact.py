@@ -16,7 +16,7 @@ address = 0x68
 bus.write_byte_data(address, power_mgmt_1, 0)
 
 check = False
-memory = sysv_ipc.SharedMemory(1219) 
+memory = sysv_ipc.SharedMemory(1209, flags=01000, size=10, mode=0600)
 
 def read_byte(adr):
     return bus.read_byte_data(address, adr)
@@ -52,25 +52,19 @@ def detect_impact():
     if (2.5 < y_scale):
     	return True
 
-def receive():
-	print("Receiving!!")
-	return True
-
-def send():
-	print("Sending!!")
-	return True
-
 def impact():
 	t = create_time()
 	print("Time : %s" % t)
-	while True:
-		fin = memory.read()
-		if fin == "True":
-			print("memory: %s" % fin)	
-			video_mixing(t)
-			break
+	#while True:
+	fin = memory.read()
+	print(fin)
+	if fin == "SIG":
+		print("memory: %s" % fin)	
+		video_mixing(t)
+
 
 def video_mixing(t):
+	print("Start")
 	time = t[11:13]
 	frame = 30
 	file_path = glob.glob("%s*.mp4" % (norm_path))
@@ -118,5 +112,6 @@ if __name__=="__main__":
 		#print("Detecting...")
 		if check == True:
 			impact()
-		
+		else:
+			continue
 
