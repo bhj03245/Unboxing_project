@@ -1,5 +1,7 @@
 import kivy
-import test as t
+import subprocess
+import os
+# import test as t
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
@@ -28,7 +30,9 @@ class MyApp(App):
 
 def print_t(obj):
     if obj.text == 'Test':
-        t.printf()
+        #t.printf()
+        cmd = 'sudo python detect_impact_ver2.py'
+        os.system(cmd)
 
 if __name__ == '__main__':
     MyApp().run()
