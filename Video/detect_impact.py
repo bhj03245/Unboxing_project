@@ -16,7 +16,7 @@ address = 0x68
 bus.write_byte_data(address, power_mgmt_1, 0)
 
 check = False
-memory = sysv_ipc.SharedMemory(1210, flags=01000, size=10, mode=0600)
+memory = sysv_ipc.SharedMemory(1215, flags=01000, size=2, mode=0600)
 
 def read_byte(adr):
     return bus.read_byte_data(address, adr)
@@ -54,12 +54,18 @@ def detect_impact():
 def impact():
     t = create_time()
     print("Time : %s" % t)
-    #while True:
-    fin = memory.read()
-    print(fin)
-    if 0 <= int(fin) <= 60:
-    	print("memory: %s" % fin)  
-    	video_mixing(t)
+    while True:
+        fin = memory.read()
+        print(fin, type(fin), len(fin))
+        if fin == '60':
+            print("Memory : %s" % fin)
+            video_mixing(t)
+            memory.write(str(''))
+            break
+      #  elif 0 <= int(fin) <= 60:
+       #     print("memory: %s" % fin)  
+        #    video_mixing(t)
+         #   break
 
 
 def video_mixing(t):
@@ -75,7 +81,7 @@ def video_mixing(t):
 
     if time < 10:
         print("############ First ##########")
-        imptFrame = time * 10
+        imptFrame = time * 30
         start_time = (60 + time) - 10
         end_time = time + 10
         endFrame = end_time * frame
