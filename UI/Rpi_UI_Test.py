@@ -1,4 +1,5 @@
 import kivy
+import test as t
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
@@ -27,7 +28,7 @@ class MyApp(App):
 
 def print_t(obj):
     if obj.text == 'Test':
-        print("Test!!!!!!!!!!!")
+        t.printf()
 
 if __name__ == '__main__':
     MyApp().run()
