@@ -21,20 +21,10 @@ import cv2
 import time
 import datetime
 
-#gp.setwarnings(False)
-#gp.setmode(gp.BOARD)
-
-#gp.setup(7, gp.OUT)
-#gp.setup(11, gp.OUT)
-#gp.setup(12, gp.OUT)
-
-#i2c = "i2cset -y 1 0x70 0x00 0x06"
-
-#os.system(i2c)
-
-#gp.output(7, False)
-#gp.output(11, True)
-#gp.output(12, False)
+alarmPin = 28
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(alarmPin, GPIO.OUT)
+GPIO.output(alarmPin, GPIO.LOW)
 
 def eye_aspect_ratio(eye):
     # compute the euclidean distances between the two sets of
@@ -88,8 +78,12 @@ print("[INFO] starting video stream thread...")
 #vs = FileVideoStream(args["video"]).start()
 #fileStream = True
 vs = VideoStream(1).start()
+<<<<<<< HEAD
+# vs = VideoStream(usePiCamera=True).start()
+=======
+#vs = VideoStream(0).start()
 #vs = VideoStream(usePiCamera=True).start()
-
+>>>>>>> 1a66a4e7bd25590c0dd8a38c50586d42b94a943e
 fileStream = False
 time.sleep(1.0)
 
@@ -144,8 +138,7 @@ while True:
             if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
                 cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
                             2.0, (0, 0, 255), 2)
-                #print("drowsiness")
-                #time.sleep(1.0)
+                GPIO.output(alarmPin, GPIO.HIGH)
         # otherwise, the eye aspect ratio is not below the blink
         # threshold
         else:
@@ -157,8 +150,7 @@ while True:
             if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
                 cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
                             2.0, (0, 0, 255), 2)
-                #print("drowsiness")
-                #time.sleep(1.0)
+                GPIO.output(alarmPin, GPIO.HIGH)
             # reset the eye frame counter
             COUNTER = 0
             DROWSINESS_COUNTER = 0
