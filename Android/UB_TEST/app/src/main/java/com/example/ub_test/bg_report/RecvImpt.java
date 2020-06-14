@@ -1,10 +1,15 @@
 package com.example.ub_test.bg_report;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.ub_test.R;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,29 +18,35 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class RecvImpt extends AsyncTask<String, Void, String> {
+    private SharedPreferences report_data;
 
     Context mContext;
 
-    public RecvImpt(Context context){
-        mContext= context;
-    }
 
-    //String ip = getString(R.string.ip);
-    private static String SERVER_URL = "http://172.30.1.28/apkCtrl/reportImpt_apk.php";
+    public RecvImpt(Context context) {
+        mContext = context;
+    }
 
     String data = "";
 
     HttpURLConnection httpURLConnection;
 
+
+    public void load() {
+
+
+    }
+
     @Override
     protected String doInBackground(String... unused) {
 
-
+        String ip = mContext.getString(R.string.ip);
         try {
-            URL url = new URL(SERVER_URL);
+            URL url = new URL(ip + "/apkCtrl/reportImpt_apk.php");
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setReadTimeout(5000);
             httpURLConnection.setConnectTimeout(5000);
@@ -87,19 +98,22 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
 
         Log.d(TAG, "recvData: " + s);
 
-        if(s.equals("Impt")){
-            final String phone = "01023024573";
-            final String contents = "와구와구 테스트중";
+        report_data = mContext.getSharedPreferences("report_data", MODE_PRIVATE);
+        String phone = report_data.getString("phone", "");
+        String content = report_data.getString("content", "");
 
-            try{
+
+        if (s.equals("Impt")) {
+
+            try {
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(phone, null, contents, null, null);
+                smsManager.sendTextMessage(phone, null, content, null, null);
                 Toast.makeText(mContext, "Send Succeeded", Toast.LENGTH_LONG).show();
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             Log.d(TAG, "recvData: " + s);
         }
 

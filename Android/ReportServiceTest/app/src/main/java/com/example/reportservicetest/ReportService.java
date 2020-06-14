@@ -13,12 +13,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 public class ReportService extends Service {
 
@@ -32,27 +35,37 @@ public class ReportService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         serviceIntent = intent;
-        showToast(getApplication(), "Start Service");
 
-        mainThread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat("aa hh:mm");
-                boolean run = true;
-                while (run) {
-                    try {
-                        Thread.sleep(1000 * 10 * 1); // 1 minute 1000 * 60 * 1
-                        Date date = new Date();
-                        sendNotification(sdf.format(date));
-                    } catch (InterruptedException e) {
-                        run = false;
-                        e.printStackTrace();
+        boolean modeChecked = intent.getBooleanExtra("modeChecked", false);
+        Log.d(TAG, "Checked! = " + modeChecked);
+        System.out.println("모드 체크 = " + modeChecked);
+
+        if(modeChecked) {
+
+            showToast(getApplication(), "Start Service");
+
+            mainThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    SimpleDateFormat sdf = new SimpleDateFormat("aa hh:mm");
+                    boolean run = true;
+                    while (run) {
+                        try {
+                            Thread.sleep(1000 * 10 * 1); // 1 minute 1000 * 60 * 1
+                            Date date = new Date();
+                            sendNotification(sdf.format(date));
+                        } catch (InterruptedException e) {
+                            run = false;
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
-        mainThread.start();
+            });
+            mainThread.start();
 
+        }
+        else
+            stopService(serviceIntent);
 
         return START_NOT_STICKY;
     }
@@ -68,6 +81,7 @@ public class ReportService extends Service {
             mainThread.interrupt();
             mainThread = null;
         }
+
     }
 
     @Override
@@ -78,7 +92,7 @@ public class ReportService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
-    }
+}
 
     public void showToast(final Application application, final String msg) {
         Handler h = new Handler(application.getMainLooper());
@@ -116,5 +130,6 @@ public class ReportService extends Service {
         }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        startForeground(0, notificationBuilder.build());
     }
 }

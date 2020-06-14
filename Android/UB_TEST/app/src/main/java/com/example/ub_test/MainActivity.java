@@ -27,6 +27,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.ub_test.bg_report.RealService;
+import com.example.ub_test.bg_report.RecvImpt;
 import com.example.ub_test.bg_report.RestartService;
 
 import java.io.BufferedReader;
@@ -39,24 +40,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
 public class MainActivity extends AppCompatActivity {
-    Context context = this;
     EditText et_id;
     EditText et_pw;
     Button btn_login;
     String str_id;
     String str_pw;
-    Switch mode_switch;
 
-    SharedPreferences data;
 
-    Boolean main_modeChecked = false;
-    Boolean load_mode=false;
-
-    private Intent serviceIntent;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private static final int MULTIPLE_PERMISSIONS = 101;
 
@@ -70,19 +63,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        RecvImpt recvImpt = new RecvImpt(MainActivity.this);
 
-        et_id = (EditText)findViewById(R.id.id);
-        et_pw = (EditText)findViewById(R.id.password);
-        btn_login = (Button)findViewById(R.id.login);
-        mode_switch = (Switch)findViewById(R.id.mode_switch);
+        et_id = (EditText) findViewById(R.id.id);
+        et_pw = (EditText) findViewById(R.id.password);
+        btn_login = (Button) findViewById(R.id.login);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
+                try {
                     str_id = et_id.getText().toString();
                     str_pw = et_pw.getText().toString();
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     Log.e("error", e.getMessage());
                 }
                 DB_login DBL = new DB_login();
@@ -90,49 +83,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    if (RealService.serviceIntent == null) {
-                        serviceIntent = new Intent(context, RealService.class);
-                        startService(serviceIntent);
-                        Toast.makeText(context, "주행모드", Toast.LENGTH_SHORT).show();
-                    } else {
-                        serviceIntent = RealService.serviceIntent;//getInstance().getApplication();
-                        Toast.makeText(MainActivity.this, "already", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else{
-                    stopService(serviceIntent);
-                    Toast.makeText(context, "주차모드", Toast.LENGTH_SHORT).show();
-                }
-                //String ex = Boolean.toString(isChecked);
-                //Toast.makeText(context, ex, Toast.LENGTH_SHORT).show();
-                SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
-                SharedPreferences.Editor editor = data.edit();
-                editor.putBoolean("switchkey", isChecked);
-                editor.commit();
-            }
-        });
 
-        //main_modeCheckded = (Boolean) serviceIntent.getExtras().get("modeChecked");
-        //SwitchMode switchMode = new SwitchMode(this);
-        //main_modeChecked = switchMode.getChecked();
-
-        data = getSharedPreferences("switch_data", MODE_PRIVATE);
-        load_mode = data.getBoolean("switchkey", false);
-        mode_switch.setChecked(load_mode);
-
-
-        //String ex = Boolean.toString(load_mode);
-        //oast.makeText(context, ex, Toast.LENGTH_SHORT).show();
-        Intent toRestart = new Intent(MainActivity.this, RestartService.class);
-        toRestart.putExtra("modeChecked", load_mode);
-        startService(toRestart);
-
-
-        if(Build.VERSION.SDK_INT >= 23){
+        if (Build.VERSION.SDK_INT >= 23) {
             checkPermissions();
         }
 
@@ -161,35 +113,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean checkPermissions(){
+    private boolean checkPermissions() {
         int result;
-        List<String> permissionList= new ArrayList<>();
-        for(String pm : permissions){
+        List<String> permissionList = new ArrayList<>();
+        for (String pm : permissions) {
             result = ContextCompat.checkSelfPermission(this, pm);
-            if(result!= PackageManager.PERMISSION_GRANTED){
+            if (result != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(pm);
             }
         }
-        if(!permissionList.isEmpty()){
+        if (!permissionList.isEmpty()) {
             ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), MULTIPLE_PERMISSIONS);
             return false;
         }
         return true;
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case MULTIPLE_PERMISSIONS:{
-                if(grantResults.length > 0 ){
-                    for(int i =0; i < permissions.length; i++){
-                        if(permissions[i].equals(this.permissions[i])){
-                            if(grantResults[i]!=PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case MULTIPLE_PERMISSIONS: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        if (permissions[i].equals(this.permissions[i])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                                 Toast.makeText(this, "권한 요청에 동의하셔야 제대로 서비스를 이용하실 수 있습니다.", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         }
                     }
-                }else{
+                } else {
                     Toast.makeText(this, "권한 요청에 동의하셔야 제대로 서비스를 이용하실 수 있습니다.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -199,14 +152,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        if(serviceIntent!=null){
-            stopService(serviceIntent);
-            serviceIntent=null;
-        }
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
 
     public class DB_login extends AsyncTask<Void, Integer, String> {
