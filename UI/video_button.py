@@ -1,12 +1,12 @@
 import kivy
-import subprocess
-import os
-# import test as t
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.gridlayout import GridLayout
 from kivy.graphics import Color, Rectangle
+from kivy.uix.camera import Camera
+import cv2
+import numpy as np
 
 class MyApp(App):
     def build(self):
@@ -16,13 +16,14 @@ class MyApp(App):
             Color(.2,.2,.2,1)
             self.rect = Rectangle(size=(800,600), pos=layout.pos)
 
-        inputDisplay = Button(text="Input")
+        play = Button(text="Play")
         outputControl = ToggleButton(text="LED")
         testButton = Button(text="Test")
         beepButton = Button(text="BEEP!")
 
         testButton.bind(on_press=print_t)
-        layout.add_widget(inputDisplay)
+        play.bind(on_press=print_t)
+        layout.add_widget(play)
         layout.add_widget(outputControl)
         layout.add_widget(beepButton)
         layout.add_widget(testButton)
@@ -30,9 +31,18 @@ class MyApp(App):
 
 def print_t(obj):
     if obj.text == 'Test':
-        #t.printf()
-        cmd = 'sudo python detect_impact_ver2.py'
-        os.system(cmd)
+        print("Test!!!!!!!!!!!")
+
+    elif obj.text == 'Play':
+        cap = cv2.VideoCapture('IMPT_200531_180221.mp4')
+        while(cap.isOpened()):
+            ret, frame = cap.read()
+            cv2.imshow("image", frame)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        cap.release()
+        cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     MyApp().run()

@@ -32,7 +32,7 @@ impt_path = os.getcwd() + '/UB_video/Impact/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 
-memory = sysv_ipc.SharedMemory(1209) 
+memory = sysv_ipc.SharedMemory(1215) 
 
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
@@ -86,7 +86,7 @@ class recording:
     def recording(self, record):
         picam = cv2.VideoCapture(-1)
         if picam.isOpened() == False:
-            print('Can\'t open the CAM C')
+            print('Can\'t open the CAM')
             exit()
 	
         cv2.namedWindow('CAM_Window')
@@ -110,12 +110,12 @@ class recording:
             out.write(frame)
             self.show(frame)
 
-            if sec == 30:
+            if sec == 60:
                #picam.release()
                 out.release()
                 video = convert(path, path.split('/')[6])
                 fin = memory.read()
-                memory.write("SIG")
+                memory.write(str(sec))
                 break
 
             if cv2.waitKey(33) >= 0:
