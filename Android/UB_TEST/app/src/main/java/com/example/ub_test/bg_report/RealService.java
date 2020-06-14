@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -20,13 +21,18 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.ub_test.MainActivity;
 import com.example.ub_test.R;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class RealService extends Service {
 
     private Thread mainThread;
     public static Intent serviceIntent = null;
+
+
 
     public RealService() {
     }
@@ -39,15 +45,16 @@ public class RealService extends Service {
         mainThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                //SimpleDateFormat sdf = new SimpleDateFormat("aa hh:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("aa hh:mm");
                 boolean run = true;
                 while (run) {
                     try {
-                        Thread.sleep(1000 * 60 * 1); // 1 minute
+                        Thread.sleep(1000 * 15 * 1); // 1 minute 1000 * 60 * 1
                         RecvImpt recvImpt = new RecvImpt(getApplicationContext());
                         recvImpt.execute();
+                        //Date date = new Date();
                         //showToast(getApplication(), sdf.format(date));
-                        sendNotification("서비스 작동중");
+                        //sendNotification(sdf.format(date));
                     } catch (InterruptedException e) {
                         run = false;
                         e.printStackTrace();
@@ -67,11 +74,25 @@ public class RealService extends Service {
         serviceIntent = null;
         setAlarmTimer();
         Thread.currentThread().interrupt();
-
         if (mainThread != null) {
             mainThread.interrupt();
             mainThread = null;
         }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        //setAlarmTimer();
+
+        PendingIntent service = PendingIntent.getService(
+                getApplicationContext(),
+                1001,
+                new Intent(getApplicationContext(), RestartService.class),
+                PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, service);
+
     }
 
     @Override
@@ -94,7 +115,7 @@ public class RealService extends Service {
         h.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(application, msg, Toast.LENGTH_LONG).show();
+                Toast.makeText(application, msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -103,7 +124,7 @@ public class RealService extends Service {
         final Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         c.add(Calendar.SECOND, 1);
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, RestartService.class);
         PendingIntent sender = PendingIntent.getBroadcast(this, 0,intent,0);
 
         AlarmManager mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

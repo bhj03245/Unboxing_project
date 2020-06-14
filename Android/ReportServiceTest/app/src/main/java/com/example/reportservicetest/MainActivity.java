@@ -48,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
                 //System.out.println("스트링 확인" + ex);
                 //System.out.println("isCecked 확인" + isChecked);
                 modeChecked = isChecked;
+
+                Intent toReport = new Intent(MainActivity.this, ReportService.class);
+                toReport.putExtra("modeChecked", isChecked);
+                startService(toReport);
+
+                Intent toAlarm = new Intent(MainActivity.this, AlarmReceiver.class);
+                toAlarm.putExtra("toAlarmChecked", isChecked);
+
                 SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
                 SharedPreferences.Editor editor = data.edit();
                 editor.putBoolean("switchkey", isChecked);
