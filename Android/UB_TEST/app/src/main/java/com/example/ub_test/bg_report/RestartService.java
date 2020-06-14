@@ -5,13 +5,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -25,8 +23,7 @@ import static android.content.ContentValues.TAG;
 public class RestartService extends Service {
 
 
-
-    Boolean modeChecked;
+    boolean modeChecked = false;
 
     public RestartService() {
     }
@@ -45,7 +42,7 @@ public class RestartService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default");
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentTitle(null);
+        builder.setContentTitle("신고 기능");
         builder.setContentText(null);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -57,29 +54,36 @@ public class RestartService extends Service {
         }
 
         Notification notification = builder.build();
+
+
         startForeground(9, notification);
 
         /////////////////////////////////////////////////////////////////////
         //modeChecked = intent.getBooleanExtra("modeChecked", false);
         //String modeChecked = intent.getStringExtra("modeChecked");
-        modeChecked = intent.getExtras().getBoolean("modeChecked", false);
+
+        SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
+        modeChecked = data.getBoolean("switchkey", false);
+
+        //modeChecked = intent.getBooleanExtra("modeChecked", false);
         Log.d(TAG, "Checked! = " + modeChecked);
-//        SwitchMode switchMode = new SwitchMode(activity);
-//        modeChecked = switchMode.getChecked();
+        System.out.println("모드 체크 = " + modeChecked);
 
-//        MainActivity activity = new MainActivity();
-//        modeChecked = activity.getChecked();
+        Intent in = new Intent(this, RealService.class);
 
-        //MainActivity mainActivity = MainActivity.
+        if (modeChecked == true) {
 
-        if(modeChecked) {
-            Intent in = new Intent(this, RealService.class);
             startService(in);
-
-            stopForeground(true);
-            stopSelf();
+        } else {
+           // stopForeground(true);
+            //stopSelf();
+            stopService(in);
         }
+        //stopForeground(true);
+        //stopSelf();
+
         return START_NOT_STICKY;
+
     }
 
     @Nullable
