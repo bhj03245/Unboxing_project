@@ -2,6 +2,7 @@ package com.example.ub_test.list;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +13,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -34,11 +37,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static String TAG = "phptest";
+    private static String TAG = "test";
 
     private ArrayList<VideoVO> mArrayList;
     private VideoAdapter mAdapter;
@@ -50,6 +54,11 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
     private DownloadManager downloadManager;
     private long downloadID = -1L;
 
+    private static String list_name = "manl";
+
+    private SearchView searchView;
+    private SearchView.OnQueryTextListener queryTextListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,19 +67,23 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         mRecyclerView = (RecyclerView)findViewById(R.id.showList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
+        //리스트 초기화 및 Item을 어뎁터 이용하여 리사이클러 뷰에 적용
         mArrayList = new ArrayList<>();
-        mAdapter = new VideoAdapter(this, mArrayList);
+        mAdapter = new VideoAdapter(this, mArrayList, list_name);
         mRecyclerView.setAdapter(mAdapter);
 
         mArrayList.clear();
         mAdapter.notifyDataSetChanged();
 
+        //SwipeRefreshLayout 등록
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         GetData task = new GetData();
         task.execute();
 
+        //다운로드 매니저 등록
         downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
@@ -78,6 +91,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         registerReceiver(onDownloadComplete, intentFilter);
 
 
+        //어댑터로부터 다운로드할 url 받기
         Intent intent = getIntent();
         String inTitle = intent.getStringExtra("title");
         String inUrl = intent.getStringExtra("url");
@@ -87,6 +101,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
     }
     @Override
     public void onRefresh() {
+        mArrayList.clear();
         GetData task = new GetData();
         task.execute();
         mSwipeRefreshLayout.setRefreshing(false);
@@ -98,6 +113,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         unregisterReceiver(onDownloadComplete);
     }
 
+    //해당 Item의 URL로 안드로이드 다운로드 매니저 실행
     private void startDownload(String title, String downloadUrl){
         File file = new File(getExternalFilesDir(Environment.DIRECTORY_DCIM), title);
 
@@ -113,6 +129,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         downloadID = downloadManager.enqueue(request);
     }
 
+    //다운로드 결과 알려 주는 함수
     private BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -142,6 +159,52 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         }
     };
 
+    //리스트에서 검색 함수
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) findViewById(R.id.search_view);
+        searchView.onActionViewExpanded(); //바로 검색할 수 있도록
+
+        if (searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
+            searchView.setQueryHint(getString(R.string.search_hint));
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    mAdapter.setFilter(filter(mArrayList, newText));
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        return true;
+    }
+    //필터 설정 함수
+    private List<VideoVO> filter(List<VideoVO> testItem, String query) {
+        query = query.toLowerCase();
+
+        final List<VideoVO> filteredNoticeList = new ArrayList<>();
+        if (query != null && !query.equals("")) {
+            for (VideoVO model : testItem) {
+                final String title = model.getTitle().toLowerCase();
+                if (title.contains(query)) {
+                    filteredNoticeList.add(model);
+                }
+            }
+        }
+        else{
+
+        }
+        return filteredNoticeList;
+    }
+
+    //웹서버에서 리스트 가져오기
     private class GetData extends AsyncTask<Void, Void, String> {
         ProgressDialog progressDialog;
         String errString = null;
@@ -165,8 +228,7 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
             Log.d(TAG, "response - " + result);
 
             if (result == null){
-
-                //mTextViewResult.setText(errorString);
+                Toast.makeText(ManlList.this, "Error: Network is not ready", Toast.LENGTH_SHORT).show();
             }
             else {
                 mJsonString = result;
@@ -228,6 +290,8 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
             }
         }
     }
+
+    // Asnyctask로 가져온 결과 보여주는 함수
     private void showResult(){
         try{
             JSONObject jsonObject = new JSONObject(mJsonString);

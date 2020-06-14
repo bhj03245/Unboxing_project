@@ -2,14 +2,21 @@ package com.example.ub_test;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.Toast;
 
+import com.example.ub_test.bg_report.RealService;
+import com.example.ub_test.bg_report.RestartService;
 import com.example.ub_test.list.ImptList;
 import com.example.ub_test.list.ManlList;
 import com.example.ub_test.list.NormList;
@@ -31,14 +38,20 @@ import static android.content.ContentValues.TAG;
 
 public class MainMenu extends AppCompatActivity {
 
+    private Intent serviceIntent;
+    Context context = this;
+
     Button btn_streaming;
     Button btn_parkLocation;
     Button btn_normList;
     Button btn_manlList;
     Button btn_parkList;
     Button btn_imptList;
-
     ImageView iv_setting;
+    Switch mode_switch;
+
+    SharedPreferences data;
+    boolean load_mode;
 
     final static String trig = "trigger";
     String str_lat, str_lng;
@@ -56,6 +69,8 @@ public class MainMenu extends AppCompatActivity {
         btn_parkList = (Button)findViewById(R.id.park_list);
         btn_imptList = (Button)findViewById(R.id.impt_list);
         iv_setting = (ImageView)findViewById(R.id.settings);
+        mode_switch = (Switch) findViewById(R.id.mode_switch);
+
 
         GetGPS getGPS = new GetGPS();
         try {
@@ -132,6 +147,39 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        mode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (RealService.serviceIntent == null) {
+                        serviceIntent = new Intent(context, RestartService.class);
+                        startService(serviceIntent);
+                        Toast.makeText(context, "주행모드", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        serviceIntent = RealService.serviceIntent;//getInstance().getApplication();
+                        Toast.makeText(MainMenu.this, "already started", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    stopService(serviceIntent);
+                    Toast.makeText(context, "주차모드", Toast.LENGTH_SHORT).show();
+
+                }
+
+                System.out.println("isCecked 확인" + isChecked);
+
+                SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
+                SharedPreferences.Editor editor = data.edit();
+                editor.putBoolean("switchkey", isChecked);
+                editor.commit();
+            }
+        });
+
+        data = getSharedPreferences("switch_data", MODE_PRIVATE);
+        load_mode = data.getBoolean("switchkey", false);
+        mode_switch.setChecked(load_mode);
 
 
     }
