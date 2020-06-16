@@ -32,7 +32,8 @@ impt_path = os.getcwd() + '/UB_video/Impact/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 
-memory = sysv_ipc.SharedMemory(1215) 
+impt_memory = sysv_ipc.SharedMemory(1218)
+fin_memory = sysv_ipc.SharedMemory(1217) 
 
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
@@ -42,7 +43,6 @@ def create_file():
     now = create_time()
     file_name = now + '.h264'
     return file_name
-
 
 def convert(path, file_name):
     dest_file = path.replace('h264','mp4')
@@ -105,6 +105,14 @@ class recording:
             ret, frame = picam.read()
             sec = framecnt / fps
             rr = (picam.get(cv2.CAP_PROP_POS_FRAMES))
+            chk = impt_memory.read()
+            print(chk)
+            
+            if chk == 'IMPT':
+                fin = fin_memory.read()
+                fin_memory.write(str('%02d' % sec))
+                impt_memory.write('    ')
+
             print("%d %d %d %d" % (fps, framecnt, rr, sec))
 
             out.write(frame)
@@ -114,8 +122,8 @@ class recording:
                #picam.release()
                 out.release()
                 video = convert(path, path.split('/')[6])
-                fin = memory.read()
-                memory.write(str(sec))
+                flag = impt_memory.read()
+                impt_memory.write("FLAG")
                 break
 
             if cv2.waitKey(33) >= 0:
