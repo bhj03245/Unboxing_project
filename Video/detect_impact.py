@@ -1,4 +1,3 @@
-#import video_ver3
 import os
 import glob
 import threading
@@ -16,7 +15,22 @@ address = 0x68
 bus.write_byte_data(address, power_mgmt_1, 0)
 
 check = False
-memory = sysv_ipc.SharedMemory(1215, flags=01000, size=2, mode=0600)
+impt_memory = sysv_ipc.SharedMemory(1218, flags=01000, size=4, mode=0600)
+fin_memory = sysv_ipc.SharedMemory(1217, flags=01000, size=2, mode=0600)
+
+class ListQueue:
+    def __init__(self):
+        self.my_list = list()
+
+    def put(self, element):
+        self.my_list.append(element)
+        self.my_list = sorted(set(self.my_list), reverse=True)
+
+    def get(self):
+        return self.my_list.pop(0)
+
+    def qsize(self):
+        return len(self.my_list)
 
 def read_byte(adr):
     return bus.read_byte_data(address, adr)
@@ -53,14 +67,17 @@ def detect_impact():
 
 def impact():
     t = create_time()
+    impt_memory.write("IMPT")
     print("Time : %s" % t)
     while True:
-        fin = memory.read()
-        print(fin, type(fin), len(fin))
-        if fin == '60':
-            print("Memory : %s" % fin)
-            video_mixing(t)
-            memory.write(str(''))
+        sec = fin_memory.read()
+        print(sec)
+        nt = t[:11] + sec
+        flag = impt_memory.read()   
+        if flag == 'FLAG':
+            print("Memory : %s" % flag)
+            video_mixing(nt)
+            impt_memory.write('    ')
             break
       #  elif 0 <= int(fin) <= 60:
        #     print("memory: %s" % fin)  
@@ -107,7 +124,7 @@ def video_mixing(t):
             middleFrame = amount_of_frames
             while True:
                 ret, frame = cap.read()
-                if (CurrentFrame > (middleFrame - imptFrame)):
+                if (CurrentFrame > (middleFrame - startFrame)):
                     cap = cv2.VideoCapture(files[0][0])
                     cap.set(cv2.CAP_PROP_POS_FRAMES, imptFrame)
 
@@ -130,7 +147,7 @@ def video_mixing(t):
         
     elif 10 <= time <= 50:   
         print("############ Second ##########")
-        impt_time = int(time) * int(frame)
+        impt_time = time * frame
         startFrame = impt_time - frame * 10
         CurrentFrame = 0
         endFrame = impt_time + (frame * 10)
@@ -160,8 +177,58 @@ def video_mixing(t):
             impt_out.release()
             print(amount_of_frames)
         print("Success!!")
+    
+    elif time > 50:
+        print("############ Third ##########")
+        time_queue = queue.Queue()
+        imptFrame = time * 30
+        start_time = time - 10
+        end_time = time - 50
+        startFrame = start_time * frame
+        endFrame = end_time * frame
+
+        CurrentFrame = 0
+        CurrentSecond = 0
+
+        print("startFrame : %d" % startFrame)
+
+        for i in range(0, 2):
+            if i == 2:
+                if not os.path.isfile(files[0][i]):
+                    break
+            print(files[0][i])
+
+            cap = cv2.VideoCapture(files[0][1])
+            amount_of_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+            cap.set(cv2.CAP_PROP_POS_FRAMES, startFrame)
+            middleFrame = amount_of_frames
+            while True:
+                ret, frame = cap.read()
+                if (CurrentFrame > (middleFrame - startFrame)):
+                    cap = cv2.VideoCapture(files[0][0])
+                    cap.set(cv2.CAP_PROP_POS_FRAMES, startFrame)
+
+                    while True:
+                        ret, frame = cap.read()
+                        if (CurrentSecond > (endFrame - 0)):
+                            break
+                        CurrentSecond += 1
+                        impt_out.write(frame)
+                    break
+
+                CurrentFrame += 1
+
+                impt_out.write(frame)
+                cv2.waitKey(1)
+
+            impt_out.release()
+            print(amount_of_frames)
+        print("Success!!")
 
 if __name__=="__main__":
+    if impt_memory.read() != '' or fin_memory.read() != '':
+        impt_memory.write('    ')
+        fin_memory.write('  ')
 	while True:
 		check = detect_impact()
 		if check == True:
