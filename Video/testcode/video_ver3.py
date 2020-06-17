@@ -32,6 +32,7 @@ impt_path = os.getcwd() + '/UB_video/Impact/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 
+chk_memory = sysv_ipc.SharedMemory(1219)
 impt_memory = sysv_ipc.SharedMemory(1218)
 fin_memory = sysv_ipc.SharedMemory(1217) 
 
@@ -83,7 +84,7 @@ class recording:
     def show(self, frame):
         cv2.imshow('CAM_Window', frame)
 
-    def recording(self, record):
+    def recording(self, record, sec_sum):
         picam = cv2.VideoCapture(-1)
         if picam.isOpened() == False:
             print('Can\'t open the CAM')
@@ -91,15 +92,21 @@ class recording:
 	
         cv2.namedWindow('CAM_Window')
         prevTime = 0
-   
+        sec_sum = sec_sum
         path = record[0]
         out = record[1]
         framecnt = 0
-
         fps = int(picam.get(cv2.CAP_PROP_FPS))
-        check = False
 
         while True:
+            if sec_sum == 120:
+                print(sec_sum)
+                flag = impt_memory.read()
+                chk_memory.write("CHEK")
+                impt_memory.write("FLG2")
+                sec_sum = 0
+                continue
+
             framecnt += 1
 
             ret, frame = picam.read()
@@ -113,18 +120,22 @@ class recording:
                 fin_memory.write(str('%02d' % sec))
                 impt_memory.write('    ')
 
-            print("%d %d %d %d" % (fps, framecnt, rr, sec))
+            print("%d %d %d %d %d" % (fps, framecnt, rr, sec, sec_sum))
 
             out.write(frame)
             self.show(frame)
-
-            if sec == 60:
+         
+            if sec == 60:    
                #picam.release()
+                sec_sum += sec
                 out.release()
                 video = convert(path, path.split('/')[6])
-                flag = impt_memory.read()
-                impt_memory.write("FLAG")
-                break
+                break 
+
+                if 0 <= int(fin_memory.read()) <= 50:
+                    flag = impt_memory.read()
+                    impt_memory.write("FLAG")
+                    break
 
             if cv2.waitKey(33) >= 0:
                 picam.release()
@@ -132,7 +143,7 @@ class recording:
                 break
 
 		
-        nthread = threading.Thread(target=self.recording, args=(self.normal_recording(),))
+        nthread = threading.Thread(target=self.recording, args=(self.normal_recording(), sec_sum))
         nthread.start()
 
 
@@ -145,6 +156,6 @@ n = r.normal_recording()
 #m = r.manual_recording()
 #p = r.parking_recording()
 
-r.recording(n)
+r.recording(n, 0)
 
 
