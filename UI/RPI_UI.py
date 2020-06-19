@@ -23,6 +23,11 @@ class Menu(Screen):
 class Setting(Screen):
     pass
 
+    def drowsiness_switch(selfself, switchObject, switchValue):
+        if(switchValue):
+            print('Switch is On:')
+        else:
+            print('Switch is OFF')
 
 class Video_list(Screen):
     pass
