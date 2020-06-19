@@ -142,7 +142,9 @@ class recording:
                 video = convert(path, path.split('/')[6])  
                 break
 
-		
+        if sec_sum == 60:
+            pthread = threading.Thread(target=self.recording, args=(self.parking_recording(), sec_sum))
+            pthread.start() 
         nthread = threading.Thread(target=self.recording, args=(self.normal_recording(), sec_sum))
         nthread.start()
 
