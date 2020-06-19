@@ -1,0 +1,108 @@
+WindowManager:
+    Main:
+    Menu:
+    Setting:
+
+<Main>
+    name: "main"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 100
+                size_hint: (None, None)
+                Button:
+                    text:"Back"
+                    on_release:
+                        app.root.current = "menu"
+                Button:
+                    text:"Home"
+                    on_release:
+                        app.root.current = "main"
+                Button:
+                    text:"Menu"
+                    on_release:
+                        app.root.current = "menu"
+
+<Menu>
+    name: "menu"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    text:"Drowsiness on"
+                Button:
+                    text:"Lane_detector on"
+
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    text:"Video List"
+                Button:
+                    text:"Setting"
+                    on_release:
+                        app.root.current = "setting"
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 100
+                size_hint: (None, None)
+                Button:
+                    text:"Back"
+                    on_release:
+                        app.root.current = "main"
+                Button:
+                    text:"Home"
+                    on_release:
+                        app.root.current = "main"
+                Button:
+                    text:"Menu"
+                    on_release:
+                        app.root.current = "menu"
+
+<Setting>
+    name: "setting"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    text:"Menual Recording on"
+                Button:
+                    text:"Black Box on"
+
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    text:"Reservation End"
+                Button:
+                    text:"Account Information"
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 100
+                size_hint: (None, None)
+                Button:
+                    text:"Back"
+                    on_release:
+                        app.root.current = "menu"
+                Button:
+                    text:"Home"
+                    on_release:
+                        app.root.current = "main"
+                Button:
+                    text:"Menu"
+                    on_release:
+                        app.root.current = "menu"
