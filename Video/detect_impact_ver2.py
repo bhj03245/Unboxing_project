@@ -5,6 +5,7 @@ import cv2
 import datetime
 import smbus
 import sysv_ipc
+import Queue
 
 norm_path = os.getcwd() + '/UB_video/Normal/'
 impt_path = os.getcwd() + '/UB_video/Impact/'
@@ -15,6 +16,7 @@ address = 0x68
 bus.write_byte_data(address, power_mgmt_1, 0)
 
 check = False
+chk_memory = sysv_ipc.SharedMemory(1219, flags=01000, size=4, mode=0600)
 impt_memory = sysv_ipc.SharedMemory(1218, flags=01000, size=4, mode=0600)
 fin_memory = sysv_ipc.SharedMemory(1217, flags=01000, size=2, mode=0600)
 
@@ -74,11 +76,21 @@ def impact():
         print(sec)
         nt = t[:11] + sec
         flag = impt_memory.read()   
-        if flag == 'FLAG':
+        chk = chk_memory.read()
+
+        if flag == 'FLG2' and chk == 'CHEK':
+            video_mixing(nt)
+            impt_memory.write('    ')
+            chk_memory.write('    ')
+            break
+        
+        elif flag == 'FLAG':
             print("Memory : %s" % flag)
             video_mixing(nt)
             impt_memory.write('    ')
             break
+
+        
       #  elif 0 <= int(fin) <= 60:
        #     print("memory: %s" % fin)  
         #    video_mixing(t)
@@ -180,7 +192,7 @@ def video_mixing(t):
     
     elif time > 50:
         print("############ Third ##########")
-        time_queue = queue.Queue()
+        time_queue = ListQueue()
         imptFrame = time * 30
         start_time = time - 10
         end_time = time - 50
@@ -206,7 +218,7 @@ def video_mixing(t):
                 ret, frame = cap.read()
                 if (CurrentFrame > (middleFrame - startFrame)):
                     cap = cv2.VideoCapture(files[0][0])
-                    cap.set(cv2.CAP_PROP_POS_FRAMES, startFrame)
+                    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
                     while True:
                         ret, frame = cap.read()
@@ -226,9 +238,11 @@ def video_mixing(t):
         print("Success!!")
 
 if __name__=="__main__":
-    if impt_memory.read() != '' or fin_memory.read() != '':
+    if impt_memory.read() != '' or fin_memory.read() != '' or chk_memory.read() != '':
         impt_memory.write('    ')
         fin_memory.write('  ')
+        chk_memory.write('    ')
+
 	while True:
 		check = detect_impact()
 		if check == True:

@@ -1,6 +1,7 @@
 # USAGE
 # python detect_blinks.py --shape-predictor shape_predictor_68_face_landmarks.dat --video blink_detection_demo.mp4
 # python detect_blinks.py --shape-predictor shape_predictor_68_face_landmarks.dat
+# python drowsiness_prevention.py -p ./shape-predictor shape_predictor_68_face_landmarks.dat
 
 # import the necessary packages
 from scipy.spatial import distance as dist
@@ -10,21 +11,24 @@ from imutils import face_utils
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
-import RPi.GPIO as gp
+import RPi.GPIO as GPIO
 import os
 import numpy as np
 import argparse
 import imutils
-import time
 import dlib
 import cv2
 import time
 import datetime
 
-alarmPin = 28
+buzzer= 17
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(alarmPin, GPIO.OUT)
-GPIO.output(alarmPin, GPIO.LOW)
+scale = [ 261, 294, 329, 349, 392, 440, 493, 523 ]
+    
+GPIO.setup(buzzer, GPIO.OUT)  
+p = GPIO.PWM(buzzer, 100)
+buzzer_list = [7,4]
 
 def eye_aspect_ratio(eye):
     # compute the euclidean distances between the two sets of
@@ -54,7 +58,7 @@ args = vars(ap.parse_args())
 # define two constants, one for the eye aspect ratio to indicate
 # blink and then a second constant for the number of consecutive
 # frames the eye must be below the threshold
-EYE_AR_THRESH = 0.2
+EYE_AR_THRESH = 0.25
 EYE_AR_CONSEC_FRAMES = 3
 DROWSINESS_CONSEC_FRAMES = 60
 # initialize the frame counters and the total number of blinks
@@ -77,13 +81,9 @@ predictor = dlib.shape_predictor(args["shape_predictor"])
 print("[INFO] starting video stream thread...")
 #vs = FileVideoStream(args["video"]).start()
 #fileStream = True
-vs = VideoStream(1).start()
-<<<<<<< HEAD
-# vs = VideoStream(usePiCamera=True).start()
-=======
-#vs = VideoStream(0).start()
+vs = VideoStream(0).start()
 #vs = VideoStream(usePiCamera=True).start()
->>>>>>> 1a66a4e7bd25590c0dd8a38c50586d42b94a943e
+
 fileStream = False
 time.sleep(1.0)
 
@@ -136,9 +136,13 @@ while True:
             COUNTER += 1
             DROWSINESS_COUNTER += 1
             if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
-                cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
-                            2.0, (0, 0, 255), 2)
-                GPIO.output(alarmPin, GPIO.HIGH)
+                cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX, 2.0, (0, 0, 255), 2)
+                p.start(100) 
+                p.ChangeDutyCycle(10) #
+                for i in range(len(buzzer_list)): 
+                    p.ChangeFrequency(scale[buzzer_list[i]]) 
+                    time.sleep(1)
+                p.stop() 
         # otherwise, the eye aspect ratio is not below the blink
         # threshold
         else:
@@ -148,9 +152,14 @@ while True:
                 TOTAL += 1
 
             if DROWSINESS_COUNTER >= DROWSINESS_CONSEC_FRAMES:
-                cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX,
-                            2.0, (0, 0, 255), 2)
-                GPIO.output(alarmPin, GPIO.HIGH)
+                cv2.putText(frame, 'Warning', (int(640 / 2.0) - 200, int(360 / 2.0) - 100), cv2.FONT_HERSHEY_SIMPLEX, 2.0, (0, 0, 255), 2)
+                p.start(100) 
+                p.ChangeDutyCycle(10) 
+                for i in range(len(buzzer_list)): 
+                    p.ChangeFrequency(scale[buzzer_list[i]]) 
+                    time.sleep(1)
+                p.stop() 
+                  
             # reset the eye frame counter
             COUNTER = 0
             DROWSINESS_COUNTER = 0
