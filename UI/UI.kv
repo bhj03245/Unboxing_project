@@ -2,6 +2,7 @@ WindowManager:
     Main:
     Menu:
     Setting:
+    Video_list:
 
 <Main>
     name: "main"
@@ -16,14 +17,17 @@ WindowManager:
                 size_hint: (None, None)
                 Button:
                     text:"Back"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
                 Button:
                     text:"Home"
+                    font_size:50
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"Menu"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
 
@@ -37,17 +41,31 @@ WindowManager:
 
             BoxLayout:
                 orientation: 'horizontal'
-                Button:
-                    text:"Drowsiness on"
-                Button:
-                    text:"Lane_detector on"
+                size: root.width, 100
+                size_hint: (None,None)
+                Label:
+                    text:"Drowsiness Prevention"
+                    font_size:20
+                Switch:
+                    active: False
+                    on_active: root.drowsiness_switch(self, self.active)
+                Label:
+                    text:"lane_detection"
+                    font_size:20
+                Switch:
+                    active: False
+                    on_active: root.drowsiness_switch(self, self.active)
 
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     text:"Video List"
+                    font_size:50
+                    on_release:
+                        app.root.current = "video_list"
                 Button:
                     text:"Setting"
+                    font_size:50
                     on_release:
                         app.root.current = "setting"
 
@@ -57,14 +75,17 @@ WindowManager:
                 size_hint: (None, None)
                 Button:
                     text:"Back"
+                    font_size:50
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"Home"
+                    font_size:50
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"Menu"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
 
@@ -77,18 +98,31 @@ WindowManager:
             size_hint: (None, None)
 
             BoxLayout:
+                size: root.width, 100
+                size_hint: (None,None)
                 orientation: 'horizontal'
-                Button:
-                    text:"Menual Recording on"
-                Button:
-                    text:"Black Box on"
+
+                Label:
+                    text:"Manual Recording"
+                    font_size:19
+                Switch:
+                    active: False
+                    on_active: root.drowsiness_switch(self, self.active)
+                Label:
+                    text:"BlackBox Power"
+                    font_size:20
+                Switch:
+                    active: False
+                    on_active: root.drowsiness_switch(self, self.active)
 
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     text:"Reservation End"
+                    font_size:50
                 Button:
                     text:"Account Information"
+                    font_size:50
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -96,13 +130,62 @@ WindowManager:
                 size_hint: (None, None)
                 Button:
                     text:"Back"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
                 Button:
                     text:"Home"
+                    font_size:50
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"Menu"
+                    font_size:50
+                    on_release:
+                        app.root.current = "menu"
+
+<Video_list>
+    name: "video_list"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    text:"Normal video list"
+                    font_size:50
+                Button:
+                    text:"Manual video list"
+                    font_size:50
+
+            BoxLayout:
+                orientation: 'horizontal'
+                Button:
+                    text:"Impact video list"
+                    font_size:50
+                Button:
+                    text:"Parking video list"
+                    font_size:50
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 100
+                size_hint: (None, None)
+                Button:
+                    text:"Back"
+                    font_size:50
+                    on_release:
+                        app.root.current = "menu"
+                Button:
+                    text:"Home"
+                    font_size:50
+                    on_release:
+                        app.root.current = "main"
+                Button:
+                    text:"Menu"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
