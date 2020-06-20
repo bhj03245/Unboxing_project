@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import sys
 import cv2
 import time
 import RPi.GPIO as gp
@@ -13,6 +14,7 @@ import subprocess
 import sysv_ipc
 from picamera import PiCamera
 from picamera.array import PiRGBArray
+from park import park_db
 
 gp.setwarnings(False)
 gp.setmode(gp.BOARD)
@@ -25,10 +27,10 @@ gp.output(7, False)
 gp.output(11, False)
 gp.output(12, True)
 
-norm_path = os.getcwd() + '/UB_video/Normal/'
-manl_path = os.getcwd() + '/UB_video/Manual/'
-park_path = os.getcwd() + '/UB_video/Parking/'
-impt_path = os.getcwd() + '/UB_video/Impact/'
+norm_path = '/var/www/html/Upload/UB_video/Normal/'
+manl_path = '/var/www/html/Upload/UB_video/Manual/'
+park_path = '/var/www/html/Upload/UB_video/Parking/'
+impt_path = '/var/www/html/Upload/UB_video/Impact/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 
@@ -84,7 +86,7 @@ class recording:
     def show(self, frame):
         cv2.imshow('CAM_Window', frame)
 
-    def recording(self, record, sec_sum):
+    def recording(self, record, sec_sum, mode1):
         picam = cv2.VideoCapture(-1)
         if picam.isOpened() == False:
             print('Can\'t open the CAM')
@@ -99,7 +101,9 @@ class recording:
         fps = int(picam.get(cv2.CAP_PROP_FPS))
 
         while True:
-            if sec_sum == 120:
+
+         	# impact : sec > 50 processing 
+            if sec_sum == 120:					
                 print(sec_sum)
                 flag = impt_memory.read()
                 chk_memory.write("CHEK")
@@ -107,24 +111,27 @@ class recording:
                 sec_sum = 0
                 continue
 
+			# Read video
             framecnt += 1
-
             ret, frame = picam.read()
             sec = framecnt / fps
             rr = (picam.get(cv2.CAP_PROP_POS_FRAMES))
             chk = impt_memory.read()
             print(chk)
             
-            if chk == 'IMPT':
+			# impact : sec < 10 
+            if chk == 'IMPT':					
                 fin = fin_memory.read()
                 fin_memory.write(str('%02d' % sec))
                 impt_memory.write('    ')
 
             print("%d %d %d %d %d" % (fps, framecnt, rr, sec, sec_sum))
 
+			# video display
             out.write(frame)
             self.show(frame)
          
+			# video saving
             if sec == 60:    
                #picam.release()
                 sec_sum += sec
@@ -132,32 +139,57 @@ class recording:
                 video = convert(path, path.split('/')[6])
                 break 
 
+				# impact : 10 <= sec <= 50 processing
                 if 0 <= int(fin_memory.read()) <= 50:
                     flag = impt_memory.read()
                     impt_memory.write("FLAG")
                     break
 
+			# key interrupt : video saving
             if cv2.waitKey(33) >= 0:
                 picam.release()
                 video = convert(path, path.split('/')[6])  
                 break
-
-        if sec_sum == 60:
-            pthread = threading.Thread(target=self.recording, args=(self.parking_recording(), sec_sum))
-            pthread.start() 
-        nthread = threading.Thread(target=self.recording, args=(self.normal_recording(), sec_sum))
+        
+        #pthread = threading.Thread(target=self.recording, args=(self.parking_recording(), sec_sum, mode1))
+        nthread = threading.Thread(target=self.recording, args=(self.normal_recording(), sec_sum, mode1))
         nthread.start()
 
+        #if mode1 == 'NORM':
+        #    if pthread.is_alive():
+		#		pthread.stop()
+        #    nthread.start()
+        #elif mode1 == 'PARK':
+        #    if nthread.is_alive():
+        #        nthread.stop()
+        #    pthread.start()              
 
         #cv2.destroyWindow('CAM_Window')
 
+def mode():
+    mode = str(park_db())
+    print(mode)
+    return mode
 
-r = recording()
-n = r.normal_recording()
-#i = r.impact_recording()
-#m = r.manual_recording()
-#p = r.parking_recording()
+if __name__=="__main__":
+    r = recording()
+    n = r.normal_recording()
+    #i = r.impact_recording()
+    #m = r.manual_recording()
+    mode1 = mode()
+    r.recording(n, 0, mode1)
 
-r.recording(n, 0)
+    #while True:
+     #   mode1 = mode()
+      #  if mode1 == 'NORM':
+    	#    r.recording(n, 0, mode1)
+        #elif mode1 == 'PARK':
+         #   p = r.parking_recording()
+          #  r.recording(p, 0, mode1)
+    #r.recording(p, 0, mode) 
+
+
+
+            
 
 
