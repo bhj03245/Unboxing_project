@@ -1,8 +1,8 @@
 package com.example.ub_test.bg_report;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.util.Output;
 import android.os.AsyncTask;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,27 +24,26 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class RecvImpt extends AsyncTask<String, Void, String> {
     private SharedPreferences report_data;
-
+    private SharedPreferences switch_data;
+    boolean bSwitch;
     Context mContext;
+    String data = "";
 
+    final static String trig = "trigger";
+    HttpURLConnection httpURLConnection;
 
     public RecvImpt(Context context) {
         mContext = context;
     }
 
-    String data = "";
-
-    HttpURLConnection httpURLConnection;
-
-
-    public void load() {
-
-
-    }
-
     @Override
     protected String doInBackground(String... unused) {
 
+        switch_data = mContext.getSharedPreferences("switch_data", MODE_PRIVATE);
+        bSwitch = switch_data.getBoolean("switchkey", false);
+
+
+        String param = "request_impt" + "=" + bSwitch;
         String ip = mContext.getString(R.string.ip);
         try {
             URL url = new URL(ip + "/apkCtrl/reportImpt_apk.php");
@@ -53,6 +53,11 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoInput(true);
             httpURLConnection.connect();
+
+            OutputStream outs = httpURLConnection.getOutputStream();
+            outs.write(param.getBytes("UTF-8"));
+            outs.flush();
+            outs.close();
 
             int responseStatusCode = httpURLConnection.getResponseCode();
 
@@ -104,7 +109,6 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
 
 
         if (s.equals("Impt")) {
-
             try {
                 SmsManager smsManager = SmsManager.getDefault();
                 smsManager.sendTextMessage(phone, null, content, null, null);
