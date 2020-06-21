@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.ub_test.bg_report.RealService;
+import com.example.ub_test.bg_report.RecvImpt;
 import com.example.ub_test.bg_report.RestartService;
 import com.example.ub_test.list.ImptList;
 import com.example.ub_test.list.ManlList;
@@ -169,11 +170,17 @@ public class MainMenu extends AppCompatActivity {
                 }
 
                 System.out.println("isCecked 확인" + isChecked);
+                if(isChecked == false) {
+                    RecvImpt recvImpt = new RecvImpt(MainMenu.this);
+                    recvImpt.execute();
+                }
 
                 SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
                 SharedPreferences.Editor editor = data.edit();
                 editor.putBoolean("switchkey", isChecked);
                 editor.commit();
+
+
             }
         });
 

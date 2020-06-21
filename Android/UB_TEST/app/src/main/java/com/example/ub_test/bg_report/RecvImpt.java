@@ -2,7 +2,6 @@ package com.example.ub_test.bg_report;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.icu.util.Output;
 import android.os.AsyncTask;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -26,6 +25,7 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
     private SharedPreferences report_data;
     private SharedPreferences switch_data;
     boolean bSwitch;
+    String strSwith;
     Context mContext;
     String data = "";
 
@@ -41,9 +41,11 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
 
         switch_data = mContext.getSharedPreferences("switch_data", MODE_PRIVATE);
         bSwitch = switch_data.getBoolean("switchkey", false);
+        strSwith = String.valueOf(bSwitch);
+        Log.d(TAG, "mode!: " + bSwitch);
 
 
-        String param = "request_impt" + "=" + bSwitch;
+        String param = "request_impt" + "=" + strSwith;
         String ip = mContext.getString(R.string.ip);
         try {
             URL url = new URL(ip + "/apkCtrl/reportImpt_apk.php");
