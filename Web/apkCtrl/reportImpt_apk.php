@@ -8,12 +8,12 @@
 	$fp = fopen("impt_data.txt", "r");
 	$fr = fread($fp, 10);
 	
-	if($mode == True){
+	if($mode == 'true'){
 		echo $fr;
-		$result = $conn->query("UPDATE users SET users_mode = 'NORM' WHERE users_num = 1");
+		$result_norm = $conn->query("UPDATE users SET users_mode = 'NORM' WHERE users_num = 1");
 	}
-	else if($mode == null){
-		$result = $conn->query("UPDATE users SET users_mode = 'PARK' WHERE users_num = 1");
+	else if($mode == 'false'){
+		$result_park = $conn->query("UPDATE users SET users_mode = 'PARK' WHERE users_num = 1");
 	}
 
 	fclose($fp);
