@@ -34,6 +34,7 @@ impt_path = '/var/www/html/Upload/UB_video/Impact/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 
+#mode_memory = sysv_ipc.SharedMemory(1220)
 chk_memory = sysv_ipc.SharedMemory(1219)
 impt_memory = sysv_ipc.SharedMemory(1218)
 fin_memory = sysv_ipc.SharedMemory(1217) 
@@ -101,7 +102,6 @@ class recording:
         fps = int(picam.get(cv2.CAP_PROP_FPS))
 
         while True:
-
          	# impact : sec > 50 processing 
             if sec_sum == 120:					
                 print(sec_sum)
@@ -150,9 +150,13 @@ class recording:
                 picam.release()
                 video = convert(path, path.split('/')[6])  
                 break
-        
+
+        if mode1 == 'PARK':
+            record_type = self.parking_recording()
+        elif mode1 == 'NORM':
+            record_type = self.normal_recording()
         #pthread = threading.Thread(target=self.recording, args=(self.parking_recording(), sec_sum, mode1))
-        nthread = threading.Thread(target=self.recording, args=(self.normal_recording(), sec_sum, mode1))
+        nthread = threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1))
         nthread.start()
 
         #if mode1 == 'NORM':
@@ -176,8 +180,8 @@ if __name__=="__main__":
     n = r.normal_recording()
     #i = r.impact_recording()
     #m = r.manual_recording()
-    mode1 = mode()
-    r.recording(n, 0, mode1)
+    mode_rec = 'PARK'
+    r.recording(n, 0, mode_rec)
 
     #while True:
      #   mode1 = mode()
