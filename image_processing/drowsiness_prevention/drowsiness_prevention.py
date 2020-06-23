@@ -21,7 +21,7 @@ import cv2
 import time
 import datetime
 
-buzzer= 17
+buzzer= 12
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 scale = [ 261, 294, 329, 349, 392, 440, 493, 523 ]
