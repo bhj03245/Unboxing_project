@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
 
+
 def region_of_interest(img, vertices):
     mask = np.zeros_like(img)
-    #channel_count = img.shape[2]
+    # channel_count = img.shape[2]
     match_mask_color = 255
     cv2.fillPoly(mask, vertices, match_mask_color)
     masked_image = cv2.bitwise_and(img, mask)
@@ -13,7 +14,6 @@ def region_of_interest(img, vertices):
 def get_fitline(img, f_lines):  # 대표선 구하기
     try:
         lines = np.squeeze(f_lines)
-        print("ch")
 
         if len(lines.shape) != 1:
             lines = lines.reshape(lines.shape[0] * 2, 2)
@@ -22,8 +22,8 @@ def get_fitline(img, f_lines):  # 대표선 구하기
             vx, vy, x, y = output[0], output[1], output[2], output[3]
             # 차선변경 에러
 
-            x1, y1 = int(((img.shape[0] - 1) - y) / vy * vx + x), img.shape[0] - 1
-            x2, y2 = int(((img.shape[0] / 2 + 70) - y) / vy * vx + x), int(img.shape[0] / 2 + 70)
+            x1, y1 = int(((img.shape[0] - 1) - y) / vy * vx + x), int(img.shape[0] - 1)
+            x2, y2 = int(((img.shape[0] / 2 + 85) - y) / vy * vx + x), int(img.shape[0] / 2 + 85)
 
             result = [x1, y1, x2, y2]
 
@@ -31,8 +31,10 @@ def get_fitline(img, f_lines):  # 대표선 구하기
     except:
         return None
 
+
 def draw_fit_line(img, lines, color=[255, 0, 0], thickness=10):  # 대표선 그리기
     cv2.line(img, (lines[0], lines[1]), (lines[2], lines[3]), color, thickness)
+
 
 def line_intersection(line1, line2):
     xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
@@ -43,15 +45,15 @@ def line_intersection(line1, line2):
 
     div = det(xdiff, ydiff)
     if div == 0:
-       raise Exception('lines do not intersect')
+        raise Exception('lines do not intersect')
 
     d = (det(*line1), det(*line2))
     x = det(d, xdiff) / div
     y = det(d, ydiff) / div
     return [x, y]
 
-def offset(left, mid, right):
 
+def offset(left, mid, right):
     LANEWIDTH = 3.7
     a = mid - left
     b = right - mid
@@ -66,28 +68,27 @@ def offset(left, mid, right):
 
 
 def process(image):
-    # print(image.shape)
+    #     # print(image.shape)
     height = image.shape[0]
     width = image.shape[1]
     region_of_interest_vertices = [
         (0, height),
-        (width/2, height/2),
+        (width / 2, height / 2),
         (width, height)
     ]
     gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
     canny_image = cv2.Canny(gray_image, 100, 120)
     cropped_image = region_of_interest(canny_image,
-                    np.array([region_of_interest_vertices], np.int32),)
+                                       np.array([region_of_interest_vertices], np.int32), )
 
     lines = cv2.HoughLinesP(cropped_image,
                             rho=2,
-                            theta=np.pi/180,
+                            theta=np.pi / 180,
                             threshold=50,
                             lines=np.array([]),
                             minLineLength=40,
                             maxLineGap=100)
-
 
     line_arr = np.squeeze(lines)
 
@@ -114,7 +115,6 @@ def process(image):
     if left_fit_line != None and right_fit_line != None:
         print(right_fit_line[0] - left_fit_line[0])
 
-
     color = [255, 0, 0]
 
     # car detection
@@ -131,23 +131,23 @@ def process(image):
         car_mask = np.zeros_like(image)
         # channel_count = img.shape[2]
         match_mask_color = 255
-        cv2.fillPoly(car_mask, [np.array([(intersection[0], 50), A, C],np.int32)], match_mask_color)
+        cv2.fillPoly(car_mask, [np.array([(intersection[0], 50), A, C], np.int32)], match_mask_color)
 
         car_masked_image = cv2.bitwise_and(image, car_mask)
         # cv2.imshow('ma', car_masked_image)
         car_roi_gray = cv2.cvtColor(car_masked_image, cv2.COLOR_RGB2GRAY)
         # car_roi_color = car_masked_image
         # cv2.imshow('gra', car_roi_gray)
-        cars = car_cascade.detectMultiScale(car_roi_gray, 1.4, 1, minSize=(80,80))
+        cars = car_cascade.detectMultiScale(car_roi_gray, 1.4, 1, minSize=(80, 80))
 
         for (x, y, w, h) in cars:
-            print(w,h)
+            print(w, h)
             cv2.rectangle(temp, (x, y), (x + w, y + h), (0, 255, 255), 2)
 
-        center = offset(left_fit_line[0] , 180 , right_fit_line[0])
+        center = offset(left_fit_line[0], 180, right_fit_line[0])
 
-        print('center',abs(center))
-        if abs(center) > 1.5:
+        print('center', abs(center))
+        if abs(center) > 1.75:
             center_x = int(640 / 2.0)
             center_y = int(360 / 2.0)
 
@@ -157,8 +157,8 @@ def process(image):
             font = cv2.FONT_HERSHEY_SIMPLEX;  # hand-writing style font
             fontScale = 3.5
             cv2.putText(temp, 'Warning', location, font, fontScale, (0, 0, 255), thickness)
-            color = [0, 0, 255]
 
+            color = [0, 0, 255]
 
     if left_fit_line != None:
         draw_fit_line(temp, left_fit_line, color)
@@ -172,22 +172,20 @@ def process(image):
 
 
 cascade_src = 'cars.xml'
-cap = cv2.VideoCapture('change.avi')
+cap = cv2.VideoCapture('TestVideo2.mp4')
 car_cascade = cv2.CascadeClassifier(cascade_src)
 
 while cap.isOpened():
-  ret, frame = cap.read()
+    ret, frame = cap.read()
 
-  if (type(frame) == type(None)):
-      break
+    if (type(frame) == type(None)):
+        break
 
-  frame = process(frame)
-  cv2.imshow('frame', frame)
+    frame = process(frame)
+    cv2.imshow('frame', frame)
 
-
-
-  if cv2.waitKey(1) & 0xFF == ord('q'):
-      break
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
 cap.release()
 cv2.destroyAllWindows()
