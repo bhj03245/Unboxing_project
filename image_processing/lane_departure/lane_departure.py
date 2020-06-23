@@ -1,6 +1,16 @@
 import cv2
 import numpy as np
+import time
+import RPi.GPIO as GPIO
 
+buzzer = 12
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+scale = [261, 294, 329, 349, 392, 440, 493, 523]
+
+GPIO.setup(buzzer, GPIO.OUT)
+p = GPIO.PWM(buzzer, 100)
+buzzer_list = [4]
 
 def region_of_interest(img, vertices):
     mask = np.zeros_like(img)
@@ -157,7 +167,12 @@ def process(image):
             font = cv2.FONT_HERSHEY_SIMPLEX;  # hand-writing style font
             fontScale = 3.5
             cv2.putText(temp, 'Warning', location, font, fontScale, (0, 0, 255), thickness)
-
+            p.start(100)
+            p.ChangeDutyCycle(10)
+            for i in range(len(buzzer_list)):
+                p.ChangeFrequency(scale[buzzer_list[i]])
+                time.sleep(1)
+            p.stop()
             color = [0, 0, 255]
 
     if left_fit_line != None:
@@ -172,7 +187,7 @@ def process(image):
 
 
 cascade_src = 'cars.xml'
-cap = cv2.VideoCapture('TestVideo2.mp4')
+cap = cv2.VideoCapture('TestVideo1.avi')
 car_cascade = cv2.CascadeClassifier(cascade_src)
 
 while cap.isOpened():
