@@ -5,7 +5,10 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.switch import Switch
+from kivy.core.text import LabelBase
 
+LabelBase.register(name='malgun',
+                   fn_regular='malgun.ttf')
 
 class Main(Screen):
     pass
