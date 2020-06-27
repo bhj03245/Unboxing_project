@@ -12,8 +12,12 @@ from kivy.graphics.texture import Texture
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.video import Video
 from kivy.uix.camera import Camera
-import cv2
 
+from ccccc import normal_recording
+import cv2
+import datetime
+import time
+import sys
 
 LabelBase.register(name="malgun",
                    fn_regular="malgun.ttf")
@@ -34,10 +38,31 @@ class KivyCamera(Screen):
             image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
             self.texture = image_texture
 
+
+
 class Main(Screen):
-    def cam(self):
+    def cam(self, value):
         self.capture = cv2.VideoCapture(0)
-        self.my_camera = KivyCamera(capture=self.capture, fps=30)
+        path = normal_recording()[0]
+        out = normal_recording()[1]
+        framecnt = 0
+        fps = int(self.capture.get(cv2.CAP_PROP_FPS))
+        sec = 0
+
+        while True:
+            framecnt += 1
+            ret, frame = self.capture.read()
+            sec = framecnt / fps
+
+            print("%d %d %d" % (fps, framecnt, sec))
+            out.write(frame)
+
+            if sec == 10:
+                out.release()
+        # self.my_camera = KivyCamera(capture=self.capture, fps=30)
+
+    def on_stop(self):
+        self.capture.release()
 
 class Menu(Screen):
     pass
@@ -78,10 +103,6 @@ class WindowManager(ScreenManager):
 class MyApp(App):
     def build(self):
         return ui
-
-    def on_stop(self):
-        self.capture.release()
-
 
 ui = Builder.load_file("UI.kv")
 
