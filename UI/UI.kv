@@ -4,7 +4,7 @@ WindowManager:
     Setting:
     Video_list:
     VideoWidget:
-    KivyCamera:
+
 
 <Main>
     name: "main"
@@ -13,6 +13,13 @@ WindowManager:
         BoxLayout:
             size: root.width, root.height
             orientation: 'vertical'
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 700
+                Camera:
+                    id: camera
+                    resolution: 640, 480
+                    play: True
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -257,6 +264,3 @@ WindowManager:
                     font_size:50
                     on_release:
                         app.root.current = "menu"
-
-<KivyCamera>:
-    name: 'kivy_camera'
