@@ -3,9 +3,12 @@ WindowManager:
     Menu:
     Setting:
     Video_list:
+    VideoWidget:
+    KivyCamera:
 
 <Main>
     name: "main"
+
     FloatLayout:
         BoxLayout:
             size: root.width, root.height
@@ -16,21 +19,21 @@ WindowManager:
                 size: 800, 100
                 size_hint: (None, None)
                 Button:
-                    text: '뒤로가기'
-                    font_size:40
-                    font_name:'malgun'
+                    text:"뒤로가기"
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
                 Button:
-                    text:"메인 화면"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"홈"
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"메뉴"
-                    font_size:40
-                    font_name:'malgun'
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
 
@@ -47,17 +50,16 @@ WindowManager:
                 size: root.width, 100
                 size_hint: (None,None)
                 Label:
-                    text:"졸음 방지 기능"
+                    text:"졸음 방지 알림"
                     font_size:20
-                    font_name:'malgun'
+                    font_name: "malgun"
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
                 Label:
-                    text:"차선 이탈 방지 기능"
+                    text:"차선 이탈 방지"
                     font_size:20
-                    font_name:'malgun'
-
+                    font_name: "malgun"
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
@@ -66,14 +68,14 @@ WindowManager:
                 orientation: 'horizontal'
                 Button:
                     text:"영상 목록"
-                    font_size:40
-                    font_name:'malgun'
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "video_list"
                 Button:
-                    text:"설정"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"환경설정"
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "setting"
 
@@ -83,20 +85,20 @@ WindowManager:
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
-                    font_size:40
-                    font_name:'malgun'
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "main"
                 Button:
-                    text:"메인"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"홈"
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"메뉴"
-                    font_name:'malgun'
-                    font_size:40
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
 
@@ -114,16 +116,14 @@ WindowManager:
                 orientation: 'horizontal'
 
                 Label:
-                    text:"수동 녹화"
-                    font_size:20
-                    font_name:'malgun'
+                    text:"Manual Recording"
+                    font_size:19
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
                 Label:
-                    text:"블랙박스 전원"
+                    text:"BlackBox Power"
                     font_size:20
-                    font_name:'malgun'
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
@@ -131,34 +131,29 @@ WindowManager:
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
-                    text:"예약 종료"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Reservation End"
+                    font_size:50
                 Button:
-                    text:"계정 정보"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Account Information"
+                    font_size:50
 
             BoxLayout:
                 orientation: 'horizontal'
                 size: 800, 100
                 size_hint: (None, None)
                 Button:
-                    text:"뒤로가기"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Back"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
                 Button:
-                    text:"메인"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Home"
+                    font_size:50
                     on_release:
                         app.root.current = "main"
                 Button:
-                    text:"메뉴"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Menu"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
 
@@ -173,44 +168,95 @@ WindowManager:
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
-                    text:"상시 녹화 목록"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Normal video list"
+                    font_size:50
+                    release: "Norm"
+                    on_release:
+                        app.root.current = "video_widget"
+                        root.video_list(self, self.release)
+
                 Button:
-                    text:"수동 녹화 목록"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Manual video list"
+                    font_size:50
+                    release: "Manl"
+                    on_release:
+                        app.root.current = "video_widget"
+                        root.video_list(self, self.release)
 
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
-                    text:"충격 녹화 목록"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Impact video list"
+                    font_size:50
+                    release: "Impt"
+                    on_release:
+                        app.root.current = "video_widget"
+                        root.video_list(self, self.release)
+
                 Button:
-                    text:"주차 녹화 목록"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Parking video list"
+                    font_size:50
+                    release: "Park"
+                    on_release:
+                        app.root.current = "video_widget"
+                        root.video_list(self, self.release)
 
             BoxLayout:
                 orientation: 'horizontal'
                 size: 800, 100
                 size_hint: (None, None)
                 Button:
-                    text:"뒤로가기"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Back"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
                 Button:
-                    text:"메인"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Home"
+                    font_size:50
                     on_release:
                         app.root.current = "main"
                 Button:
-                    text:"메뉴"
-                    font_size:40
-                    font_name:'malgun'
+                    text:"Menu"
+                    font_size:50
                     on_release:
                         app.root.current = "menu"
+
+<VideoWidget>:
+    name: "video_widget"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                size: root.width, 500
+                size_hint: (None,None)
+                orientation: 'horizontal'
+
+                VideoPlayer:
+                    source: "test.mp4"
+                    state: "play"
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 100
+                size_hint: (None, None)
+                Button:
+                    text:"Back"
+                    font_size:50
+                    on_release:
+                        app.root.current = "menu"
+                Button:
+                    text:"Home"
+                    font_size:50
+                    on_release:
+                        app.root.current = "main"
+                Button:
+                    text:"Menu"
+                    font_size:50
+                    on_release:
+                        app.root.current = "menu"
+
+<KivyCamera>:
+    name: 'kivy_camera'
