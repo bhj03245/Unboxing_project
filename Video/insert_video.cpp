@@ -83,6 +83,8 @@ public:
 
 void norm_db_insert(Video vid);
 void impt_db_insert(Video vid);
+void park_db_insert(Video vid);
+void manl_db_insert(Video vid);
 void db_select();
 void db_update();
 char* timeToString(struct tm* t);
@@ -137,6 +139,7 @@ void park_db_insert(Video vid) {
 	cout << "Insert Success!!" << endl;
 	mysql_close(&mysql);
 }
+
 void manl_db_insert(Video vid) {
 	MYSQL mysql;
 	MYSQL_RES* res;
@@ -186,6 +189,7 @@ void impt_db_insert(Video vid) {
 	cout << "Insert Success!!" << endl;
 	mysql_close(&mysql);
 }
+
 void db_select() {
 	MYSQL mysql;
 	MYSQL_RES* res;
@@ -239,13 +243,13 @@ void db_update() {
 	mysql_query(&mysql, set);
 	mysql_query(&mysql, norm_up);
 	cout << "Update Success!!" << endl;
-	mysql_close(&mysql);
+	mysql_query(&mysql, set);
 	mysql_query(&mysql, impt_up);
 	cout << "Update Success!!" << endl;
-	mysql_close(&mysql);
+	mysql_query(&mysql, set);
 	mysql_query(&mysql, park_up);
 	cout << "Update Success!!" << endl;
-	mysql_close(&mysql);
+	mysql_query(&mysql, set);
 	mysql_query(&mysql, manl_up);
 	cout << "Update Success!!" << endl;
 	mysql_close(&mysql);
@@ -343,7 +347,7 @@ void FileList(char* ip_addr, char* PATH)
 				else if (strcmp(dirname[5], "Manual") == 0) {
 					manl_db_insert(vid);
 				}
-				//db_update();
+				db_update();
 				// db_select();
 				num++;
 			}
