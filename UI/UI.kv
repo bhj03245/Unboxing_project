@@ -16,6 +16,7 @@ WindowManager:
             BoxLayout:
                 orientation: 'horizontal'
                 size: 800, 700
+
                 Camera:
                     id: camera
                     resolution: 640, 480
@@ -123,13 +124,15 @@ WindowManager:
                 orientation: 'horizontal'
 
                 Label:
-                    text:"Manual Recording"
+                    text:"수동 녹화"
+                    font_name: "malgun"
                     font_size:19
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
                 Label:
-                    text:"BlackBox Power"
+                    text:"블랙박스 전원"
+                    font_name: "malgun"
                     font_size:20
                 Switch:
                     active: False
@@ -138,10 +141,12 @@ WindowManager:
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
-                    text:"Reservation End"
+                    text:"예약 종료"
+                    font_name: "malgun"
                     font_size:50
                 Button:
-                    text:"Account Information"
+                    text:"계정 정보"
+                    font_name: "malgun"
                     font_size:50
 
             BoxLayout:
@@ -149,18 +154,21 @@ WindowManager:
                 size: 800, 100
                 size_hint: (None, None)
                 Button:
-                    text:"Back"
+                    text:"뒤로가기"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
                 Button:
-                    text:"Home"
+                    text:"메인"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "main"
                 Button:
-                    text:"Menu"
+                    text:"메뉴"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
 
@@ -175,16 +183,18 @@ WindowManager:
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
-                    text:"Normal video list"
+                    text:"상시 녹화 목록"
                     font_size:50
+                    font_name: "malgun"
                     release: "Norm"
                     on_release:
                         app.root.current = "video_widget"
                         root.video_list(self, self.release)
 
                 Button:
-                    text:"Manual video list"
+                    text:"수동 녹화 목록"
                     font_size:50
+                    font_name: "malgun"
                     release: "Manl"
                     on_release:
                         app.root.current = "video_widget"
@@ -193,16 +203,18 @@ WindowManager:
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
-                    text:"Impact video list"
+                    text:"충격 녹화 목록"
                     font_size:50
+                    font_name: "malgun"
                     release: "Impt"
                     on_release:
                         app.root.current = "video_widget"
                         root.video_list(self, self.release)
 
                 Button:
-                    text:"Parking video list"
+                    text:"주차 녹화 목록"
                     font_size:50
+                    font_name: "malgun"
                     release: "Park"
                     on_release:
                         app.root.current = "video_widget"
@@ -213,18 +225,21 @@ WindowManager:
                 size: 800, 100
                 size_hint: (None, None)
                 Button:
-                    text:"Back"
+                    text:"뒤로가기"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
                 Button:
-                    text:"Home"
+                    text:"메인"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "main"
                 Button:
-                    text:"Menu"
+                    text:"메뉴"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
 
@@ -250,17 +265,20 @@ WindowManager:
                 size: 800, 100
                 size_hint: (None, None)
                 Button:
-                    text:"Back"
+                    text:"뒤로가기"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
                 Button:
-                    text:"Home"
+                    text:"메인"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "main"
                 Button:
-                    text:"Menu"
+                    text:"메뉴"
                     font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
