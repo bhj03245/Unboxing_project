@@ -32,11 +32,12 @@ class KivyCamera(Screen):
             image_texture = Texture.create(
                 size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
             image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-            # display image from the texture
             self.texture = image_texture
 
 class Main(Screen):
-    pass
+    def cam(self):
+        self.capture = cv2.VideoCapture(0)
+        self.my_camera = KivyCamera(capture=self.capture, fps=30)
 
 class Menu(Screen):
     pass
@@ -76,8 +77,6 @@ class WindowManager(ScreenManager):
 
 class MyApp(App):
     def build(self):
-        self.capture = cv2.VideoCapture(0)
-        self.my_camera = KivyCamera(capture=self.capture, fps=30)
         return ui
 
     def on_stop(self):
