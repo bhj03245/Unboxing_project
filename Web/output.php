@@ -5,13 +5,115 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<link href="//netdna.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<script src="//netdna.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<style>
+	
+    body {
+        font-family: "Lato", sans-serif;
+        height:100%;
+    }
+
+
+
+        .main-head{
+            height: 150px;
+            background: #FFF;
+        
+        }
+
+        .sidenav {
+            height: 100%;
+            background-color: #000;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+        .sidemenu{
+        	height: 100%;
+        	background-color: #000;
+        	padding-left:80px;
+        	}
+
+
+        .main {
+            padding: 0px 10px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {padding-top: 15px;}
+        }
+
+        @media screen and (max-width: 450px) {
+            .login-form{
+                margin-top: 10%;
+            }
+
+            .register-form{
+                margin-top: 10%;
+            }
+        }
+
+        @media screen and (min-width: 768px){
+            .main{
+                margin-left: 40%; 
+            }
+
+            .sidenav{
+                width: 40%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+            }
+
+            .login-form{
+                margin-top: 80%;
+            }
+
+            .register-form{
+                margin-top: 20%;
+            }
+        }
+
+
+        .login-main-text{
+            margin-top: 20%;
+            padding: 60px;
+            color: #fff;
+        }
+
+        .login-main-text h2{
+            font-weight: 300;
+        }
+
+        .btn-black{
+            background-color: #000 !important;
+            color: #fff;
+        }
+        .btn-white{
+        	color: #fff;
+        }
+        h2{
+        	margin-left:30px;
+        }
+        .manual{
+        	margin-left:300px;
+        }
+        
+	</style>
+	
 </head>
 
 <?php
     function display_header(){
 ?>  
     <body>
-        <h1>UB_BlackBox</h1>    
+       	<div align="center">
+		<img src="http://localhost/images/Unboxing_logo.png" width="200" height="100"></div>
 <?php
     }
 ?>
@@ -23,7 +125,7 @@
 		<frame src="menu.php" scrolling=no noresize>
 		<frame src="main.php">
     </frameset>
-    </html>
+    </html>                                                                                                                                                     
 <?php
     }
 ?>
@@ -113,16 +215,31 @@
 
 <?php
     function display_login(){
-?> 
-	<div align='center'>
-		<form method="post" action="\webCtrl\login.php">
-		
-			<p>ID: <input name="id" type="text"></p>
-			<p>PW: <input name="pw" type="password"></p>
-			<input type="submit" value="login">
-		</form>
-		<br />
-	</div>
+?> 	
+	<br>
+	<div class="sidenav">
+        <div class="login-main-text">
+           <h2>Unboxing<br> Login Page</h2>
+           <p>Login from here to access BlackBox.</p>
+        </div>
+    </div>
+    <div class="main">
+        <div class="col-md-6 col-sm-12">
+           <div class="login-form">
+                <form method="post" action="\webCtrl\login.php">
+                    <div class="form-group">
+                        <label>ID</label>
+                        <input name="id" type="text" class="form-control" placeholder="ID">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input name="pw" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-black">Login</button>
+                </form>
+            </div>
+         </div>
+    </div>
 <?php
     }
 ?>
@@ -130,11 +247,20 @@
 <?php
     function display_main(){
 ?> 
-    <body>
-    <h1> 웹 페이지 사용방법 </h1>
+    <body><br><br>
+	<div align="center">
+	<h1> Unboxing BlackBox <br>홈페이지에 오신 것을 환영합니다!</h1></div>
+	<br><br>
+    <div class="manual">
+    <h3> 웹 페이지 사용방법 </h3>
     1. 사용자 설정<br>
+    &nbsp;&nbsp;- 비밀번호를 변경할 수 있는 페이지입니다.<br>
 	2. 영상 목록<br>
+	&nbsp;&nbsp;- 각 영상 목록의 확인과 다운로드를 할 수 있는 페이지입니다.<br>
 	3. 블랙박스 정보<br>
+	&nbsp;&nbsp;- 사용자의 블랙박스 정보를 확인할 수 있는 페이지입니다.
+	</div>
+	
 <?php
     }
 ?>
@@ -143,15 +269,18 @@
     function display_menu(){
 ?> 
 <body> 
-    <h1>UB_BlackBox</h1>
-	<a href="http://localhost/webServ/users.php" target="_top">사용자 설정</a><br>
-	영상목록<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/normPage.php" target="_top">상시 녹화</a><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/manlPage.php" target="_top">수동 녹화</a><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/parkPage.php" target="_top">주차 녹화</a><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost/webServ/imptPage.php" target="_top">이벤트 녹화</a><br>
-	<a href="http://localhost/webServ/info.php" target="_top">블랙박스 정보</a><br>
-
+	<div class="sidemenu">
+	<div style="color: #FFF;" >
+	<h2>UnBoxing</h2><hr style="border: solid 1px #ffffff">
+	
+	<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/users.php'" >사용자 설정</button><br>
+	&nbsp;&nbsp;영상목록<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/normPage.php'">상시 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/manlPage.php'">수동 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/parkPage.php'">주차 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/ImptPage.php'">충격 녹화</button><br>
+	<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/info.php'">블랙박스 정보</button><br>
+	</div></div>
 <?php
     }
 ?>
@@ -160,6 +289,7 @@
     function display_userSetting(){
 ?> 
 <body>
+	
 	<h2>User Setting</h2>
 	<div align='center'>
 		<form method="post" action="\webCtrl\userCtrl.php">
