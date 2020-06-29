@@ -7,41 +7,41 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="217dp"
-        android:layout_height="124dp"
+        android:layout_width="245dp"
+        android:layout_height="121dp"
         android:src="@drawable/unboxing_logo"
         app:layout_constraintBottom_toTopOf="@+id/id"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.478" />
 
     <EditText
         android:id="@+id/id"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="240dp"
         android:layout_marginEnd="24dp"
         android:hint="ID"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
         android:hint="PASSWORD"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id" />
 
@@ -55,12 +55,14 @@
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="64dp"
         android:text="Login"
+        android:background="@drawable/btn_bg"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.118" />
+        app:layout_constraintVertical_bias="0.066" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

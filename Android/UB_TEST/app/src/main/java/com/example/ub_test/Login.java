@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     str_id = et_id.getText().toString();
                     str_pw = et_pw.getText().toString();
+                    if(str_id.getBytes().length <= 0 | str_pw.getBytes().length <= 0)
+                    {
+                        Toast.makeText(MainActivity.this, "ID와 비밀번호를 입력해 주세요",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 } catch (NullPointerException e) {
                     Log.e("error", e.getMessage());
                 }
@@ -175,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 URL url = new URL(ip + "/apkCtrl/user_auth_apk.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setReadTimeout(5000);
+                conn.setConnectTimeout(5000);
                 conn.setRequestMethod("POST");
                 conn.setDoInput(true);
                 conn.connect();
@@ -187,23 +193,33 @@ public class MainActivity extends AppCompatActivity {
                 outs.close();
 
                 //서버 -> 안드로이드 파라미터 값 전달
-                InputStream is = null;
-                BufferedReader in = null;
-                //String data="";
+                InputStream inputStream;
 
-                is = conn.getInputStream();
-                in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
-                String line = null;
-                StringBuffer buff = new StringBuffer();
-                while ((line = in.readLine()) != null) {
-                    buff.append(line + "\n");
+                //String data="";
+                int responseStatusCode = conn.getResponseCode();
+
+                if(responseStatusCode == conn.HTTP_OK){
+                    inputStream = conn.getInputStream();
+                }else{
+                    inputStream = conn.getErrorStream();
                 }
-                data = buff.toString().trim();
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                data = sb.toString().trim();
 
                 //서버로부터 응답
                 Log.e("RECV DATA", data);
 
-
+                return data;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

@@ -71,7 +71,7 @@
             }
 
             .login-form{
-                margin-top: 80%;
+                margin-top: 70%;
             }
 
             .register-form{
@@ -98,10 +98,14 @@
         	color: #fff;
         }
         h2{
+			padding-top:10px;
         	margin-left:30px;
         }
         .manual{
         	margin-left:300px;
+        }
+        .pagination{
+        	margin-left:350px;
         }
         
 	</style>
@@ -273,12 +277,12 @@
 	<div style="color: #FFF;" >
 	<h2>UnBoxing</h2><hr style="border: solid 1px #ffffff">
 	
-	<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/users.php'" >사용자 설정</button><br>
+	<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/users.php'">사용자 설정</button><br>
 	&nbsp;&nbsp;영상목록<br>
 	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/normPage.php'">상시 녹화</button><br>
 	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/manlPage.php'">수동 녹화</button><br>
 	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/parkPage.php'">주차 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/ImptPage.php'">충격 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/imptPage.php'">충격 녹화</button><br>
 	<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/info.php'">블랙박스 정보</button><br>
 	</div></div>
 <?php
@@ -290,14 +294,26 @@
 ?> 
 <body>
 	
-	<h2>User Setting</h2>
-	<div align='center'>
+	<div class="col-md-3 col-sm-12">
+		
+		<div class="login-form">
+		<h2>User Setting</h2><br>
 		<form method="post" action="\webCtrl\userCtrl.php">
-			<p>Old Password: <input name="old_pw" type="text"></p>
-			<p>New Password: <input name="new_pw" type="text"></p>
-			<p>Retype Password: <input name="re_pw" type="text"></p>
-			<input type="submit" value="edit" >
+			<div class="form-group">
+				<label>Old Password</label> 
+				<input name="old_pw" type="text" class="form-control" placeholder="현재 비밀번호">
+			</div>
+			<div class="form-group">
+				<label>New Password</label>
+ 				<input name="new_pw" type="text" class="form-control" placeholder="새로운 비밀번호"></p>	
+			</div>
+			<div class="form-group">
+				<label>Retype Password</label>
+				<input name="re_pw" type="text" class="form-control" placeholder="비밀번호 확인">
+			</div>
+			<input type="submit" class="btn btn-black" value="수정" >
 		</form> 
+		</div>
 	</div>
 <?php
     }
@@ -308,7 +324,8 @@
 ?>  
 
     <body>
-    <table>
+    <div class="container">
+    <table class="table table-list-search">
         <thead>
             <tr align='center'>
                 <th scope="col" class="No">No</th>
@@ -338,8 +355,9 @@
 ?>
         </tbody>
     </table>
-    <div class="paging">
+    <div class="pagination">
     	<?php echo $paging ?>
+    </div>
     </div>
     </body>
     </html>
@@ -354,7 +372,7 @@
 ?>  
 
     <body>
-    <table>
+    <table class="table table-list-search">
         <thead>
             <tr align='center'>
                 <th scope="col" class="No">No</th>
@@ -384,7 +402,7 @@
 ?>
         </tbody>
     </table>
-    <div class="paging">
+    <div class="pagination">
     	<?php echo $paging ?>
     </div>
     </body>
@@ -399,7 +417,7 @@
 ?>  
 
     <body>
-    <table>
+    <table class='table table-list-search'>
         <thead>
             <tr align='center'>
                 <th scope="col" class="No">No</th>
@@ -429,7 +447,7 @@
 ?>
         </tbody>
     </table>
-    <div class="paging">
+    <div class="pagination">
     	<?php echo $paging ?>
     </div>
     </body>
@@ -442,9 +460,8 @@
 <?php 
     function display_impactList($paging, $result){
 ?>  
-
     <body>
-    <table>
+    <table class='table table-list-search>
         <thead>
             <tr align='center'>
                 <th scope="col" class="No">No</th>
@@ -474,7 +491,7 @@
 ?>
         </tbody>
     </table>
-    <div class="paging">
+    <div class="pagination">
     	<?php echo $paging ?>
     </div>
     </body>
