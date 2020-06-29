@@ -38,6 +38,7 @@ fourcc = cv2.VideoWriter_fourcc(*'X264')
 chk_memory = sysv_ipc.SharedMemory(1219)
 impt_memory = sysv_ipc.SharedMemory(1218)
 fin_memory = sysv_ipc.SharedMemory(1217) 
+mid_memory = sysv_ipc.SharedMemory(1220)
 
 def create_time():
     now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
@@ -128,8 +129,10 @@ class recording:
             print("%d %d %d %d %d" % (fps, framecnt, rr, sec, sec_sum))
 
 			# video display
-            out.write(frame)
-            self.show(frame)
+            matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
+            dst = cv2.warpAffine(frame, matrix, (640, 480))
+            out.write(dst)
+            self.show(dst)
          
 			# video saving
             if sec == 60:    
@@ -137,12 +140,13 @@ class recording:
                 sec_sum += sec
                 out.release()
                 video = convert(path, path.split('/')[6])
+                mid_memory.write("FLAG")
                 break 
 
 				# impact : 10 <= sec <= 50 processing
                 if 0 <= int(fin_memory.read()) <= 50:
                     flag = impt_memory.read()
-                    impt_memory.write("FLAG")
+                    mid_memory.write("FLAG")
                     break
 
 			# key interrupt : video saving
@@ -180,7 +184,7 @@ if __name__=="__main__":
     n = r.normal_recording()
     #i = r.impact_recording()
     #m = r.manual_recording()
-    mode_rec = 'PARK'
+    mode_rec = 'NORM'
     r.recording(n, 0, mode_rec)
 
     #while True:
