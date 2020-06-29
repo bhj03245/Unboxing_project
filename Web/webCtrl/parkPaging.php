@@ -43,27 +43,27 @@
     $paging.='<ul>'; //페이징을 저장할 변수
 
     if($page!=1){ //첫 페이지가 아니면 처음 버튼 생성
-        $paging .= '<li class="page page_start"><a href="./normList.php?page=1">처음</a></li>';
+        $paging .= '&ensp;<a href="./parkList.php?page=1">&laquo;</a>';
     }
 
     if($currentBlock!=1){ //첫 블럭이 아니면 이전 버튼 생성
-        $paging .= '<li class="page page_prev"><a href="./normList.php?page=' . $prevPage . '">이전</a></li>';
+        $paging .= '&ensp;<a href="./parkList.php?page=' . $prevPage . '"><</a>';
     }
 
     for($i=$firstPage; $i<=$lastPage; $i++){
         if($i==$page){
-            $paging .= '<li class="page current">' .$i. '</li>';
+            $paging .= '&ensp;'.$i;
         }else{
-            $paging .= '<li class="page"><a href="./normList.php?page='.$i.'">'.$i.'</a></li>';
+            $paging .= '&ensp;<a href="./parkList.php?page='.$i.'">'.$i.'</a>';
         }
     }
 
     if($currentBlock!=$allBlock){ //마지막 블럭이 아니면 다음 버튼 생성
-        $paging .= '<li class="page page_next"><a href="./normList.php?page='.$nextPage.'">다음</a></li>';
+        $paging .= '&ensp;<a href="./parkList.php?page='.$nextPage.'">></a>';
     }
 
     if($page!=$allPage){
-        $paging .= '<li class="page page end"><a href="./normList.php?page='.$allPage.'">마지막</a></li>';
+        $paging .= '&ensp;<a href="./parkList.php?page='.$allPage.'">&raquo;</a>';
     }
     $paging .= '</ul>';
 
