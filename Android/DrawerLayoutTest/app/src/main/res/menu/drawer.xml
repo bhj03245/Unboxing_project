@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/user_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="설정"
+        />
+    <item
+        android:id="@+id/park_loc"
+        android:icon="@drawable/ic_parking"
+        android:title="주차위치 확인"
+        />
+
+    <item
+        android:id="@+id/item3"
+        android:title="녹화영상 목록">
+            <menu android:checkableBehavior="single">
+                <item
+                    android:id="@+id/norm_sel"
+                    android:icon="@drawable/ic_list"
+                    android:title="상시녹화"/>
+                <item
+                    android:id="@+id/manl_sel"
+                    android:icon="@drawable/ic_list"
+                    android:title="수동녹화 목록"
+                    />
+                <item
+                    android:id="@+id/park_sel"
+                    android:icon="@drawable/ic_list"
+                    android:title="주차녹화 목록"
+                    />
+                <item
+                    android:id="@+id/impt_sel"
+                    android:icon="@drawable/ic_list"
+                    android:title="충격녹화 목록"
+                    />
+
+            </menu>
+    </item>
+</menu>

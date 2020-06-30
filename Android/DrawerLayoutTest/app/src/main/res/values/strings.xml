@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Unboxing</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
+</resources>
