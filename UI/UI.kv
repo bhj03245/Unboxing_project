@@ -3,45 +3,39 @@ WindowManager:
     Menu:
     Setting:
     Video_list:
+    Normal:
+    Manual:
+    Impact:
+    Parking:
     VideoWidget:
-
 
 <Main>
     name: "main"
-
     FloatLayout:
         BoxLayout:
             size: root.width, root.height
             orientation: 'vertical'
-            BoxLayout:
-                orientation: 'horizontal'
-                size: 800, 700
-
-                Camera:
-                    id: camera
-                    resolution: 640, 480
-                    play: True
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: 800, 100
+                size: 1000, 100
                 size_hint: (None, None)
                 Button:
-                    text:"뒤로가기"
-                    font_size:50
-                    font_name: "malgun"
+                    text: '뒤로가기'
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "menu"
                 Button:
-                    text:"홈"
-                    font_size:50
-                    font_name: "malgun"
+                    text:"메인 화면"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"메뉴"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "menu"
 
@@ -58,16 +52,17 @@ WindowManager:
                 size: root.width, 100
                 size_hint: (None,None)
                 Label:
-                    text:"졸음 방지 알림"
+                    text:"졸음 방지 기능"
                     font_size:20
-                    font_name: "malgun"
+                    font_name:'malgun'
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
                 Label:
-                    text:"차선 이탈 방지"
+                    text:"차선 이탈 방지 기능"
                     font_size:20
-                    font_name: "malgun"
+                    font_name:'malgun'
+
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
@@ -76,14 +71,14 @@ WindowManager:
                 orientation: 'horizontal'
                 Button:
                     text:"영상 목록"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "video_list"
                 Button:
-                    text:"환경설정"
-                    font_size:50
-                    font_name: "malgun"
+                    text:"설정"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "setting"
 
@@ -93,20 +88,20 @@ WindowManager:
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "main"
                 Button:
-                    text:"홈"
-                    font_size:50
-                    font_name: "malgun"
+                    text:"메인"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"메뉴"
-                    font_size:50
-                    font_name: "malgun"
+                    font_name:'malgun'
+                    font_size:40
                     on_release:
                         app.root.current = "menu"
 
@@ -125,15 +120,15 @@ WindowManager:
 
                 Label:
                     text:"수동 녹화"
-                    font_name: "malgun"
-                    font_size:19
+                    font_size:20
+                    font_name:'malgun'
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
                 Label:
                     text:"블랙박스 전원"
-                    font_name: "malgun"
                     font_size:20
+                    font_name:'malgun'
                 Switch:
                     active: False
                     on_active: root.drowsiness_switch(self, self.active)
@@ -142,12 +137,12 @@ WindowManager:
                 orientation: 'horizontal'
                 Button:
                     text:"예약 종료"
-                    font_name: "malgun"
-                    font_size:50
+                    font_size:40
+                    font_name:'malgun'
                 Button:
                     text:"계정 정보"
-                    font_name: "malgun"
-                    font_size:50
+                    font_size:40
+                    font_name:'malgun'
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -155,20 +150,20 @@ WindowManager:
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "menu"
                 Button:
                     text:"메인"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"메뉴"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "menu"
 
@@ -184,41 +179,31 @@ WindowManager:
                 orientation: 'horizontal'
                 Button:
                     text:"상시 녹화 목록"
-                    font_size:50
-                    font_name: "malgun"
-                    release: "Norm"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
-                        app.root.current = "video_widget"
-                        root.video_list(self, self.release)
-
+                        app.root.current = "normal"
                 Button:
                     text:"수동 녹화 목록"
-                    font_size:50
-                    font_name: "malgun"
-                    release: "Manl"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
-                        app.root.current = "video_widget"
-                        root.video_list(self, self.release)
+                        app.root.current = "manual"
 
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
                     text:"충격 녹화 목록"
-                    font_size:50
-                    font_name: "malgun"
-                    release: "Impt"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
-                        app.root.current = "video_widget"
-                        root.video_list(self, self.release)
-
+                        app.root.current = "impact"
                 Button:
                     text:"주차 녹화 목록"
-                    font_size:50
-                    font_name: "malgun"
-                    release: "Park"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
-                        app.root.current = "video_widget"
-                        root.video_list(self, self.release)
+                        app.root.current = "parking"
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -226,22 +211,214 @@ WindowManager:
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "menu"
                 Button:
                     text:"메인"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"메뉴"
-                    font_size:50
-                    font_name: "malgun"
+                    font_size:40
+                    font_name:'malgun'
                     on_release:
                         app.root.current = "menu"
+
+<Normal>
+    name: "normal"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Label:
+                    text:"영상 제목"
+                    font_size:20
+                    font_name:'malgun'
+                    center_x: root.width / 2
+
+            BoxLayout:
+                orientation: 'vertical'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Button:
+                    size: 100, 50
+                    size_hint: (None,None)
+                    text:"뒤로가기"
+                    font_size: 20
+                    font_name:'malgun'
+                    pos_hint: {'right': 1}
+                    on_release:
+                        app.root.current = "video_list"
+
+            RecycleView:
+                data: [{'text': str(x)} for x in root.data_items]
+                viewclass: 'SelectableButton'
+                SelectableRecycleBoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    default_size_hint: 1, None
+                    default_size: 100, 75
+                    spacing: 10
+                    padding: 10
+
+<Manual>
+    name: "manual"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Label:
+                    text:"영상 제목"
+                    font_size:20
+                    font_name:'malgun'
+                    center_x: root.width / 2
+
+            BoxLayout:
+                orientation: 'vertical'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Button:
+                    size: 100, 50
+                    size_hint: (None,None)
+                    text: "뒤로가기"
+                    font_size: 20
+                    font_name:'malgun'
+                    pos_hint: {'right': 1}
+                    on_release:
+                        app.root.current = "video_list"
+
+            RecycleView:
+                data: [{'text': str(x)} for x in root.data_items]
+                viewclass: 'SelectableButton'
+                SelectableRecycleBoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    default_size_hint: 1, None
+                    default_size: 100, 75
+                    spacing: 10
+                    padding: 10
+
+<Impact>
+    name: "impact"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Label:
+                    text:"영상 제목"
+                    font_size:20
+                    font_name:'malgun'
+                    center_x: root.width / 2
+
+            BoxLayout:
+                orientation: 'vertical'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Button:
+                    size: 100, 50
+                    size_hint: (None,None)
+                    text:"뒤로가기"
+                    font_size: 20
+                    font_name:'malgun'
+                    pos_hint: {'right': 1}
+                    on_release:
+                        app.root.current = "video_list"
+
+            RecycleView:
+                data: [{'text': str(x)} for x in root.data_items]
+                viewclass: 'SelectableButton'
+                SelectableRecycleBoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    default_size_hint: 1, None
+                    default_size: 100, 75
+                    spacing: 10
+                    padding: 10
+
+<Parking>
+    name: "parking"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Label:
+                    text:"영상 제목"
+                    font_size:20
+                    font_name:'malgun'
+                    center_x: root.width / 2
+
+            BoxLayout:
+                orientation: 'vertical'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Button:
+                    size: 100, 50
+                    size_hint: (None,None)
+                    text:"뒤로가기"
+                    font_size: 20
+                    font_name:'malgun'
+                    pos_hint: {'right': 1}
+                    on_release:
+                        app.root.current = "video_list"
+
+            RecycleView:
+                data: [{'text': str(x)} for x in root.data_items]
+                viewclass: 'SelectableButton'
+                SelectableRecycleBoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    default_size_hint: 1, None
+                    default_size: 100, 75
+                    spacing: 10
+                    padding: 10
 
 <VideoWidget>:
     name: "video_widget"
@@ -257,7 +434,7 @@ WindowManager:
                 orientation: 'horizontal'
 
                 VideoPlayer:
-                    source: "test.mp4"
+                    source: root.source
                     state: "play"
 
             BoxLayout:
