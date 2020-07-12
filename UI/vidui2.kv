@@ -1,0 +1,62 @@
+<MainScreen>
+    name: "main"
+
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 700
+                Image:
+                    id: vid
+                    size: 800, 700
+                    size_hing: 1, 0.6
+                    allow_stretch: True
+                    keep_ratio: True
+
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: 800, 100
+                size_hint: (None, None)
+                Button:
+                    text: "Back"
+                    font_size: 50
+                    on_release:
+                        app.root.current = "menu"
+                Button:
+                    text: "Home"
+                    font_size: 50
+                    on_release:
+                        app.root.current = "menu"
+                Button:
+                    text: "Menu"
+                    font_size: 50
+                    on_release:
+                        app.root.current = "menu"
+
+<Menu>
+    name: "menu"
+    BoxLayout:
+        BoxLayout:
+            orientation: 'horizontal'
+            size: 800, 100
+            size_hint: (None, None)
+
+            Button:
+                text: "Back"
+                font_size: 50
+                on_release:
+                    app.root.current = "menu"
+            Button:
+                text: "Home"
+                font_size: 50
+                on_release:
+                    app.root.current = "menu"
+            Button:
+                text: "Menu"
+                font_size: 50
+                on_release:
+                    app.root.current = "menu"
+
