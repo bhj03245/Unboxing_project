@@ -16,14 +16,38 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.video import Video
 from kivy.network.urlrequest import UrlRequest
 from kivy.uix.recycleview import RecycleView
+from kivy.logger import Logger
 import requests
 import webbrowser
 import pymysql
+import glob
+import threading
+from functools import partial
+from kivy.clock import Clock
+from kivy.uix.image import Image
+from kivy.graphics.texture import Texture
+import datetime
+import cv2
+import RPi.GPIO as gp
+
+
+gp.setwarnings(False)
+gp.setmode(gp.BOARD)
+
+gp.setup(7, gp.OUT)
+gp.setup(11, gp.OUT)
+gp.setup(12, gp.OUT)
+
+gp.output(7, False)
+gp.output(11, False)
+gp.output(12, True)
 
 LabelBase.register(name='malgun',
                    fn_regular='malgun.ttf')
-date = ''
-source = ''
+
+norm_path = '/var/www/html/Upload/UB_video/Normal/'
+fourcc = cv2.VideoWriter_fourcc(*'X264')
+nlist = []
 
 
 class Main(Screen):
@@ -35,7 +59,7 @@ class Menu(Screen):
 
     def drowsiness_switch(selfself, switchObject, switchValue):
         if (switchValue):
-            print('Switch is On:')
+            print('Switch is On: ' + SelectableButton().get_source())
         else:
             print('Switch is OFF')
 
@@ -64,6 +88,7 @@ class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,
 
 
 class SelectableButton(RecycleDataViewBehavior, Button):
+    source = ''
     ''' Add selection support to the Label '''
     index = None
     selected = BooleanProperty(False)
@@ -90,11 +115,16 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         App.get_running_app().root.current = "video_widget"
 
     def on_press(self):
-        date = self.text
+        data = self.text
+        self.source = os.path.join(norm_path, data)
+        data_index = self.index
+
+    def get_source(self):
+        return self.source
 
 
 class Manual(Screen):
-    data_items = ListProperty([])
+    data_items_manl = ListProperty([])
 
     def __init__(self, **kwargs):
         super(Manual, self).__init__(**kwargs)
@@ -103,24 +133,24 @@ class Manual(Screen):
     def get_board(self):
         mydb = pymysql.connect(
             host='localhost',
-            user='spring',
-            passwd='passwd',
-            database='springdb',
+            user='pi',
+            passwd='myub',
+            database='ub_project',
         )
 
         mycursor = mydb.cursor()
-        sql = "select b_date from tk_board"
+        sql = "select manl_name from manl"
         mycursor.execute(sql)
 
         rows = mycursor.fetchall()
         root = 'localhost'
         for row in rows:
             for col in row:
-                self.data_items.append(col)
+                self.data_items_manl.append(col)
 
 
 class Normal(Screen):
-    data_items = ListProperty([])
+    data_items_norm = ListProperty([])
     url = ListProperty([])
 
     def __init__(self, **kwargs):
@@ -130,24 +160,24 @@ class Normal(Screen):
     def get_board(self):
         mydb = pymysql.connect(
             host='localhost',
-            user='spring',
-            passwd='passwd',
-            database='springdb',
+            user='pi',
+            passwd='myub',
+            database='ub_project',
         )
 
         mycursor = mydb.cursor()
-        sql = "select b_date from tk_board"
+        sql = "select norm_name from norm"
         mycursor.execute(sql)
 
         rows = mycursor.fetchall()
         root = 'localhost'
         for row in rows:
             for col in row:
-                self.data_items.append(col)
+                nlist.append(self.data_items_norm.append(col))
 
 
 class Impact(Screen):
-    data_items = ListProperty([])
+    data_items_impt = ListProperty([])
 
     def __init__(self, **kwargs):
         super(Impact, self).__init__(**kwargs)
@@ -156,24 +186,24 @@ class Impact(Screen):
     def get_board(self):
         mydb = pymysql.connect(
             host='localhost',
-            user='spring',
-            passwd='passwd',
-            database='springdb',
+            user='pi',
+            passwd='myub',
+            database='ub_project',
         )
 
         mycursor = mydb.cursor()
-        sql = "select b_date from tk_board"
+        sql = "select impt_name from impt"
         mycursor.execute(sql)
 
         rows = mycursor.fetchall()
         root = 'localhost'
         for row in rows:
             for col in row:
-                self.data_items.append(col)
+                self.data_items_impt.append(col)
 
 
 class Parking(Screen):
-    data_items = ListProperty([])
+    data_items_park = ListProperty([])
 
     def __init__(self, **kwargs):
         super(Parking, self).__init__(**kwargs)
@@ -182,31 +212,40 @@ class Parking(Screen):
     def get_board(self):
         mydb = pymysql.connect(
             host='localhost',
-            user='spring',
-            passwd='passwd',
-            database='springdb',
+            user='pi',
+            passwd='myub',
+            database='ub_project',
         )
 
         mycursor = mydb.cursor()
-        sql = "select b_date from tk_board"
+        sql = "select park_name from park"
         mycursor.execute(sql)
 
         rows = mycursor.fetchall()
         root = 'localhost'
         for row in rows:
             for col in row:
-                self.data_items.append(col)
+                self.data_items_park.append(col)
 
 
 class VideoWidget(Screen):
-    path = r'/var/www/html/Upload?UB_video/Normal/'
-    file = date
-    source = path + file
+    # r_source = source
+    # file = []
+
+    # ff = SelectableButton().on_press()
+    # file = SelectableButton.data
+    # Logger.info('text: ')
+    # for i in range(0, len(nlist)):
+    #    file.append(nlist[i])
+    # source = path + fie
+
+    r_source = '/var/www/html/Upload/UB_video/Normal/NORM_200511_135802.mp4'
+    # r_source = os.path.join(path, file)
 
 
-class VideoPlayerApp(App):
-    def build(self):
-        return VideoWidget()
+# class VideoPlayerApp(App):
+#   def build(self):
+#      return VideoWidget()
 
 
 class WindowManager(ScreenManager):
@@ -215,7 +254,74 @@ class WindowManager(ScreenManager):
 
 class MyApp(App):
     def build(self):
-        return ui
+        threading.Thread(target=self.recording, daemon=True).start()
+        sm = ScreenManager()
+        self.main = Main()
+        self.menu = Menu()
+        sm.add_widget(self.main)
+        sm.add_widget(self.menu)
+        return sm
+
+    def create_time(self):
+        now = datetime.datetime.today().strftime("%y%m%d_%H%M%S")
+        return now
+
+    def create_file(self):
+        now = self.create_time()
+        file_name = now + '.h264'
+        return file_name
+
+    def convert(path, file_name):
+        dest_file = path.replace('h264', 'mp4')
+        convert_cmd = 'MP4Box -fps 30 -add ' + path + " " + dest_file + "; rm " + path
+        os.system(convert_cmd)
+        return dest_file
+
+    def normal_recording(self):
+        __file_name = self.create_file()
+        path = norm_path + "NORM_" + __file_name
+        norm_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
+        return path, norm_out
+
+    def recording(self):
+        # this code is run in a separate thread
+        self.do_vid = True  # flag to stop loop
+
+        cam = cv2.VideoCapture(-1)
+        path = self.normal_recording()[0]
+        out = self.normal_recording()[1]
+        framecnt = 0
+        fps = int(cam.get(cv2.CAP_PROP_FPS))
+        sec = 0
+        # start processing loop
+        while (self.do_vid):
+            framecnt += 1
+            ret, frame = cam.read()
+            sec = framecnt / fps
+            print("%d %d %d" % (framecnt, fps, sec))
+            Clock.schedule_once(partial(self.display_frame, frame))
+            #matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
+            #dst = cv2.warpAffine(frame, matrix, (640, 480))
+            #out.write(dst)
+            out.write(frame)
+            # cv2.imshow('Hidden', frame)
+            cv2.waitKey(1)
+            if sec == 10:
+                out.release()
+                break
+
+        nthread = threading.Thread(target=self.recording)
+        nthread.start()
+
+    def stop_vid(self):
+        # stop the video capture loop
+        self.do_vid = False
+
+    def display_frame(self, frame, dt):
+        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(frame.tobytes(order=None), colorfmt='bgr', bufferfmt='ubyte')
+        texture.flip_vertical()
+        self.main.ids.vid.texture = texture
 
 
 ui = Builder.load_file("UI.kv")
