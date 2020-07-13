@@ -1,16 +1,8 @@
-WindowManager:
-    Main:
-    Menu:
-    Setting:
-    Video_list:
-    Normal:
-    Manual:
-    Impact:
-    Parking:
-    VideoWidget:
+
 
 <Main>
     name: "main"
+    
     FloatLayout:
         BoxLayout:
             size: root.width, root.height
@@ -18,8 +10,26 @@ WindowManager:
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: 1000, 100
+                size: root.width, 380
+
+                Image:
+                    id: vid
+                    size: root.width, 380
+                    allow_stretch: True
+                    keep_ratio: True
+                    canvas.before:
+                        PushMatrix
+                        Rotate:
+                            angle: 270
+                            origin: self.center
+                    canvas.after:
+                        PopMatrix
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: root.width, 100
                 size_hint: (None, None)
+
                 Button:
                     text: '뒤로가기'
                     font_size:40
@@ -84,7 +94,7 @@ WindowManager:
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: 800, 100
+                size: root.width, 100
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
@@ -146,7 +156,7 @@ WindowManager:
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: 800, 100
+                size: root.width, 100
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
@@ -207,7 +217,7 @@ WindowManager:
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: 800, 100
+                size: root.width, 100
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
@@ -265,9 +275,10 @@ WindowManager:
                         app.root.current = "video_list"
 
             RecycleView:
-                data: [{'text': str(x)} for x in root.data_items]
+                data: [{'text': str(x)} for x in root.data_items_norm]
                 viewclass: 'SelectableButton'
                 SelectableRecycleBoxLayout:
+                    id: controller 
                     size_hint_y: None
                     height: self.minimum_height
                     orientation: 'vertical'
@@ -313,7 +324,7 @@ WindowManager:
                         app.root.current = "video_list"
 
             RecycleView:
-                data: [{'text': str(x)} for x in root.data_items]
+                data: [{'text': str(x)} for x in root.data_items_manl]
                 viewclass: 'SelectableButton'
                 SelectableRecycleBoxLayout:
                     size_hint_y: None
@@ -361,7 +372,7 @@ WindowManager:
                         app.root.current = "video_list"
 
             RecycleView:
-                data: [{'text': str(x)} for x in root.data_items]
+                data: [{'text': str(x)} for x in root.data_items_impt]
                 viewclass: 'SelectableButton'
                 SelectableRecycleBoxLayout:
                     size_hint_y: None
@@ -409,7 +420,7 @@ WindowManager:
                         app.root.current = "video_list"
 
             RecycleView:
-                data: [{'text': str(x)} for x in root.data_items]
+                data: [{'text': str(x)} for x in root.data_items_park]
                 viewclass: 'SelectableButton'
                 SelectableRecycleBoxLayout:
                     size_hint_y: None
@@ -434,12 +445,12 @@ WindowManager:
                 orientation: 'horizontal'
 
                 VideoPlayer:
-                    source: root.source
+                    source: root.r_source
                     state: "play"
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: 800, 100
+                size: root.width, 100
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
