@@ -300,7 +300,7 @@ class MyApp(App):
             sec = framecnt / fps
             print("%d %d %d" % (framecnt, fps, sec))
             matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
-            dst = cv2.warpAffine(frame, matrix, (640, 480))
+            dst = cv2.warpAffine(frame, matrix, (640, 380))
             Clock.schedule_once(partial(self.display_frame, dst))
 
             out.write(dst)
