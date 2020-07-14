@@ -299,11 +299,12 @@ class MyApp(App):
             ret, frame = cam.read()
             sec = framecnt / fps
             print("%d %d %d" % (framecnt, fps, sec))
-            Clock.schedule_once(partial(self.display_frame, frame))
-            #matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
-            #dst = cv2.warpAffine(frame, matrix, (640, 480))
-            #out.write(dst)
-            out.write(frame)
+            matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
+            dst = cv2.warpAffine(frame, matrix, (640, 480))
+            Clock.schedule_once(partial(self.display_frame, dst))
+
+            out.write(dst)
+            #out.write(frame)
             # cv2.imshow('Hidden', frame)
             cv2.waitKey(1)
             if sec == 10:
