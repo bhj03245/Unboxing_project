@@ -29,6 +29,7 @@ from kivy.graphics.texture import Texture
 import datetime
 import cv2
 import RPi.GPIO as gp
+from park import park_db
 
 
 gp.setwarnings(False)
@@ -283,13 +284,19 @@ class MyApp(App):
         norm_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
         return path, norm_out
 
-    def recording(self):
+    def recording(self, record, sec_sum, mode1):
         # this code is run in a separate thread
         self.do_vid = True  # flag to stop loop
 
         cam = cv2.VideoCapture(-1)
+        if cam.isOpened() == False:
+            print('Can\'t open the CAM')
+            exit()
+            
         path = self.normal_recording()[0]
         out = self.normal_recording()[1]
+        
+        sec_sum = sec_sum
         framecnt = 0
         fps = int(cam.get(cv2.CAP_PROP_FPS))
         sec = 0
@@ -310,8 +317,8 @@ class MyApp(App):
             if sec == 10:
                 out.release()
                 break
-
-        nthread = threading.Thread(target=self.recording)
+            
+        nthread = threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1))
         nthread.start()
 
     def stop_vid(self):
@@ -323,7 +330,11 @@ class MyApp(App):
         texture.blit_buffer(frame.tobytes(order=None), colorfmt='bgr', bufferfmt='ubyte')
         texture.flip_vertical()
         self.main.ids.vid.texture = texture
-
+    
+    def mode():
+        mode = str(park_db())
+        print(mode)
+        return mode
 
 ui = Builder.load_file("UI.kv")
 
