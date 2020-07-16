@@ -29,9 +29,10 @@ from kivy.graphics.texture import Texture
 import datetime
 import cv2
 import RPi.GPIO as gp
-from park import park_db
+import sysv_ipc
+import sys
 
-
+# Init GPIO 
 gp.setwarnings(False)
 gp.setmode(gp.BOARD)
 
@@ -43,17 +44,27 @@ gp.output(7, False)
 gp.output(11, False)
 gp.output(12, True)
 
+# Font
 LabelBase.register(name='malgun',
                    fn_regular='malgun.ttf')
 
+# Path & Fourcc 
 norm_path = '/var/www/html/Upload/UB_video/Normal/'
+park_path = '/var/www/html/Upload/UB_video/Parking/'
+impt_path = '/var/www/html/Upload/UB_video/Impact/'
+
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 nlist = []
 
+# Shared Memory 
+chk_memory = sysv_ipc.SharedMemory(1219)
+impt_memory = sysv_ipc.SharedMemory(1218)
+fin_memory = sysv_ipc.SharedMemory(1217) 
+mid_memory = sysv_ipc.SharedMemory(1220)
 
+mode_bool = True
 class Main(Screen):
     pass
-
 
 class Menu(Screen):
     pass
@@ -254,8 +265,18 @@ class WindowManager(ScreenManager):
 
 
 class MyApp(App):
+    def mode(self):
+        mycursor = self.user_mode()
+        sql = "select users_mode from users"
+        mycursor.execute(sql)
+        mode = mycursor.fetchall()[0][0]
+        return mode
+        
     def build(self):
-        threading.Thread(target=self.recording, daemon=True).start()
+        record_type = self.normal_recording()
+        sec_sum = 0
+        mode1 = self.mode()
+        threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1, mode_bool), daemon=True).start()
         sm = ScreenManager()
         self.main = Main()
         self.menu = Menu()
@@ -272,7 +293,7 @@ class MyApp(App):
         file_name = now + '.h264'
         return file_name
 
-    def convert(path, file_name):
+    def convert(self, path, file_name):
         dest_file = path.replace('h264', 'mp4')
         convert_cmd = 'MP4Box -fps 30 -add ' + path + " " + dest_file + "; rm " + path
         os.system(convert_cmd)
@@ -284,7 +305,24 @@ class MyApp(App):
         norm_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
         return path, norm_out
 
-    def recording(self, record, sec_sum, mode1):
+    def parking_recording(self):
+        __file_name = self.create_file()
+        path = park_path + "PARK_" + __file_name
+        park_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
+        return path, park_out
+        
+    def user_mode(self):
+        mydb = pymysql.connect(
+            host='localhost',
+            user='pi',
+            passwd='myub',
+            database='ub_project'
+        )
+        mycursor = mydb.cursor()
+  
+        return mycursor
+        
+    def recording(self, record, sec_sum, mode1, mode_bool):
         # this code is run in a separate thread
         self.do_vid = True  # flag to stop loop
 
@@ -293,32 +331,46 @@ class MyApp(App):
             print('Can\'t open the CAM')
             exit()
             
-        path = self.normal_recording()[0]
-        out = self.normal_recording()[1]
+        path = record[0]
+        out = record[1]
         
         sec_sum = sec_sum
         framecnt = 0
         fps = int(cam.get(cv2.CAP_PROP_FPS))
         sec = 0
+        
         # start processing loop
         while (self.do_vid):
+            # Getting Mode
+            mode = self.mode()
+            # Parking Mode Change
+            if mode == 'PARK' and mode_bool == True:
+                print(mode)
+                mode1 = mode
+                mode_bool = False
+                break
+                            
             framecnt += 1
             ret, frame = cam.read()
             sec = framecnt / fps
-            print("%d %d %d" % (framecnt, fps, sec))
+            print("%s %d %d %d" % (mode, framecnt, fps, sec))
             matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
-            dst = cv2.warpAffine(frame, matrix, (640, 380))
+            dst = cv2.warpAffine(frame, matrix, (640, 480))
             Clock.schedule_once(partial(self.display_frame, dst))
 
             out.write(dst)
-            #out.write(frame)
-            # cv2.imshow('Hidden', frame)
             cv2.waitKey(1)
             if sec == 10:
                 out.release()
+                video = self.convert(path, path.split('/')[6]) 
                 break
-            
-        nthread = threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1))
+                
+        if mode1 == 'PARK':
+            record_type = self.parking_recording()
+        elif mode1 == 'NORM':
+            record_type = self.normal_recording()
+                
+        nthread = threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1, mode_bool))
         nthread.start()
 
     def stop_vid(self):
@@ -331,10 +383,6 @@ class MyApp(App):
         texture.flip_vertical()
         self.main.ids.vid.texture = texture
     
-    def mode():
-        mode = str(park_db())
-        print(mode)
-        return mode
 
 ui = Builder.load_file("UI.kv")
 
