@@ -311,6 +311,12 @@ class MyApp(App):
         park_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
         return path, park_out
         
+    def impact_recording(self):
+        __file_name = create_file()
+        path = impt_path + "IMPT_" + __file_name
+        impt_out = cv2.VideoWriter(path, fourcc, 30.0, (640, 480))
+        return path, impt_out
+      
     def user_mode(self):
         mydb = pymysql.connect(
             host='localhost',
@@ -343,26 +349,62 @@ class MyApp(App):
         while (self.do_vid):
             # Getting Mode
             mode = self.mode()
+            
             # Parking Mode Change
             if mode == 'PARK' and mode_bool == True:
                 print(mode)
                 mode1 = mode
                 mode_bool = False
                 break
-                            
+                
+            # impact : sec > 50 processing    
+            if sec_sum == 120:
+                print(sec_sum)
+                flag = impt_memory.read()
+                chk_memory.write("CHEK")
+                impt_memory.write("FLG2")
+                sec_sum = 0
+                continue
+                
+            # Read video    
             framecnt += 1
             ret, frame = cam.read()
             sec = framecnt / fps
-            print("%s %d %d %d" % (mode, framecnt, fps, sec))
+            rr = (cam.get(cv2.CAP_PROP_POS_FRAMES))
+            chk = impt_memory.read()
+            print(chk)
+            
+            if chk == 'IMPT':
+                fin = fin_memory.read()
+                fin_memory.write(str('%02d' %sec))
+                impt_memory.write('    ')
+                
+            print("%s %d %d %d %d" % (mode, rr, framecnt, fps, sec))
+            
             matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
             dst = cv2.warpAffine(frame, matrix, (640, 480))
             Clock.schedule_once(partial(self.display_frame, dst))
-
             out.write(dst)
-            cv2.waitKey(1)
-            if sec == 10:
+           
+            # cv2.waitKey(1)
+            # video saving
+            if sec == 60:
+                sec_sum += sec
                 out.release()
-                video = self.convert(path, path.split('/')[6]) 
+                video = self.convert(path, path.split('/')[6])
+                mid_memory.write("FLAG")
+                break
+                
+                # impact : 10 <= sec <= 50 processing
+                if 0 <= int(fin_memory.read()) <= 50:
+                    flag = impt_memory.read()
+                    mid_memory.write("FLAG")
+                    break
+                    
+            # key interrupt : video saving
+            if cv2.waitKey(33) >= 0:
+                cam.release()
+                video = self.convert(path, path.split('/')[6])
                 break
                 
         if mode1 == 'PARK':
