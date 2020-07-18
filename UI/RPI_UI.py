@@ -402,7 +402,8 @@ class MyApp(App):
                     break
                     
             # key interrupt : video saving
-            if cv2.waitKey(33) >= 0:
+            # if cv2.waitKey(33) >= 0:
+            if cv2.waitKey(1):
                 cam.release()
                 video = self.convert(path, path.split('/')[6])
                 break
