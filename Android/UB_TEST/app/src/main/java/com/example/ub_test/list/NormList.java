@@ -14,9 +14,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -42,6 +46,7 @@ import androidx.appcompat.widget.SearchView;
 
 
 public class NormList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+    private Context context = this;
     private static String TAG = "test";
 
     private ArrayList<VideoVO> mArrayList;
@@ -60,10 +65,14 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
     private SearchView.OnQueryTextListener queryTextListener;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.search_toolbar);
+        setSupportActionBar(toolbar);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.showList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -97,7 +106,7 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
         String inUrl = intent.getStringExtra("url");
 
         if (inTitle != null & inUrl != null) {
-            Toast.makeText(getApplicationContext(), inUrl, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), inUrl, Toast.LENGTH_LONG).show();
 
             startDownload(inTitle, inUrl);
             finish();
@@ -118,6 +127,7 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
         super.onDestroy();
         unregisterReceiver(onDownloadComplete);
     }
+
 
     //해당 Item의 URL로 안드로이드 다운로드 매니저 실행
     private void startDownload(String title, String downloadUrl) {
@@ -168,22 +178,32 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
     //리스트에서 검색 함수
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+
         SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) findViewById(R.id.search_view);
         searchView.onActionViewExpanded(); //바로 검색할 수 있도록
 
+
         if (searchView != null) {
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.onActionViewCollapsed();
+
             searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
             searchView.setQueryHint(getString(R.string.search_hint));
             queryTextListener = new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
+                    mAdapter.setFilter(mArrayList);
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    mAdapter.setFilter(filter(mArrayList, newText));
+                    if(newText.length() > 0) {
+                        mAdapter.setFilter(filter(mArrayList, newText));
+                    }
                     return true;
                 }
             };
@@ -204,8 +224,6 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
                     filteredNoticeList.add(model);
                 }
             }
-        } else {
-
         }
         return filteredNoticeList;
     }
@@ -213,25 +231,17 @@ public class NormList extends AppCompatActivity implements SwipeRefreshLayout.On
 
     //웹서버에서 리스트 가져오기
     private class GetData extends AsyncTask<Void, Void, String> {
-        ProgressDialog progressDialog;
+
         String errString = null;
 
         URL url = null;
         HttpURLConnection httpURLConnection;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(NormList.this,
-                    "잠시만 기다려주세요", null, true, true);
-        }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            progressDialog.dismiss();
             Log.d(TAG, "response - " + result);
 
             if (result == null) {

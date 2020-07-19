@@ -35,7 +35,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
         this.list_name = list_name;
     }
 
-    class VideoHolder extends RecyclerView.ViewHolder {
+    public class VideoHolder extends RecyclerView.ViewHolder {
         protected TextView tv_num;
         protected TextView tv_title;
         protected TextView tv_size;
@@ -60,12 +60,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
     @Override
     public void onBindViewHolder(@NonNull VideoHolder holder, int position) {
 
-        VideoVO item = mList.get(position);
+        int safePosition = holder.getAdapterPosition();
+
+        final VideoVO item = mList.get(safePosition);
 
         holder.tv_num.setText(item.getNum());
         holder.tv_title.setText("영상 제목: " + item.getTitle());
         holder.tv_size.setText("영상 사이즈: " + item.getSize());
         holder.tv_length.setText("영상 길이: " + item.getLength());
+
+        System.out.println(item.getTitle());
 
         final String videoTitle = item.getTitle();
         final String videoUrl = item.getUrl();
@@ -77,7 +81,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoHolder>
                     final Intent toNorm = new Intent(v.getContext(), NormList.class);
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(videoTitle);
-                    builder.setMessage("다운로드하시겠습니까?");
+                    builder.setMessage("다운로드하시겠습니까?" + list_name);
                     builder.setPositiveButton("네",
                             new DialogInterface.OnClickListener() {
                                 @Override

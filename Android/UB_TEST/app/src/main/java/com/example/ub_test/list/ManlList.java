@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -63,6 +64,9 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.search_toolbar);
+        setSupportActionBar(toolbar);
 
         mRecyclerView = (RecyclerView)findViewById(R.id.showList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -167,6 +171,10 @@ public class ManlList extends AppCompatActivity implements SwipeRefreshLayout.On
         searchView.onActionViewExpanded(); //바로 검색할 수 있도록
 
         if (searchView != null){
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.onActionViewCollapsed();
+
             searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
             searchView.setQueryHint(getString(R.string.search_hint));
             queryTextListener = new SearchView.OnQueryTextListener() {

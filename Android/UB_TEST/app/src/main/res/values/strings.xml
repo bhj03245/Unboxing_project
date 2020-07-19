@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">UB_TEST</string>
-    <string name="ip">http://192.168.0.75</string>
+    <string name="ip">http://192.168.1.123</string>
     <string name="search_hint">검색어 입력</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
 </resources>

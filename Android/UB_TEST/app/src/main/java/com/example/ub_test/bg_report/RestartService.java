@@ -14,7 +14,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.example.ub_test.MainActivity;
+import com.example.ub_test.Login;
 import com.example.ub_test.R;
 
 import static android.content.ContentValues.TAG;
@@ -24,6 +24,7 @@ public class RestartService extends Service {
 
 
     boolean modeChecked = false;
+
 
     public RestartService() {
     }
@@ -36,6 +37,8 @@ public class RestartService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //if(modeChecked == false)
+        //    stopService(in);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class RestartService extends Service {
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentTitle("신고 기능");
         builder.setContentText(null);
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, Login.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         builder.setContentIntent(pendingIntent);
 

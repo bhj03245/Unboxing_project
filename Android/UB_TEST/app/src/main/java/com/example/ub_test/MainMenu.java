@@ -2,6 +2,8 @@ package com.example.ub_test;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -173,7 +175,14 @@ public class MainMenu extends AppCompatActivity {
                 if(isChecked == false) {
                     RecvImpt recvImpt = new RecvImpt(MainMenu.this);
                     recvImpt.execute();
+                    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+                    for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+                        if("com.example.bg_report.RealService".equals(service.service.getClassName())){
+                            stopService(serviceIntent);
+                        }
+                    }
                 }
+
 
                 SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
                 SharedPreferences.Editor editor = data.edit();

@@ -109,7 +109,6 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
         String phone = report_data.getString("phone", "");
         String content = report_data.getString("content", "");
 
-
         if (s.equals("Impt")) {
             try {
                 SmsManager smsManager = SmsManager.getDefault();
@@ -122,6 +121,5 @@ public class RecvImpt extends AsyncTask<String, Void, String> {
         } else {
             Log.d(TAG, "recvData: " + s);
         }
-
     }
 }

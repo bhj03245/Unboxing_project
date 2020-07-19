@@ -8,10 +8,8 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,14 +19,10 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
-import com.example.ub_test.bg_report.RealService;
 import com.example.ub_test.bg_report.RecvImpt;
-import com.example.ub_test.bg_report.RestartService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class Login extends AppCompatActivity {
     EditText et_id;
     EditText et_pw;
     Button btn_login;
@@ -62,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        RecvImpt recvImpt = new RecvImpt(MainActivity.this);
+        setContentView(R.layout.activity_login);
+        RecvImpt recvImpt = new RecvImpt(Login.this);
 
         et_id = (EditText) findViewById(R.id.id);
         et_pw = (EditText) findViewById(R.id.password);
@@ -77,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                     str_pw = et_pw.getText().toString();
                     if(str_id.getBytes().length <= 0 | str_pw.getBytes().length <= 0)
                     {
-                        Toast.makeText(MainActivity.this, "ID와 비밀번호를 입력해 주세요",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "ID와 비밀번호를 입력해 주세요",Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } catch (NullPointerException e) {
@@ -232,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(MainActivity.this,
+            progressDialog = ProgressDialog.show(Login.this,
                     "잠시만 기다려주세요", null, true, true);
         }
 
@@ -240,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String data) {
             super.onPostExecute(data);
             progressDialog.dismiss();
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Login.this);
 
             if (data.equals("1")) {
                 Log.e("RESULT", "성공적으로 처리됨");
@@ -248,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(MainActivity.this, MainMenu.class);
+                                Intent intent = new Intent(Login.this, Main.class);
                                 startActivity(intent);
                                 finish();
                             }

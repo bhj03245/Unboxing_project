@@ -12,57 +12,55 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Unboxing"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MainMenu"></activity>
+        <activity android:name=".Main">
+        </activity>
+        <activity android:name=".MainMenu" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBE0bSOBE9___yep8DTvB8P4MKJjqBrc6Q" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".list.ImptList" />
         <activity android:name=".list.ParkList" />
         <activity android:name=".list.ManlList" />
         <activity android:name=".list.NormList" />
-
-        <activity android:name=".parking.ImagePop"
+        <activity
+            android:name=".parking.ImagePop"
             android:theme="@android:style/Theme.Dialog" />
-
         <activity android:name=".parking.ParkLocation" />
-
-        <activity android:name=".setting.UserSetting"/>
-        <activity android:name=".setting.ReportSetting"
-            android:theme="@android:style/Theme.Dialog"/>
-
+        <activity android:name=".setting.UserSetting" />
+        <activity
+            android:name=".setting.ReportSetting"
+            android:theme="@android:style/Theme.Dialog" />
 
         <service
             android:name=".bg_report.RealService"
             android:enabled="true"
-            android:exported="true"/>
-
-        <service android:name=".bg_report.RestartService"
+            android:exported="true" />
+        <service
+            android:name=".bg_report.RestartService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
 
-        <receiver android:name=".bg_report.AlarmReceiver"/>
-
-        <receiver android:name=".bg_report.RebootReceiver"
+        <receiver android:name=".bg_report.AlarmReceiver" />
+        <receiver
+            android:name=".bg_report.RebootReceiver"
             android:enabled="true"
             android:exported="false"
             android:process=":remote">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
     </application>

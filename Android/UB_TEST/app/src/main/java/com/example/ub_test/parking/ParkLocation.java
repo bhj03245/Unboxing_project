@@ -50,7 +50,7 @@ public class ParkLocation extends AppCompatActivity implements OnMapReadyCallbac
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latlng);
         markerOptions.title("주차 위치");
-        markerOptions.snippet("요기");
+        markerOptions.snippet("Here");
         mMap.addMarker(markerOptions);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
