@@ -8,13 +8,15 @@ import sysv_ipc
 import Queue
 from impt import detect_impact
 
-norm_path = os.getcwd() + '/UB_video/Normal/'
-impt_path = os.getcwd() + '/UB_video/Impact/'
+norm_path = '/var/www/html/Upload/UB_video/Normal/'
+impt_path = '/var/www/html/Upload/UB_video/Impact/'
+park_path = '/var/www/html/Upload/UB_video/Parking/'
 
 check = False
 chk_memory = sysv_ipc.SharedMemory(1219, flags=01000, size=4, mode=0600)
 impt_memory = sysv_ipc.SharedMemory(1218, flags=01000, size=4, mode=0600)
 fin_memory = sysv_ipc.SharedMemory(1217, flags=01000, size=2, mode=0600)
+mid_memory = sysv_ipc.SharedMemory(1220, flags=01000, size=4, mode=0600)
 
 class ListQueue:
     def __init__(self):
@@ -35,6 +37,7 @@ def create_time():
     return now
 
 def impact():
+    # Modify this part (Mode : Norm or Park)
     t = create_time()
     impt_memory.write("IMPT")
     print("Time : %s" % t)
@@ -44,6 +47,7 @@ def impact():
         nt = t[:11] + sec
         flag = impt_memory.read()   
         chk = chk_memory.read()
+        midtime = mid_memory.read()
 
         if flag == 'FLG2' and chk == 'CHEK':
             video_mixing(nt)
@@ -51,10 +55,10 @@ def impact():
             chk_memory.write('    ')
             break
         
-        elif flag == 'FLAG':
-            print("Memory : %s" % flag)
+        if midtime == 'FLAG':
+            print("Memory : %s" % midtime)
             video_mixing(nt)
-            impt_memory.write('    ')
+            mid_memory.write('    ')
             break
 
         
@@ -65,6 +69,7 @@ def impact():
 
 def video_mixing(t):
     print("Start")
+    print(t[11:13])
     time = int(t[11:13])
     frame = 30
     file_path = glob.glob("%s*.mp4" % (norm_path))
