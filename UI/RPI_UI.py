@@ -63,6 +63,7 @@ fin_memory = sysv_ipc.SharedMemory(1217)
 mid_memory = sysv_ipc.SharedMemory(1220)
 
 mode_bool = True
+
 class Main(Screen):
     pass
 
@@ -370,16 +371,16 @@ class MyApp(App):
             framecnt += 1
             ret, frame = cam.read()
             sec = framecnt / fps
-            rr = (cam.get(cv2.CAP_PROP_POS_FRAMES))
-            chk = impt_memory.read()
+            #rr = (cam.get(cv2.CAP_PROP_POS_FRAMES))
+            chk = str(impt_memory.read())
             print(chk)
             
             if chk == 'IMPT':
                 fin = fin_memory.read()
-                fin_memory.write(str('%02d' %sec))
+                fin_memory.write(str('%02d' % sec))
                 impt_memory.write('    ')
                 
-            print("%s %d %d %d %d" % (mode, rr, framecnt, fps, sec))
+            print("%s %d %d %d" % (mode, framecnt, fps, sec))
             
             matrix = cv2.getRotationMatrix2D((640 / 2, 480 / 2), 270, 1)
             dst = cv2.warpAffine(frame, matrix, (640, 480))
@@ -402,8 +403,8 @@ class MyApp(App):
                     break
                     
             # key interrupt : video saving
-            # if cv2.waitKey(33) >= 0:
-            if cv2.waitKey(1):
+            if cv2.waitKey(33) >= 0:
+            #if cv2.waitKey(1):
                 cam.release()
                 video = self.convert(path, path.split('/')[6])
                 break
@@ -412,7 +413,7 @@ class MyApp(App):
             record_type = self.parking_recording()
         elif mode1 == 'NORM':
             record_type = self.normal_recording()
-                
+
         nthread = threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1, mode_bool))
         nthread.start()
 
