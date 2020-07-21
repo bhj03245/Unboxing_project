@@ -377,7 +377,7 @@ class MyApp(App):
             
             if chk == 'IMPT':
                 fin = fin_memory.read()
-                fin_memory.write(str('%02d' % sec))
+                fin_memory.write(str('%02d' % sec)) # Modify Need
                 impt_memory.write('    ')
                 
             print("%s %d %d %d" % (mode, framecnt, fps, sec))
@@ -387,7 +387,6 @@ class MyApp(App):
             Clock.schedule_once(partial(self.display_frame, dst))
             out.write(dst)
            
-            # cv2.waitKey(1)
             # video saving
             if sec == 60:
                 sec_sum += sec
@@ -404,7 +403,6 @@ class MyApp(App):
                     
             # key interrupt : video saving
             if cv2.waitKey(33) >= 0:
-            #if cv2.waitKey(1):
                 cam.release()
                 video = self.convert(path, path.split('/')[6])
                 break
