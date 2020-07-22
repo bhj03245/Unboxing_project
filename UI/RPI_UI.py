@@ -370,7 +370,7 @@ class MyApp(App):
             # Read video    
             framecnt += 1
             ret, frame = cam.read()
-            sec = framecnt / fps
+            sec = int(framecnt / fps)
             #rr = (cam.get(cv2.CAP_PROP_POS_FRAMES))
             chk = str(impt_memory.read())
             print(chk)
@@ -412,8 +412,8 @@ class MyApp(App):
         elif mode1 == 'NORM':
             record_type = self.normal_recording()
 
-        nthread = threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1, mode_bool))
-        nthread.start()
+        rec_thread = threading.Thread(target=self.recording, args=(record_type, sec_sum, mode1, mode_bool))
+        rec_thread.start()
 
     def stop_vid(self):
         # stop the video capture loop
