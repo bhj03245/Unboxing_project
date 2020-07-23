@@ -372,12 +372,13 @@ class MyApp(App):
             ret, frame = cam.read()
             sec = int(framecnt / fps)
             #rr = (cam.get(cv2.CAP_PROP_POS_FRAMES))
-            chk = str(impt_memory.read())
+            chk = impt_memory.read()
+            chk = chk.decode('utf-8')
             print(chk)
             
             if chk == 'IMPT':
                 fin = fin_memory.read()
-                fin_memory.write(str('%02d' % sec)) # Modify Need
+                fin_memory.write(str('%02d' % sec)) 
                 impt_memory.write('    ')
                 
             print("%s %d %d %d" % (mode, framecnt, fps, sec))
