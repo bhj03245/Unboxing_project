@@ -1,2 +1,2 @@
 #!/bin/bash
-shutdown -t sec
+shutdown -h $1
