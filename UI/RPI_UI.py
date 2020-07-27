@@ -252,7 +252,7 @@ class VideoWidget(Screen):
     #    file.append(nlist[i])
     # source = path + fie
 
-    r_source = '/var/www/html/Upload/UB_video/Normal/NORM_200511_135802.mp4'
+    r_source = '/var/www/html/Upload/UB_video/Normal/NORM_200701_125348.mp4'
     # r_source = os.path.join(path, file)
 
 
@@ -281,8 +281,22 @@ class MyApp(App):
         sm = ScreenManager()
         self.main = Main()
         self.menu = Menu()
+        self.setting = Setting()
+        self.video_list = Video_list()
+        self.normal = Normal()
+        self.manual = Manual()
+        self.impact = Impact()
+        self.parking = Parking()
+        self.video_widget = VideoWidget() 
         sm.add_widget(self.main)
         sm.add_widget(self.menu)
+        sm.add_widget(self.setting)
+        sm.add_widget(self.video_list)
+        sm.add_widget(self.normal)
+        sm.add_widget(self.manual)
+        sm.add_widget(self.impact)
+        sm.add_widget(self.parking)
+        sm.add_widget(self.video_widget)
         return sm
 
     def create_time(self):
