@@ -150,6 +150,10 @@ WindowManager:
                     text:"예약 종료"
                     font_size:40
                     font_name:'malgun'
+                    active: False
+                    on_release:
+                        root.reservation_shutdown(self)
+                        
                 Button:
                     text:"계정 정보"
                     font_size:40
