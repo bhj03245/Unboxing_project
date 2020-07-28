@@ -68,8 +68,6 @@ class Main(Screen):
     pass
 
 class Menu(Screen):
-    pass
-
     def drowsiness_switch(selfself, switchObject, switchValue):
         if (switchValue):
             print('Switch is On: ' + SelectableButton().get_source())
@@ -78,14 +76,15 @@ class Menu(Screen):
 
 
 class Setting(Screen):
-    pass
-
     def drowsiness_switch(selfself, switchObject, switchValue):
         if (switchValue):
             print('Switch is On:')
         else:
             print('Switch is OFF')
-
+            
+    def reservation_shutdown(self, active):
+        os.system('sh reserve.sh')
+        
 
 class Video_list(Screen):
     def run_UrlRequests(self, *args):
