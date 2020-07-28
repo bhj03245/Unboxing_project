@@ -1,2 +1,2 @@
 #!/bin/bash
-shutdown -h $1
+shutdown -h 1
