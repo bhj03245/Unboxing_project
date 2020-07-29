@@ -3,11 +3,10 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 #include <opencv4/opencv2/opencv.hpp>
 #include <time.h>
 #include <error.h>
-#include <cstring>
 #include "/usr/include/mariadb/mysql.h"
 
 #define DB_HOST "localhost"
@@ -66,8 +65,8 @@ public:
 
 	char* getUrl() {
 		return this->url;
-	}
-
+    }
+    
 	void printInfo() {
 		cout << "--------------------------------------------" << endl;
 		cout << "NUM : " << getNum() << endl;
@@ -81,12 +80,12 @@ public:
 	}
 };
 
-void norm_db_insert(Video vid);
-void impt_db_insert(Video vid);
-void park_db_insert(Video vid);
-void manl_db_insert(Video vid);
-void db_select();
-void db_update();
+//void norm_db_insert(Video vid);
+//void impt_db_insert(Video vid);
+//void park_db_insert(Video vid);
+//void manl_db_insert(Video vid);
+//void db_select();
+//void db_update();
 char* timeToString(struct tm* t);
 
 void norm_db_insert(Video vid) {
@@ -264,11 +263,9 @@ void FileList(char* ip_addr, char* PATH)
 	char newpath[100];
 	char vidpath[100];
 
-	char webpath[100];
-	char web_npath[70];
-	char web_ipath[70];
-	char web_ppath[70];
-	char web_mpath[70];
+	char npath[100];
+	char web_newpath[70];
+
 
 	strcpy(vidpath, PATH);
 	char* dirname[10] = { NULL, };   
@@ -285,19 +282,19 @@ void FileList(char* ip_addr, char* PATH)
 
 	printf("%s\n", dirname[5]);
 	if (strcmp(dirname[5], "Normal") == 0) {
-		sprintf(web_npath, "http://%s/Upload/UB_video/Normal", ip_addr);
+		sprintf(web_newpath, "http://%s/Upload/UB_video/Normal", ip_addr);
 	}
 	else if (strcmp(dirname[5], "Impact") == 0) {
-		sprintf(web_npath, "http://%s/Upload/UB_video/Impact", ip_addr);
+		sprintf(web_newpath, "http://%s/Upload/UB_video/Impact", ip_addr);
 	}
 	else if (strcmp(dirname[5], "Parking") == 0) {
-		sprintf(web_npath, "http://%s/Upload/UB_video/Parking", ip_addr);
+		sprintf(web_newpath, "http://%s/Upload/UB_video/Parking", ip_addr);
 	}
 	else if (strcmp(dirname[5], "Manual") == 0) {
-		sprintf(web_npath, "http://%s/Upload/UB_video/Manual", ip_addr);
+		sprintf(web_newpath, "http://%s/Upload/UB_video/Manual", ip_addr);
 	}
 
-	cout << "URL : " << web_npath << endl;
+	cout << "URL : " << web_newpath << endl;
     cout << vidpath << endl;
 	video_dir = opendir(vidpath);
 
@@ -308,7 +305,7 @@ void FileList(char* ip_addr, char* PATH)
 			char* ext;
 			ext = strrchr(entry->d_name, '.');
 			if (strcmp(ext, ".mp4") == 0) {
-				sprintf(webpath, "%s/%s", web_npath, entry->d_name);
+				sprintf(npath, "%s/%s", web_newpath, entry->d_name);
 				sprintf(newpath, "%s/%s", vidpath, entry->d_name);	// Combine Path
 				stat(newpath, &buf);
 	
@@ -333,8 +330,9 @@ void FileList(char* ip_addr, char* PATH)
 				sprintf(vidResolution, "%dX%d", width, height);		// Convert & Combine
 				strcpy(vidMakeTime, timeToString(localtime(&t)));	// Convert time to String
 
-				vid.setVideo(num, file, buf.st_size, vidLength, vidMakeTime, vidResolution, webpath);	// Set
+				vid.setVideo(num, file, buf.st_size, vidLength, vidMakeTime, vidResolution, npath);	// Set
 				vid.printInfo();	// Output Video Info 
+
 				if (strcmp(dirname[5], "Normal") == 0) {
 					norm_db_insert(vid);
 				}
@@ -357,6 +355,7 @@ void FileList(char* ip_addr, char* PATH)
 		perror("");
 	}
 }
+
 char* timeToString(struct tm* t) {
 	static char s[20];
 	sprintf(s, "%04d-%02d-%02d %02d:%02d:%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
