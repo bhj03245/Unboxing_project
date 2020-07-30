@@ -85,7 +85,7 @@ class Setting(Screen):
     def reservation_shutdown(self, active):
         os.system('sh reserve.sh')
         
-
+        
 class Video_list(Screen):
     def run_UrlRequests(self, *args):
         # self.r = UrlRequest("https://www.google.com")
@@ -130,6 +130,8 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         data = self.text
         self.source = os.path.join(norm_path, data)
         data_index = self.index
+        print(self.source)
+        return self.source
 
     def get_source(self):
         return self.source
@@ -242,17 +244,16 @@ class Parking(Screen):
 
 class VideoWidget(Screen):
     # r_source = source
-    # file = []
-
-    # ff = SelectableButton().on_press()
-    # file = SelectableButton.data
-    # Logger.info('text: ')
-    # for i in range(0, len(nlist)):
+    ff = SelectableButton().on_press()
+    print(ff)
+    #file = SelectableButton().data
+    #Logger.info('text: ')
+    #for i in range(0, len(nlist)):
     #    file.append(nlist[i])
-    # source = path + fie
+    #r_source = norm_path + 'NORM_200701_125348.mp4'
+    r_source = os.path.join(norm_path, ff)
+    # r_source = '/var/www/html/Upload/UB_video/Normal/NORM_200701_125348.mp4'
 
-    r_source = '/var/www/html/Upload/UB_video/Normal/NORM_200701_125348.mp4'
-    # r_source = os.path.join(path, file)
 
 
 # class VideoPlayerApp(App):
