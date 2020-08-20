@@ -135,14 +135,14 @@ WindowManager:
                     font_name:'malgun'
                 Switch:
                     active: False
-                    on_active: root.drowsiness_switch(self, self.active)
+                    on_active: root.manual_switch(self, self.active)
                 Label:
                     text:"블랙박스 전원"
                     font_size:20
                     font_name:'malgun'
                 Switch:
-                    active: False
-                    on_active: root.drowsiness_switch(self, self.active)
+                    active: True
+                    on_active: root.power_switch(self, self.active)
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -155,7 +155,7 @@ WindowManager:
                         root.reservation_shutdown(self)
                         
                 Button:
-                    text:"계정 정보"
+                    text:"계정 정보"                  
                     font_size:40
                     font_name:'malgun'
 
@@ -449,9 +449,12 @@ WindowManager:
                 size_hint: (None,None)
                 orientation: 'horizontal'
 
-                VideoPlayer:
-                    source: root.r_source
-                    state: "play"
+                Image:
+                    id: video_player
+                    size_hint: (None, None)
+                    size: root.width, 500
+                    allow_stretch: True
+                    keep_ratio: True
 
             BoxLayout:
                 orientation: 'horizontal'
