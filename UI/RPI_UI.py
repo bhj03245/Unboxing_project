@@ -31,6 +31,9 @@ import cv2
 import RPi.GPIO as gp
 import sysv_ipc
 import sys
+from kivy.core.window import Window
+
+Window.size = (1024, 708)
 
 # Init GPIO 
 gp.setwarnings(False)
@@ -52,6 +55,7 @@ LabelBase.register(name='malgun',
 norm_path = '/var/www/html/Upload/UB_video/Normal/'
 park_path = '/var/www/html/Upload/UB_video/Parking/'
 impt_path = '/var/www/html/Upload/UB_video/Impact/'
+manl_path = '/var/www/html/Upload/UB_video/Manual/'
 
 fourcc = cv2.VideoWriter_fourcc(*'X264')
 nlist = []
@@ -64,6 +68,11 @@ mid_memory = sysv_ipc.SharedMemory(1220)
 
 mode_bool = True
 
+
+def file_list(in_path):
+    vidlist = glob.glob(in_path + '/*.mp4')
+    return vidlist
+    
 class Main(Screen):
     pass
 
@@ -76,7 +85,7 @@ class Menu(Screen):
 
 
 class Setting(Screen):
-    def drowsiness_switch(selfself, switchObject, switchValue):
+    def manual_switch(selfself, switchObject, switchValue):
         if (switchValue):
             print('Switch is On:')
         else:
@@ -84,14 +93,12 @@ class Setting(Screen):
             
     def reservation_shutdown(self, active):
         os.system('sh reserve.sh')
-        
+    
+    def power_switch(self, active):
+        os.system('shutdown -h now')
         
 class Video_list(Screen):
-    def run_UrlRequests(self, *args):
-        # self.r = UrlRequest("https://www.google.com")
-        # r = requests.get("https://www.google.com")
-        url = "https://www.google.com"
-        webbrowser.open_new(url)
+    pass
 
 
 class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,
@@ -105,6 +112,7 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     index = None
     selected = BooleanProperty(False)
     selectable = BooleanProperty(True)
+    key = ''
 
     def refresh_view_attrs(self, rv, index, data):
         ''' Catch and handle the view changes '''
@@ -124,14 +132,44 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         self.selected = is_selected
 
     def on_release(self, *args):
-        App.get_running_app().root.current = "video_widget"
+        if self.key == 'NORM':
+            App.get_running_app().root.current = "normal"
+        elif self.key == 'IMPT':
+            App.get_running_app().root.current = "impact"
+        elif self.key == 'MANL':
+            App.get_running_app().root.current = "manual"
+        elif self.key == 'PARK':
+            App.get_running_app().root.current = "parking"
+        #App.get_running_app().root.current = "video_list"
 
     def on_press(self):
         data = self.text
-        self.source = os.path.join(norm_path, data)
-        data_index = self.index
-        print(self.source)
-        return self.source
+        self.key = data[:4]
+        if self.key == 'NORM':      
+            self.source = os.path.join(norm_path, data)
+            path = norm_path
+        elif self.key == 'IMPT':
+            self.source = os.path.join(impt_path, data)
+            path = impt_path
+        elif self.key == 'PARK':
+            self.source = os.path.join(park_path, data)
+            path = park_path
+        elif self.key == 'MANL':
+            self.source = os.path.join(manl_path, data)
+            path = manl_path
+            
+        print("Selectable : %s" % self.selectable)
+        print("Index : %s" % self.index)
+
+        if self.index == None:
+            print("FileName : None")
+        else:
+            print("FileName : %s" % data)
+            print("Abstract path : %s" % self.source)
+
+        vw = VideoWidget()
+        vw.vidname(self.index, self.selectable, self.source, path)
+        print("=" * 50)
 
     def get_source(self):
         return self.source
@@ -139,126 +177,116 @@ class SelectableButton(RecycleDataViewBehavior, Button):
 
 class Manual(Screen):
     data_items_manl = ListProperty([])
-
+    video_items = []
     def __init__(self, **kwargs):
         super(Manual, self).__init__(**kwargs)
         self.get_board()
 
     def get_board(self):
-        mydb = pymysql.connect(
-            host='localhost',
-            user='pi',
-            passwd='myub',
-            database='ub_project',
-        )
-
-        mycursor = mydb.cursor()
-        sql = "select manl_name from manl"
-        mycursor.execute(sql)
-
-        rows = mycursor.fetchall()
-        root = 'localhost'
-        for row in rows:
-            for col in row:
-                self.data_items_manl.append(col)
+        self.video_items = file_list(manl_path)
+        for i in range(0, len(self.video_items)):
+            self.data_items_manl.append(os.path.split(self.video_items[i])[1])
+        return self.data_items_manl
 
 
 class Normal(Screen):
     data_items_norm = ListProperty([])
-    url = ListProperty([])
-
+    video_items = []
     def __init__(self, **kwargs):
         super(Normal, self).__init__(**kwargs)
         self.get_board()
 
     def get_board(self):
-        mydb = pymysql.connect(
-            host='localhost',
-            user='pi',
-            passwd='myub',
-            database='ub_project',
-        )
-
-        mycursor = mydb.cursor()
-        sql = "select norm_name from norm"
-        mycursor.execute(sql)
-
-        rows = mycursor.fetchall()
-        root = 'localhost'
-        for row in rows:
-            for col in row:
-                nlist.append(self.data_items_norm.append(col))
-
+        self.video_items = file_list(norm_path)
+        for i in range(0, len(self.video_items)):
+            self.data_items_norm.append(os.path.split(self.video_items[i])[1])
+        return self.data_items_norm
 
 class Impact(Screen):
     data_items_impt = ListProperty([])
-
+    video_items = []
     def __init__(self, **kwargs):
         super(Impact, self).__init__(**kwargs)
         self.get_board()
 
     def get_board(self):
-        mydb = pymysql.connect(
-            host='localhost',
-            user='pi',
-            passwd='myub',
-            database='ub_project',
-        )
-
-        mycursor = mydb.cursor()
-        sql = "select impt_name from impt"
-        mycursor.execute(sql)
-
-        rows = mycursor.fetchall()
-        root = 'localhost'
-        for row in rows:
-            for col in row:
-                self.data_items_impt.append(col)
+        self.video_items = file_list(impt_path)
+        for i in range(0, len(self.video_items)):
+            self.data_items_impt.append(os.path.split(self.video_items[i])[1])
+        return self.data_items_impt
 
 
 class Parking(Screen):
     data_items_park = ListProperty([])
-
+    video_items = []
     def __init__(self, **kwargs):
         super(Parking, self).__init__(**kwargs)
         self.get_board()
 
     def get_board(self):
-        mydb = pymysql.connect(
-            host='localhost',
-            user='pi',
-            passwd='myub',
-            database='ub_project',
-        )
-
-        mycursor = mydb.cursor()
-        sql = "select park_name from park"
-        mycursor.execute(sql)
-
-        rows = mycursor.fetchall()
-        root = 'localhost'
-        for row in rows:
-            for col in row:
-                self.data_items_park.append(col)
+        self.video_items = file_list(park_path)
+        for i in range(0, len(self.video_items)):
+            self.data_items_park.append(os.path.split(self.video_items[i])[1])
+        return self.data_items_park
 
 
 class VideoWidget(Screen):
-    # r_source = source
-    ff = SelectableButton().on_press()
-    print(ff)
-    #file = SelectableButton().data
-    #Logger.info('text: ')
-    #for i in range(0, len(nlist)):
-    #    file.append(nlist[i])
-    #r_source = norm_path + 'NORM_200701_125348.mp4'
-    r_source = os.path.join(norm_path, ff)
-    # r_source = '/var/www/html/Upload/UB_video/Normal/NORM_200701_125348.mp4'
+    def vidname(self, key, check, file, path):
 
+        self.key = key
+        self.check = check
+        self.file = file
+        path_key = path.split('/')[6]
+  
+        source = file_list(path)
+        
+        if path_key == 'Normal':
+            vidlist = Normal().data_items_norm
+        elif path_key == 'Impact':
+            vidlist = Impact().data_items_impt
+        elif path_key == 'Parking':
+            vidlist = Parking().data_items_park
+        elif path_key == 'Manual':
+            vidlist = Manual().data_items_manl        
 
+        print("#" * 50)
+        print("key : " + str(self.key))
+        print("check : " + str(self.check))
 
-# class VideoPlayerApp(App):
-#   def build(self):
-#      return VideoWidget()
+        # Modify
+        for i in range(0, len(vidlist)):
+            if self.check == True:
+                file = source[key]
+
+        print("file : " + str(self.file))
+        print("#" * 50)
+
+        cap = cv2.VideoCapture(self.file)
+        framecnt = 0
+        while (cap.isOpened()):
+            ret, frame = cap.read()
+            dst = cv2.resize(frame, dsize=(1024, 708), interpolation=cv2.INTER_AREA)
+            if ret == True:
+                framecnt += cv2.CAP_PROP_POS_FRAMES
+                cv2.imshow('frame', dst)
+                cv2.moveWindow('frame', 0,0)
+                Clock.schedule_once(partial(self.display_frame, dst))
+                if cap.get(cv2.CAP_PROP_FRAME_COUNT) == framecnt:
+                    cap.release()
+                    break
+
+                if cv2.waitKey(20) >= 0:
+                    cap.release()
+                    break
+
+        print("FINISH")
+        cv2.destroyAllWindows()
+        
+    def display_frame(self, frame, dt):
+        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(frame.tobytes(order=None), colorfmt='bgr', bufferfmt='ubyte')
+        texture.flip_vertical()
+        self.ids.video_player.texture = texture
 
 
 class WindowManager(ScreenManager):
