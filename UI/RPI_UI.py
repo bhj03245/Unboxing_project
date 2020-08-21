@@ -85,10 +85,12 @@ class Main(Screen):
 
 class Menu(Screen):
     def drowsiness_switch(selfself, switchObject, switchValue):
-        if (switchValue):
-            print('Switch is On: ' + SelectableButton().get_source())
-        else:
-            print('Switch is OFF')
+        if switchValue == True:
+            os.system('sh /home/pi/Desktop/drowsiness/drowsiness.sh')
+            print('WHOHWOEHOEH')
+        elif switchValue == False:
+            off_cmd = 'ps -ef | grep drowsiness.sh | awk \'{print $2}\' | xargs kill -9'
+            os.system(off_cmd)
 
 
 class Setting(Screen):
