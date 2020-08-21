@@ -1,5 +1,6 @@
 <?php 
     require_once('db.php');
+    
 ?>
 <!DOCTYPE>
 <html>
@@ -28,13 +29,13 @@
 
         .sidenav {
             height: 100%;
-            background-color: #000;
+            background-color: #0CF;
             overflow-x: hidden;
             padding-top: 20px;
         }
         .sidemenu{
         	height: 100%;
-        	background-color: #000;
+        	background-color: #0CF;
         	padding-left:80px;
         	}
 
@@ -90,8 +91,8 @@
             font-weight: 300;
         }
 
-        .btn-black{
-            background-color: #000 !important;
+        .btn-skyblue{
+            background-color: #0CF !important;
             color: #fff;
         }
         .btn-white{
@@ -132,7 +133,7 @@
     </html>                                                                                                                                                     
 <?php
     }
-?>
+?>	
 
 <?php
     function display_users(){
@@ -200,7 +201,7 @@
 ?> 
   <frameset cols="30%, *" border="1">
 		<frame src="menu.php" scrolling=no noresize>
-		<frame src="info.php">
+		<frame src="infoTable.php">
     </frameset>
     </html>
 <?php
@@ -239,7 +240,7 @@
                         <label>Password</label>
                         <input name="pw" type="password" class="form-control" placeholder="Password">
                     </div>
-                    <button type="submit" class="btn btn-black">Login</button>
+                    <button type="submit" class="btn btn-skyblue">Login</button>
                 </form>
             </div>
          </div>
@@ -277,13 +278,13 @@
 	<div style="color: #FFF;" >
 	<h2>UnBoxing</h2><hr style="border: solid 1px #ffffff">
 	
-	<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/users.php'">사용자 설정</button><br>
+	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/users.php'">사용자 설정</button><br>
 	&nbsp;&nbsp;영상목록<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/normPage.php'">상시 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/manlPage.php'">수동 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/parkPage.php'">주차 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/imptPage.php'">충격 녹화</button><br>
-	<button type="button" class="btn btn-black" onclick="parent.location.href='http://localhost/webServ/info.php'">블랙박스 정보</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/normPage.php'">상시 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/manlPage.php'">수동 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/parkPage.php'">주차 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/imptPage.php'">충격 녹화</button><br>
+	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/info.php'">블랙박스 정보</button><br>
 	</div></div>
 <?php
     }
@@ -311,7 +312,7 @@
 				<label>Retype Password</label>
 				<input name="re_pw" type="text" class="form-control" placeholder="비밀번호 확인">
 			</div>
-			<input type="submit" class="btn btn-black" value="수정" >
+			<input type="submit" class="btn btn-skyblue" value="수정" >
 		</form> 
 		</div>
 	</div>
@@ -348,7 +349,7 @@
                 <td class="Length"><?php echo $row['norm_length']?></td>
                 <td class="Mktime"><?php echo $row['norm_mktime']?></td>
                 <td class="Resolution"><?php echo $row['norm_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['norm_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+		<td class="Url"><a href="<?php echo $row['norm_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
             </tr> 
 <?php
     }
@@ -395,7 +396,7 @@
                 <td class="Length"><?php echo $row['manl_length']?></td>
                 <td class="Mktime"><?php echo $row['manl_mktime']?></td>
                 <td class="Resolution"><?php echo $row['manl_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['manl_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+		<td class="Url"><a href="<?php echo $row['manl_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
             </tr> 
 <?php
     }
@@ -440,7 +441,7 @@
                 <td class="Length"><?php echo $row['park_length']?></td>
                 <td class="Mktime"><?php echo $row['park_mktime']?></td>
                 <td class="Resolution"><?php echo $row['park_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['park_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+		<td class="Url"><a href="<?php echo $row['park_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
             </tr> 
 <?php
     }
@@ -484,7 +485,7 @@
                 <td class="Length"><?php echo $row['impt_length']?></td>
                 <td class="Mktime"><?php echo $row['impt_mktime']?></td>
                 <td class="Resolution"><?php echo $row['impt_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['impt_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+		<td class="Url"><a href="<?php echo $row['impt_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
             </tr> 
 <?php
     }
@@ -497,6 +498,65 @@
     </body>
     </html>
 
+<?php
+    }
+?>
+
+<?php 
+    function display_infoTable(){
+?>  
+    <body>
+    <table class='table table-list-search'>
+        <thead>
+            <th>상세 정보</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>카메라</td>
+            <td>V2 (RPI 8MP CAMERA BOARD)</td>
+        </tr>
+        <tr>
+            <td>디스플레이</td>
+            <td>3.5 터치 LCD (320x480 Pixel)</td>
+        </tr>
+        <tr>
+            <td>해상도</td>
+            <td>8MP (640x480)</td>
+        </tr>
+        <tr>
+            <td>이미지센서</td>
+            <td>Sony IMX 219 PQ CMOS</td>
+        </tr>
+        <tr>
+            <td>녹화방식</td>
+            <td>상시녹화, 수동녹화, 주차녹화, 이벤트녹화</td>
+        </tr>
+        <tr>
+            <td>녹화 프레임 수</td>
+            <td>최대 30프레임</td>
+        </tr>
+        <tr>
+            <td>화각</td>
+            <td>62.2</td>
+        </tr>
+        <tr>
+            <td>메모리</td>
+            <td>MicroSD 메모리카드 (128GB)</td>
+        </tr>
+        <tr>
+            <td>가속도 센서</td>
+            <td>3축 가속도 센서</td>
+        </tr>
+        <tr>
+            <td>GPS</td>
+            <td>외장 GPS 모듈</td>
+        </tr>
+        <tr>
+            <td>추가 기능</td>
+            <td>졸음 방지, 차선이탈 방지 기능</td>
+        </tr>
+        </tbody>
+    </table>
 <?php
     }
 ?>
