@@ -135,14 +135,14 @@ WindowManager:
                     font_name:'malgun'
                 Switch:
                     active: False
-                    on_active: root.manual_switch(self, self.active)
+                    on_active: root.manual_switch(self)
                 Label:
                     text:"블랙박스 전원"
                     font_size:20
                     font_name:'malgun'
                 Switch:
                     active: True
-                    on_active: root.power_switch(self, self.active)
+                    on_active: root.power_switch(self)
 
             BoxLayout:
                 orientation: 'horizontal'
