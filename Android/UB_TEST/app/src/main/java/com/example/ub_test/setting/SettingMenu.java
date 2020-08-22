@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ub_test.R;
 
-public class UserSetting extends AppCompatActivity {
+public class SettingMenu extends AppCompatActivity {
 
     Button btn_pwChange;
     Button btn_reportSet;
@@ -17,7 +17,7 @@ public class UserSetting extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_setting);
+        setContentView(R.layout.activity_user_settingmenu);
 
         btn_pwChange = (Button)findViewById(R.id.pwChangeBtn);
         btn_reportSet = (Button)findViewById(R.id.reportSetBtn);
@@ -25,14 +25,15 @@ public class UserSetting extends AppCompatActivity {
         btn_pwChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(SettingMenu.this, UserSetting.class);
+                startActivity(intent);
             }
         });
 
         btn_reportSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserSetting.this, ReportSetting.class);
+                Intent intent = new Intent(SettingMenu.this, ReportSetting.class);
                 startActivity(intent);
             }
         });
