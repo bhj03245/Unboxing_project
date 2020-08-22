@@ -14,9 +14,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -30,6 +28,7 @@ import com.example.ub_test.list.NormList;
 import com.example.ub_test.list.ParkList;
 import com.example.ub_test.parking.ParkLocation;
 import com.example.ub_test.setting.ReportSetting;
+import com.example.ub_test.setting.SettingMenu;
 import com.example.ub_test.setting.UserSetting;
 import com.google.android.material.navigation.NavigationView;
 
@@ -41,7 +40,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static android.content.ContentValues.TAG;
@@ -60,6 +58,8 @@ public class Main extends AppCompatActivity {
     final static String trig = "trigger";
     String str_lat, str_lng;
     float lat, lng;
+
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +131,9 @@ public class Main extends AppCompatActivity {
         lat = Float.parseFloat(str_lat);
         lng = Float.parseFloat(str_lng);
 
+        Intent intent = getIntent();
+        id = intent.getStringExtra("key");
+
         InitializeLayout();
     }
     public void InitializeLayout(){
@@ -163,6 +166,7 @@ public class Main extends AppCompatActivity {
                 {
                     case R.id.user_set:
                         Intent toUser = new Intent(Main.this, UserSetting.class);
+                        toUser.putExtra("key", id);
                         startActivity(toUser);
                         break;
                     case R.id.report_set:

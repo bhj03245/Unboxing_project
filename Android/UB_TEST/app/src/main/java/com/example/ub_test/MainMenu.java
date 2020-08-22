@@ -2,7 +2,6 @@ package com.example.ub_test;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import com.example.ub_test.list.ManlList;
 import com.example.ub_test.list.NormList;
 import com.example.ub_test.list.ParkList;
 import com.example.ub_test.parking.ParkLocation;
+import com.example.ub_test.setting.SettingMenu;
 import com.example.ub_test.setting.UserSetting;
 
 import java.io.BufferedReader;

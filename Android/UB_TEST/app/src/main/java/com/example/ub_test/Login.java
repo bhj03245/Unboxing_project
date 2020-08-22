@@ -8,8 +8,10 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -79,6 +81,7 @@ public class Login extends AppCompatActivity {
                 }
                 DB_login DBL = new DB_login();
                 DBL.execute();
+
 
 
             }
@@ -168,6 +171,8 @@ public class Login extends AppCompatActivity {
     public class DB_login extends AsyncTask<Void, Integer, String> {
         String data = "";
         ProgressDialog progressDialog;
+        HttpURLConnection conn;
+        Context mContext;
 
         @Override
         protected String doInBackground(Void... unused) {
@@ -176,7 +181,7 @@ public class Login extends AppCompatActivity {
 
             try {
                 URL url = new URL(ip + "/apkCtrl/user_auth_apk.php");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(5000);
                 conn.setConnectTimeout(5000);
                 conn.setRequestMethod("POST");
@@ -221,6 +226,8 @@ public class Login extends AppCompatActivity {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }finally{
+                conn.disconnect();
             }
             return data;
         }
@@ -246,6 +253,7 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Intent intent = new Intent(Login.this, Main.class);
+                                intent.putExtra("key", str_id);
                                 startActivity(intent);
                                 finish();
                             }
@@ -253,6 +261,7 @@ public class Login extends AppCompatActivity {
 
                 AlertDialog dialog = alertBuilder.create();
                 dialog.show();
+
             } else if (data.equals("0")) {
                 Log.e("RESULT", "비밀번호가 틀렸습니다.");
                 alertBuilder.setTitle("알림").setMessage("비밀번호가 틀렸습니다.").setCancelable(true)
@@ -267,14 +276,7 @@ public class Login extends AppCompatActivity {
                 dialog.show();
             } else {
                 Log.e("RESULT", "errcode: " + data);
-                alertBuilder.setTitle("알림").setMessage("errcode: " + data).setCancelable(true)
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        });
-
+                alertBuilder.setTitle("알림").setMessage("errcode: " + data).setCancelable(true);
                 AlertDialog dialog = alertBuilder.create();
                 dialog.show();
             }

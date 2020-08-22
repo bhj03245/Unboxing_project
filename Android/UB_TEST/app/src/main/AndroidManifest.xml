@@ -17,8 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Main">
+        <activity
+            android:name=".setting.UserSetting"
+            android:theme="@android:style/Theme.Dialog">
         </activity>
+        <activity android:name=".Main"></activity>
         <activity android:name=".MainMenu" />
 
         <meta-data
@@ -28,6 +31,7 @@
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -39,7 +43,7 @@
             android:name=".parking.ImagePop"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".parking.ParkLocation" />
-        <activity android:name=".setting.UserSetting" />
+        <activity android:name=".setting.SettingMenu" />
         <activity
             android:name=".setting.ReportSetting"
             android:theme="@android:style/Theme.Dialog" />
