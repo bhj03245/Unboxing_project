@@ -78,12 +78,10 @@ public class MainMenu extends AppCompatActivity {
         GetGPS getGPS = new GetGPS();
         try {
             String result = getGPS.execute().get();
-            //System.out.println("result" + result);
 
             String[] gps = result.split("&");
             str_lat = gps[0];
             str_lng = gps[1];
-            //Log.e(TAG, gps[0]);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

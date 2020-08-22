@@ -1,7 +1,6 @@
 package com.example.ub_test.list;
 
 import android.app.DownloadManager;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,13 +13,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;

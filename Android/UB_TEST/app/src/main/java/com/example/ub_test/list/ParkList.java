@@ -324,8 +324,6 @@ public class ParkList extends AppCompatActivity implements SwipeRefreshLayout.On
 
                 mArrayList.add(data);
 
-                //recycleAdapter.addItem(recycleVO);
-
             }
             mAdapter.notifyDataSetChanged();
 

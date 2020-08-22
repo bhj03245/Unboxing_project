@@ -37,8 +37,6 @@ public class RestartService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //if(modeChecked == false)
-        //    stopService(in);
     }
 
     @Override
@@ -78,12 +76,8 @@ public class RestartService extends Service {
 
             startService(in);
         } else {
-           // stopForeground(true);
-            //stopSelf();
             stopService(in);
         }
-        //stopForeground(true);
-        //stopSelf();
 
         return START_NOT_STICKY;
 
