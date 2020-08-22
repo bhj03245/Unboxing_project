@@ -17,11 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Splash"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".setting.UserSetting"
-            android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity android:name=".Main"></activity>
+            android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name=".Main" />
         <activity android:name=".MainMenu" />
 
         <meta-data
@@ -29,11 +36,6 @@
             android:value="AIzaSyBE0bSOBE9___yep8DTvB8P4MKJjqBrc6Q" />
 
         <activity android:name=".Login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".list.ImptList" />
         <activity android:name=".list.ParkList" />
