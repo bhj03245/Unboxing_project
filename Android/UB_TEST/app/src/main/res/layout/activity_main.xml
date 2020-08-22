@@ -8,9 +8,34 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="231dp"
+            android:layout_height="114dp"
+            android:layout_marginTop="104dp"
+            android:src="@drawable/unboxing_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/include"
+            app:layout_constraintHorizontal_bias="0.179"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/include"
+            app:layout_constraintVertical_bias="0.001" />
+
+        <Switch
+            android:id="@+id/mode_switch"
+            android:layout_width="48dp"
+            android:layout_height="41dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.856"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.249" />
 
         <include
             android:id="@+id/include"
@@ -18,18 +43,44 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            tools:layout_editor_absoluteY="37dp" />
 
-        <Switch
-            android:id="@+id/mode_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="주행모드"
+        <TextView
+            android:layout_width="48dp"
+            android:layout_height="29dp"
+            android:text="Mode"
+            android:textColor="@color/colorBlack"
+            android:textSize="7pt"
+            app:layout_constraintBottom_toBottomOf="@+id/include"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.856"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/include"
+            app:layout_constraintVertical_bias="0.212" />
+
+        <TextView
+            android:layout_width="493dp"
+            android:layout_height="323dp"
+            android:text="
+            Unboxing 앱을 설치해 주셔서 감사합니다.\n\n
+            앱의 기능: \n\n
+            \t 1. 사용자 설정\n
+            \t\t - 사용자의 비밀번호 변경\n
+            \t 2. 신고기능 설정\n
+            \t\t - 지인의 번호와 메시지 설정\n
+            \t 3. 주차위치 확인 \n
+            \t\t - GPS를 통한 주차위치 확인과 주차된 차량전방 사진 확인\n
+            \t 4. 녹화영상 목록 확인, 검색 및 다운로드 \n
+            \t\t - 상시녹화, 수동녹화, 주차녹화, 충격녹화"
+
+            android:textColor="@color/colorBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.426" />
+            app:layout_constraintTop_toTopOf="@+id/include"
+            app:layout_constraintVertical_bias="0.689" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
