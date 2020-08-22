@@ -5,25 +5,11 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
 import com.example.ub_test.R;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import static android.content.ContentValues.TAG;
 
 public class ReportSetting extends Activity {
 
@@ -33,9 +19,6 @@ public class ReportSetting extends Activity {
 
     String str_phone;
     String str_contents;
-
-    //String ip = getString(R.string.ip);
-    //String IP_ADDRESS = ip + "/apkCtrl/reportSet_apk.php";
 
     private SharedPreferences data;
     private String load_phone;
@@ -66,10 +49,6 @@ public class ReportSetting extends Activity {
                 str_phone = et_phone.getText().toString();
                 str_contents = et_contents.getText().toString();
                 save();
-
-                //SendData SD = new SendData();
-                //SD.execute(IP_ADDRESS, "phone", str_phone, "content", str_contents);
-
             }
         });
     }
@@ -83,110 +62,8 @@ public class ReportSetting extends Activity {
         finish();
     }
 
-    private void load(){
+    private void load() {
         load_phone = data.getString("phone", "");
         load_content = data.getString("content", "");
     }
-
-
-
-
-//    private class SendData extends AsyncTask<String, Void, String> {
-//        String data = "";
-//        ProgressDialog progressDialog;
-//
-//        HttpURLConnection httpURLConnection;
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            //String param = "phone=" + str_phone + "content=" + str_contents + "";
-//
-//            String serverURL = (String) params[0];
-//
-//            String key1 = (String) params[1];
-//            String value1 = (String) params[2];
-//
-//            String key2 = (String) params[3];
-//            String value2 = (String) params[4];
-//
-//            String postParameters = key1 +"=" + value1 + "&" + key2 + "=" + value2;
-//
-//            Log.e(TAG, postParameters);
-//
-//            try{
-//                URL url = new URL(serverURL);
-//                httpURLConnection = (HttpURLConnection)url.openConnection();
-//                httpURLConnection.setReadTimeout(5000);
-//                httpURLConnection.setConnectTimeout(5000);
-//                httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.setDoInput(true);
-//                httpURLConnection.connect();
-//
-//
-//                OutputStream outs = httpURLConnection.getOutputStream();
-//                outs.write(postParameters.getBytes("UTF-8"));
-//                outs.flush();
-//                outs.close();
-//
-//                int responseStatusCode = httpURLConnection.getResponseCode();
-//
-//
-//                InputStream inputStream;
-//                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-//                    inputStream = httpURLConnection.getInputStream();
-//                }
-//                else{
-//                    inputStream = httpURLConnection.getErrorStream();
-//                }
-//
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//
-//
-//                StringBuilder sb = new StringBuilder();
-//                String line = null;
-//
-//                while((line = bufferedReader.readLine())!= null){
-//                    sb.append(line);
-//                }
-//                bufferedReader.close();
-//
-//                data = sb.toString();
-//
-//                return data;
-//
-//                //Log.e(TAG, data);
-//
-//            }catch(MalformedURLException e){
-//                e.printStackTrace();
-//            }catch(IOException e){
-//                e.printStackTrace();
-//            }finally{
-//                httpURLConnection.disconnect();
-//            }
-//
-//            return data;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            progressDialog = ProgressDialog.show(ReportSetting.this, "잠시만 기다려주세요", null, true, true);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//            progressDialog.dismiss();
-//
-//            if(s.equals("Insert")){
-//                Toast.makeText(getApplicationContext(), "데이터 저장 완료", Toast.LENGTH_LONG).show();
-//            }else if(s.equals("Update")){
-//                Toast.makeText(getApplicationContext(), "데이터 업데이트 완료", Toast.LENGTH_LONG).show();
-//            }else{
-//                Toast.makeText(getApplicationContext(), "errcode: " + s, Toast.LENGTH_LONG).show();
-//            }
-//
-//        }
-//    }
 }
