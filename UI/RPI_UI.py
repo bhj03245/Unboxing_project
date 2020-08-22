@@ -115,6 +115,10 @@ class Setting(Screen):
         os.system('shutdown -h now')
 
 
+class Information(Screen):
+    pass
+
+
 class Video_list(Screen):
     pass
 
