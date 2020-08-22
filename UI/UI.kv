@@ -495,46 +495,47 @@ WindowManager:
                 padding: 50
 
                 Label:
-                    text:"계정 ID: Unboxing_1"
+                    text:"계정 ID: id"
                     font_size: 30
                     font_name:'malgun'
 
 
                 Label:
-                    text:"계정 비밀번호: Unboxing_1"
+                    text:"초기 비밀번호: pw"
                     font_size: 30
                     font_name:'malgun'
 
                 Label:
-                    text:"IP: "
+                    text: root.ip_info()
                     font_size: 30
                     font_name:'malgun'
 
 
                 Label:
-                    text:"블랙박스 홈페이지: "
+                    text: root.url_info()
                     font_size: 30
                     font_name:'malgun'
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: 800, 100
+                size: root.width, 100
                 size_hint: (None, None)
                 Button:
                     text:"뒤로가기"
-                    font_size:40
-                    font_name:'malgun'
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "menu"
                 Button:
                     text:"메인"
-                    font_size:40
-                    font_name:'malgun'
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
                         app.root.current = "main"
                 Button:
                     text:"메뉴"
-                    font_size:40
-                    font_name:'malgun'
+                    font_size:50
+                    font_name: "malgun"
                     on_release:
-                        app.root.current = "menu"
+                        app.root.current = "menu"          
+            
