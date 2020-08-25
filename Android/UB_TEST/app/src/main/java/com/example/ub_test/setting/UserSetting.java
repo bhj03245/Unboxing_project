@@ -47,8 +47,6 @@ public class UserSetting extends Activity {
 
         Intent intent = getIntent();
         id = intent.getStringExtra("key");
-        Toast.makeText(UserSetting.this, id,
-                Toast.LENGTH_SHORT).show();
 
         et_oldPw = (EditText)findViewById(R.id.et_oldPw);
         et_newPw = (EditText)findViewById(R.id.et_newPw);

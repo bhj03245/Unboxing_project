@@ -145,7 +145,7 @@ public class Main extends AppCompatActivity {
 
         //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu_icon);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu_icon_skyblue);
 
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(

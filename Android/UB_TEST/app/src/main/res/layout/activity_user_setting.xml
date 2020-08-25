@@ -12,7 +12,7 @@
         android:id="@+id/insertBtn_user"
         android:layout_width="75dp"
         android:layout_height="44dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_skyblue"
         android:text="입력"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"

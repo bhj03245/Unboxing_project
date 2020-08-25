@@ -20,7 +20,7 @@
         android:text="전방 사진 보기"
         android:layout_gravity="right"
         android:onClick="front_image"
-        />
+        android:background="@drawable/btn_skyblue" />
 
 
 </LinearLayout>

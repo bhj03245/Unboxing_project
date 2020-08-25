@@ -41,7 +41,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="64dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_skyblue"
         android:text="Login"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"

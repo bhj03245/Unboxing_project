@@ -61,7 +61,7 @@
         android:layout_height="37dp"
         android:layout_marginStart="224dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_skyblue"
         android:text="입력"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
