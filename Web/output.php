@@ -118,7 +118,7 @@
 ?>  
     <body>
        	<div align="center">
-		<img src="http://localhost/images/Unboxing_logo.png" width="200" height="100"></div>
+		<img src="http://192.168.1.123/images/Unboxing_logo.png" width="200" height="100"></div>
 <?php
     }
 ?>
@@ -278,13 +278,13 @@
 	<div style="color: #FFF;" >
 	<h2>UnBoxing</h2><hr style="border: solid 1px #ffffff">
 	
-	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/users.php'">사용자 설정</button><br>
+	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/users.php'">사용자 설정</button><br>
 	&nbsp;&nbsp;영상목록<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/normPage.php'">상시 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/manlPage.php'">수동 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/parkPage.php'">주차 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/imptPage.php'">충격 녹화</button><br>
-	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/info.php'">블랙박스 정보</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/normPage.php'">상시 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/manlPage.php'">수동 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/parkPage.php'">주차 녹화</button><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/imptPage.php'">충격 녹화</button><br>
+	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/info.php'">블랙박스 정보</button><br>
 	</div></div>
 <?php
     }

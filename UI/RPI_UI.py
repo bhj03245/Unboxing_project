@@ -32,6 +32,8 @@ import RPi.GPIO as gp
 import sysv_ipc
 import sys
 from kivy.core.window import Window
+import socket
+from requests import get
 
 Window.size = (1024, 708)
 
@@ -114,6 +116,22 @@ class Setting(Screen):
     def power_switch(self, active):
         os.system('shutdown -h now')
 
+
+class Information(Screen):
+    ip = ''
+    url = ''
+    
+    def ip_info(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        # self.ip = s.getsockname()[0]
+        self.ip = get('https://api.ipify.org').text
+        return 'IP: ' + str(self.ip)
+	
+    def url_info(self):
+        ip = self.ip_info()[4:]
+        self.url = ip + '/webServ/loginView.php'
+        return '블랙박스 홈페이지: ' + str(self.url)
 
 class Video_list(Screen):
     pass
@@ -339,6 +357,7 @@ class MyApp(App):
         self.impact = Impact()
         self.parking = Parking()
         self.video_widget = VideoWidget()
+        self.information = Information()
         sm.add_widget(self.main)
         sm.add_widget(self.menu)
         sm.add_widget(self.setting)
@@ -348,6 +367,7 @@ class MyApp(App):
         sm.add_widget(self.impact)
         sm.add_widget(self.parking)
         sm.add_widget(self.video_widget)
+        sm.add_widget(self.information)
         return sm
 
     def create_time(self):
