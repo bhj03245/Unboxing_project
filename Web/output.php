@@ -1,19 +1,18 @@
-<?php 
+<?php
     require_once('db.php');
-    
 ?>
 <!DOCTYPE>
 <html>
 <head>
-	<meta charset="utf-8">
-	<link href="//netdna.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	<script src="//netdna.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-	
-	<style>
-	
+   <meta charset="utf-8">
+   <link href="//netdna.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+   <script src="//netdna.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+   
+   <style>
+   
     body {
         font-family: "Lato", sans-serif;
         height:100%;
@@ -34,10 +33,10 @@
             padding-top: 20px;
         }
         .sidemenu{
-        	height: 100%;
-        	background-color: #0CF;
-        	padding-left:80px;
-        	}
+           height: 100%;
+           background-color: #0CF;
+           padding-left:80px;
+           }
 
 
         .main {
@@ -60,7 +59,7 @@
 
         @media screen and (min-width: 768px){
             .main{
-                margin-left: 40%; 
+                margin-left: 40%;
             }
 
             .sidenav{
@@ -96,29 +95,28 @@
             color: #fff;
         }
         .btn-white{
-        	color: #fff;
+           color: #fff;
         }
         h2{
-			padding-top:10px;
-        	margin-left:30px;
+           margin-left:30px;
         }
         .manual{
-        	margin-left:300px;
+           margin-left:300px;
         }
         .pagination{
-        	margin-left:350px;
+           margin-left:350px;
         }
         
-	</style>
-	
+   </style>
+   
 </head>
 
 <?php
     function display_header(){
-?>  
+?>
     <body>
-       	<div align="center">
-		<img src="http://192.168.1.123/images/Unboxing_logo.png" width="200" height="100"></div>
+          <div align="center">
+      <img src="http://localhost/images/Unboxing_logo.png" width="200" height="100"></div>
 <?php
     }
 ?>
@@ -127,20 +125,21 @@
     function display_index(){
 ?>
     <frameset cols="30%, *" border="1">
-		<frame src="menu.php" scrolling=no noresize>
-		<frame src="main.php">
+      <frame src="menu.php" scrolling=no noresize>
+      <frame src="main.php">
     </frameset>
-    </html>                                                                                                                                                     
+    </html>
+                                                                                               
 <?php
     }
-?>	
+?>
 
 <?php
     function display_users(){
-?> 
+?>
     <frameset cols="30%, *" border="1">
-		<frame src="menu.php" scrolling=no noresize>
-		<frame src="userSetting.php">
+      <frame src="menu.php" scrolling=no noresize>
+      <frame src="userSetting.php">
     </frameset>
     </html>
 <?php
@@ -149,10 +148,10 @@
 
 <?php
     function display_normal(){
-?> 
+?>
    <frameset cols="30%, *" border="1">
-		<frame src="menu.php" scrolling=no noresize>
-		<frame src="normList.php">
+      <frame src="menu.php" scrolling=no noresize>
+      <frame src="normList.php">
     </frameset>
     </html>
 <?php
@@ -161,10 +160,10 @@
 
 <?php
     function display_manual(){
-?> 
+?>
     <frameset cols="30%, *" border="1">
-		<frame src="menu.php" scrolling=no noresize>
-		<frame src="manlList.php">
+      <frame src="menu.php" scrolling=no noresize>
+      <frame src="manlList.php">
     </frameset>
     </html>
 <?php
@@ -173,10 +172,10 @@
 
 <?php
     function display_parking(){
-?> 
+?>
     <frameset cols="30%, *" border="1">
-		<frame src="menu.php" scrolling=no noresize>
-		<frame src="parkList.php">
+      <frame src="menu.php" scrolling=no noresize>
+      <frame src="parkList.php">
     </frameset>
     </html>
 <?php
@@ -185,12 +184,11 @@
 
 <?php
     function display_impact(){
-?> 
+?>
     <frameset cols="30%, *" border="1">
-		<frame src="menu.php" scrolling=no noresize>
-		<frame src="imptList.php">
+      <frame src="menu.php" scrolling=no noresize>
+      <frame src="imptList.php">
     </frameset>
-    </html>
     </html>
 <?php
     }
@@ -198,10 +196,10 @@
 
 <?php
     function display_info(){
-?> 
+?>
   <frameset cols="30%, *" border="1">
-		<frame src="menu.php" scrolling=no noresize>
-		<frame src="infoTable.php">
+      <frame src="menu.php" scrolling=no noresize>
+      <frame src="infoTable.php">
     </frameset>
     </html>
 <?php
@@ -220,9 +218,9 @@
 
 <?php
     function display_login(){
-?> 	
-	<br>
-	<div class="sidenav">
+?>
+   <br>
+   <div class="sidenav">
         <div class="login-main-text">
            <h2>Unboxing<br> Login Page</h2>
            <p>Login from here to access BlackBox.</p>
@@ -251,78 +249,66 @@
 
 <?php
     function display_main(){
-?> 
+?>
     <body><br><br>
-	<div align="center">
-	<h1> Unboxing BlackBox <br>홈페이지에 오신 것을 환영합니다!</h1></div>
-	<br><br>
+   <div align="center">
+   <h1> Unboxing BlackBox <br>홈페이지에 오신 것을 환영합니다!</h1></div>
+   <br><br>
     <div class="manual">
     <h3> 웹 페이지 사용방법 </h3>
     1. 사용자 설정<br>
     &nbsp;&nbsp;- 비밀번호를 변경할 수 있는 페이지입니다.<br>
-	2. 영상 목록<br>
-	&nbsp;&nbsp;- 각 영상 목록의 확인과 다운로드를 할 수 있는 페이지입니다.<br>
-	3. 블랙박스 정보<br>
-	&nbsp;&nbsp;- 사용자의 블랙박스 정보를 확인할 수 있는 페이지입니다.
-	</div>
-	
+   2. 영상 목록<br>
+   &nbsp;&nbsp;- 각 영상 목록의 확인과 다운로드를 할 수 있는 페이지입니다.<br>
+   3. 블랙박스 정보<br>
+   &nbsp;&nbsp;- 사용자의 블랙박스 정보를 확인할 수 있는 페이지입니다.
+   </div>
+   
 <?php
     }
 ?>
 
 <?php
     function display_menu(){
-?> 
-<body> 
-	<div class="sidemenu">
-	<div style="color: #FFF;" >
-	<h2>UnBoxing</h2><hr style="border: solid 1px #ffffff">
-	
-	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/users.php'">사용자 설정</button><br>
-	&nbsp;&nbsp;영상목록<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/normPage.php'">상시 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/manlPage.php'">수동 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/parkPage.php'">주차 녹화</button><br>
-	&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/imptPage.php'">충격 녹화</button><br>
-	<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://192.168.1.123/webServ/info.php'">블랙박스 정보</button><br>
-	</div></div>
+?>
+<body>
+   <div class="sidemenu">
+   <div style="color: #FFF;" >
+   <h2>UnBoxing</h2><hr style="border: solid 1px #ffffff">
+   
+   <button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/users.php'" >사용자 설정</button><br>
+   &nbsp;&nbsp;영상목록<br>
+   &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/normPage.php'">상시 녹화</button><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/manlPage.php'">수동 녹화</button><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/parkPage.php'">주차 녹화</button><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/imptPage.php'">충격 녹화</button><br>
+   <button type="button" class="btn btn-skyblue" onclick="parent.location.href='http://localhost/webServ/info.php'">블랙박스 정보</button><br>
+   </div></div>
 <?php
     }
 ?>
 
 <?php
     function display_userSetting(){
-?> 
+?>
 <body>
-	
-	<div class="col-md-3 col-sm-12">
-		
-		<div class="login-form">
-		<h2>User Setting</h2><br>
-		<form method="post" action="\webCtrl\userCtrl.php">
-			<div class="form-group">
-				<label>Old Password</label> 
-				<input name="old_pw" type="text" class="form-control" placeholder="현재 비밀번호">
-			</div>
-			<div class="form-group">
-				<label>New Password</label>
- 				<input name="new_pw" type="text" class="form-control" placeholder="새로운 비밀번호"></p>	
-			</div>
-			<div class="form-group">
-				<label>Retype Password</label>
-				<input name="re_pw" type="text" class="form-control" placeholder="비밀번호 확인">
-			</div>
-			<input type="submit" class="btn btn-skyblue" value="수정" >
-		</form> 
-		</div>
-	</div>
+   
+   <h2>User Setting</h2>
+   <div align='center'>
+      <form method="post" action="\webCtrl\userCtrl.php">
+         <p>Old Password: <input name="old_pw" type="text"></p>
+         <p>New Password: <input name="new_pw" type="text"></p>
+         <p>Retype Password: <input name="re_pw" type="text"></p>
+         <input type="submit" value="edit" >
+      </form>
+   </div>
 <?php
     }
 ?>
 
-<?php 
+<?php
     function display_normalList($paging, $result){
-?>  
+?>
 
     <body>
     <div class="container">
@@ -335,7 +321,7 @@
                 <th scope="col" class="Length">Length</th>
                 <th scope="col" class="Mktime">MakeTime</th>
                 <th scope="col" class="Resolution">Resolution</th>
-		<th scope="col" class="Url">Download</th>
+      <th scope="col" class="Url">Download</th>
             </tr>
         </thead>
 <?php
@@ -349,15 +335,15 @@
                 <td class="Length"><?php echo $row['norm_length']?></td>
                 <td class="Mktime"><?php echo $row['norm_mktime']?></td>
                 <td class="Resolution"><?php echo $row['norm_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['norm_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
-            </tr> 
+      <td class="Url"><a href="<?php echo $row['norm_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+            </tr>
 <?php
     }
 ?>
         </tbody>
     </table>
     <div class="pagination">
-    	<?php echo $paging ?>
+       <?php echo $paging ?>
     </div>
     </div>
     </body>
@@ -368,12 +354,12 @@
 ?>
 
 
-<?php 
+<?php
     function display_manualList($paging, $result){
-?>  
+?>
 
     <body>
-    <table class="table table-list-search">
+    <table>
         <thead>
             <tr align='center'>
                 <th scope="col" class="No">No</th>
@@ -382,7 +368,7 @@
                 <th scope="col" class="Length">Length</th>
                 <th scope="col" class="Mktime">MakeTime</th>
                 <th scope="col" class="Resolution">Resolution</th>
-		<th scope="col" class="Url">Download</th>
+      <th scope="col" class="Url">Download</th>
             </tr>
         </thead>
 <?php
@@ -396,15 +382,15 @@
                 <td class="Length"><?php echo $row['manl_length']?></td>
                 <td class="Mktime"><?php echo $row['manl_mktime']?></td>
                 <td class="Resolution"><?php echo $row['manl_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['manl_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
-            </tr> 
+      <td class="Url"><a href="<?php echo $row['manl_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+            </tr>
 <?php
     }
 ?>
         </tbody>
     </table>
-    <div class="pagination">
-    	<?php echo $paging ?>
+    <div class="paging">
+       <?php echo $paging ?>
     </div>
     </body>
     </html>
@@ -413,12 +399,12 @@
     }
 ?>
 
-<?php 
+<?php
     function display_parkingList($paging, $result){
-?>  
+?>
 
     <body>
-    <table class='table table-list-search'>
+    <table>
         <thead>
             <tr align='center'>
                 <th scope="col" class="No">No</th>
@@ -427,7 +413,7 @@
                 <th scope="col" class="Length">Length</th>
                 <th scope="col" class="Mktime">MakeTime</th>
                 <th scope="col" class="Resolution">Resolution</th>
-		<th scope="col" class="Url">Download</th>
+      <th scope="col" class="Url">Download</th>
             </tr>
         </thead>
 <?php
@@ -441,15 +427,15 @@
                 <td class="Length"><?php echo $row['park_length']?></td>
                 <td class="Mktime"><?php echo $row['park_mktime']?></td>
                 <td class="Resolution"><?php echo $row['park_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['park_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
-            </tr> 
+      <td class="Url"><a href="<?php echo $row['park_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+            </tr>
 <?php
     }
 ?>
         </tbody>
     </table>
-    <div class="pagination">
-    	<?php echo $paging ?>
+    <div class="paging">
+       <?php echo $paging ?>
     </div>
     </body>
     </html>
@@ -458,11 +444,11 @@
     }
 ?>
 
-<?php 
+<?php
     function display_impactList($paging, $result){
-?>  
+?>
     <body>
-    <table class='table table-list-search>
+    <table>
         <thead>
             <tr align='center'>
                 <th scope="col" class="No">No</th>
@@ -471,7 +457,7 @@
                 <th scope="col" class="Length">Length</th>
                 <th scope="col" class="Mktime">MakeTime</th>
                 <th scope="col" class="Resolution">Resolution</th>
-		<th scope="col" class="Url">Download</th>
+      <th scope="col" class="Url">Download</th>
             </tr>
         </thead>
 <?php
@@ -485,15 +471,15 @@
                 <td class="Length"><?php echo $row['impt_length']?></td>
                 <td class="Mktime"><?php echo $row['impt_mktime']?></td>
                 <td class="Resolution"><?php echo $row['impt_resolution']?></td>
-		<td class="Url"><a href="<?php echo $row['impt_url']?>"><img src="http://192.168.1.123/images/download_btn.png"></a></td>
-            </tr> 
+      <td class="Url"><a href="<?php echo $row['impt_url']?>"><img src="http://localhost/images/download_btn.png"></a></td>
+            </tr>
 <?php
     }
 ?>
         </tbody>
     </table>
-    <div class="pagination">
-    	<?php echo $paging ?>
+    <div class="paging">
+       <?php echo $paging ?>
     </div>
     </body>
     </html>
@@ -502,9 +488,9 @@
     }
 ?>
 
-<?php 
+<?php
     function display_infoTable(){
-?>  
+?>
     <body>
     <table class='table table-list-search'>
         <thead>
