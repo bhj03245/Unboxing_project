@@ -79,13 +79,13 @@ public class Login extends AppCompatActivity {
                 } catch (NullPointerException e) {
                     Log.e("error", e.getMessage());
                 }
-//                DB_login DBL = new DB_login();
-//                DBL.execute();
+                DB_login DBL = new DB_login();
+                DBL.execute();
 
-                Intent intent = new Intent(Login.this, Main.class);
-                intent.putExtra("key", str_id);
-                startActivity(intent);
-                finish();
+//                Intent intent = new Intent(Login.this, Main.class);
+//                intent.putExtra("key", str_id);
+//                startActivity(intent);
+//                finish();
 
             }
 
@@ -279,7 +279,7 @@ public class Login extends AppCompatActivity {
                 dialog.show();
             } else {
                 Log.e("RESULT", "errcode: " + data);
-                alertBuilder.setTitle("알림").setMessage("errcode: " + data).setCancelable(true);
+                alertBuilder.setTitle("알림").setMessage("네트워크의 문제가 있습니다. 세부사항: " + data).setCancelable(true);
                 AlertDialog dialog = alertBuilder.create();
                 dialog.show();
             }

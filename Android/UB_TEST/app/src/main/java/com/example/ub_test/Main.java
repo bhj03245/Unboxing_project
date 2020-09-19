@@ -110,21 +110,21 @@ public class Main extends AppCompatActivity {
         load_mode = data.getBoolean("switchkey", false);
         mode_switch.setChecked(load_mode);
 
-//        Main.GetGPS getGPS = new Main.GetGPS();
-//        try {
-//            String result = getGPS.execute().get();
-//
-//            String[] gps = result.split("&");
-//            str_lat = gps[0];
-//            str_lng = gps[1];
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//
-//        lat = Float.parseFloat(str_lat);
-//        lng = Float.parseFloat(str_lng);
+        Main.GetGPS getGPS = new Main.GetGPS();
+        try {
+            String result = getGPS.execute().get();
+
+            String[] gps = result.split("&");
+            str_lat = gps[0];
+            str_lng = gps[1];
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        lat = Float.parseFloat(str_lat);
+        lng = Float.parseFloat(str_lng);
 
         Intent intent = getIntent();
         id = intent.getStringExtra("key");
