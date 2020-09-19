@@ -73,10 +73,9 @@ public class Main extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     if (RealService.serviceIntent == null) {
-                        serviceIntent = new Intent(context, RestartService.class);
+                        serviceIntent = new Intent(context, RealService.class);
                         startService(serviceIntent);
                         Toast.makeText(context, "주행모드", Toast.LENGTH_SHORT).show();
-
                     } else {
                         serviceIntent = RealService.serviceIntent;//getInstance().getApplication();
                         Toast.makeText(Main.this, "already started", Toast.LENGTH_SHORT).show();
@@ -84,21 +83,19 @@ public class Main extends AppCompatActivity {
                 } else {
                     stopService(serviceIntent);
                     Toast.makeText(context, "주차모드", Toast.LENGTH_SHORT).show();
-
-
                 }
 
                 System.out.println("isCecked 확인" + isChecked);
-                if(isChecked == false) {
-                    RecvImpt recvImpt = new RecvImpt(Main.this);
-                    recvImpt.execute();
-                    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-                    for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-                        if(RealService.class.getName().equals(service.service.getClassName())){
-                            stopService(serviceIntent);
-                        }
-                    }
-                }
+//                if(isChecked == false) {
+//                    RecvImpt recvImpt = new RecvImpt(Main.this);
+//                    recvImpt.execute();
+//                    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//                    for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+//                        if(RealService.class.getName().equals(service.service.getClassName())){
+//                            stopService(serviceIntent);
+//                        }
+//                    }
+//                }
 
                 SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
                 SharedPreferences.Editor editor = data.edit();
@@ -113,27 +110,38 @@ public class Main extends AppCompatActivity {
         load_mode = data.getBoolean("switchkey", false);
         mode_switch.setChecked(load_mode);
 
-        Main.GetGPS getGPS = new Main.GetGPS();
-        try {
-            String result = getGPS.execute().get();
-
-            String[] gps = result.split("&");
-            str_lat = gps[0];
-            str_lng = gps[1];
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        lat = Float.parseFloat(str_lat);
-        lng = Float.parseFloat(str_lng);
+//        Main.GetGPS getGPS = new Main.GetGPS();
+//        try {
+//            String result = getGPS.execute().get();
+//
+//            String[] gps = result.split("&");
+//            str_lat = gps[0];
+//            str_lng = gps[1];
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//
+//        lat = Float.parseFloat(str_lat);
+//        lng = Float.parseFloat(str_lng);
 
         Intent intent = getIntent();
         id = intent.getStringExtra("key");
 
         InitializeLayout();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (serviceIntent != null){
+            stopService(serviceIntent);
+            serviceIntent = null;
+        }
+    }
+
     public void InitializeLayout(){
 
         Toolbar toolbar = findViewById(R.id.toolbar);

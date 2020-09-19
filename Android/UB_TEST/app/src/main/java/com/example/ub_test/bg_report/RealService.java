@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -28,6 +29,8 @@ public class RealService extends Service {
 
     private Thread mainThread;
     public static Intent serviceIntent = null;
+    boolean modeChecked = true;
+
 
 
     public RealService() {
@@ -38,17 +41,20 @@ public class RealService extends Service {
         serviceIntent = intent;
         showToast(getApplication(), "Start Service");
 
+        //SharedPreferences data = getSharedPreferences("switch_data", MODE_PRIVATE);
+        //modeChecked = data.getBoolean("switchkey", false);
+
         mainThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean run = true;
-                while (run) {
+                //boolean run = true;
+                while (modeChecked) {
                     try {
-                        Thread.sleep(1000 * 1 * 1); // 1 minute = 1000 * 60 * 1
+                        Thread.sleep(1000 * 5 * 1); // 1 minute = 1000 * 60 * 1
                         RecvImpt recvImpt = new RecvImpt(getApplicationContext());
                         recvImpt.execute();
                     } catch (InterruptedException e) {
-                        run = false;
+                        modeChecked = false;
                         e.printStackTrace();
                     }
                 }

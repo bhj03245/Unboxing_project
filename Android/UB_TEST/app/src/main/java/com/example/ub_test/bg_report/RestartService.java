@@ -75,12 +75,15 @@ public class RestartService extends Service {
         if (modeChecked == true) {
 
             startService(in);
-        } else {
-            stopService(in);
+            stopForeground(true);
+            stopSelf();
+        } else{
+            if (RealService.serviceIntent != null) {
+                stopService(in);
+            }
         }
 
         return START_NOT_STICKY;
-
     }
 
     @Nullable

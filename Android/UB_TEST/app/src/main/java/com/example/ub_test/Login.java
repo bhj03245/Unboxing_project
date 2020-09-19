@@ -79,10 +79,13 @@ public class Login extends AppCompatActivity {
                 } catch (NullPointerException e) {
                     Log.e("error", e.getMessage());
                 }
-                DB_login DBL = new DB_login();
-                DBL.execute();
+//                DB_login DBL = new DB_login();
+//                DBL.execute();
 
-
+                Intent intent = new Intent(Login.this, Main.class);
+                intent.putExtra("key", str_id);
+                startActivity(intent);
+                finish();
 
             }
 
